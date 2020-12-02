@@ -1,0 +1,70 @@
+##
+## 配置文件中的属性名称全部小写，对应的解析类首字母大写，不然会解析失败
+##  常量配置文件
+##
+serverversion: "3.1.0"
+cluster:
+  enabled: true
+# 下面mybuff没啥用的，只能写死在service/buffer:go里面:
+mybuff:
+  - defaultbuffersize: 262144  #1024 * 256
+    defaultreadblocksize: 8192
+    defaultwriteblocksize: 8192
+
+##服务器启动的相关配置类
+serverconf:
+  sessionsprovider: "mem"
+  topicsprovider: "redis"
+  authenticator: "mockSuccess" #//采用默认的身份验证-mysql
+# 系统默认配置
+defaultconst:
+  # 默认配置
+  - devid: 1001
+    nodes:
+      - defaultkeepalive: 300
+        defaultconnecttimeout: 2
+        defaultacktimeout: 20
+        defaulttimeoutretries: 3
+        #      //下面两个最好一样,要是修改了要去这两个文件中（sessions/memprovider.go和topics/memtopics.go）修改对应的
+        #      //因为不能在那里面要用这个，不然会引起相互依赖的
+        #      //还有redis的，也在上面两个文件包下
+        defaultsessionsprovider: "mem"  #//保存至内存中
+        defaulttopicsprovider: "mem"
+        #      //下面两个修改了，也要要去auth/mock.go文件中修改
+        defaultauthenticator: "mockSuccess" #//开启身份验证
+        defaultfailureauthenticator: "mockFailure" #//关闭身份验证，直接返回失败，拒绝所有连接
+# 自己的开发的其余配置
+myconst:
+  # 其余多样配置
+  - devid: 1003
+    nodes:
+      - redissessionsprovider: "redis"  #//保存至redis中，但是目前还是内存中的，还没有去实现
+        redistopicsprovider: "redis"
+        redis:
+          - redisurl: "127.0.0.1:6379"
+            password: ""
+            db: 1
+            rsize: 15 #redis池大小
+        mysql:
+          - mysqlurl: "47.103.1.210:3306"
+            account: "root"
+            password: "root"
+            database: "mqtt"
+            mysqlpoolsize : 10 # 数据库池化大小
+        redisauthenticator: "redisMockSuccess" #//开启身份验证
+        redisfailureauthenticator: "redisMockFailure" #//关闭身份验证，直接返回失败，拒绝所有连接
+  # 其余多样配置
+  - devid: 1005
+    nodes:
+      # redis保存session的配置
+      - redis:
+          - redisurl: "127.0.0.1:6379"
+            password: ""
+            db: 2
+            rsize: 20 #redis池大小
+# 默认账号密码，测试用
+myauth:
+  - auth:
+      - open: true  #开启测试账号
+        defaultname: "admin"
+        defaultpwd: "password"
