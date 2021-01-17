@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="bf51d1a7-8d25-4780-9e7d-def3d64000b1" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/watcherTasks.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gaca-ga/constant.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gaca-ga/ga.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gaca-ga/ga_impl.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gaca-ga/ga_main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gaca-ga/qaca.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gaca-ga/qaca_ga_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gaca-ga/qaca_impl.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/fatih/color" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/fhmq/rhmq/.idea/rhmq.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/phachon/go-logger" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/vmihailenco/msgpack" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/vmihailenco/tagparser" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../gogoWeb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../study_one_day/.idea/dictionaries/liuyanbin.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../study_one_day/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../study_one_day/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../study_one_day/check/run.exe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../study_one_day/check/run.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../study_one_day/check/util/CheckPeople.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../study_one_day/check/util/now.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../study_one_day/check/util/target.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../study_one_day/gotcp/jsons/jsons.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/web/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/colong/net.go" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/colong/net.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/comment/const.go" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/comment/const.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/config/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/config/const.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/config/const.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/config/net.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/config/net.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/examples/surgemq/surgemq.go" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/examples/surgemq/surgemq.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/service/process.go" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/service/process.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/sessions/ackqueue.go" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/sessions/ackqueue.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/utils/util.go" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/utils/util.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gmqtt-master.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../study_one_day/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../study_one_day/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../study_one_day/mian.go" beforeDir="false" afterPath="$PROJECT_DIR$/../study_one_day/mian_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../study_one_day/test/json_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/../study_one_day/test/json_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../study_one_day/test/reflect_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/../study_one_day/test/reflect_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../study_one_day/test/test_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/../study_one_day/test/test_test.go" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
+  <component name="GOROOT" path="C:\Go" />
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="SYNC" />
+  </component>
+  <component name="GoLibraries">
+    <option name="indexEntireGoPath" value="false" />
+  </component>
+  <component name="ProjectId" id="1l6LuUkGrmlKs2wTgs9G80kCSLo" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="DefaultGoTemplateProperty" value="Go File" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="configurable.Global.GOPATH.is.expanded" value="true" />
+    <property name="configurable.Module.GOPATH.is.expanded" value="false" />
+    <property name="configurable.Project.GOPATH.is.expanded" value="true" />
+    <property name="go.import.settings.migrated" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../smartgo" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="F:\Go_pro\src\Go-MQTT\gaca-ga" />
+      <recent name="F:\Go_pro\src\Go-MQTT\gaca-ga\constant" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="F:\Go_pro\src\Go-MQTT" />
+      <recent name="F:\Go_pro\src\Go-MQTT\mqtt" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Go Test.TestQAcaGa in Go-MQTT/gaca-ga">
+    <configuration name="BenchmarkQAca_Run in Go-MQTT/gaca-ga (1)" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="Go-MQTT" />
+      <working_directory value="$PROJECT_DIR$/gaca-ga" />
+      <framework value="gobench" />
+      <kind value="PACKAGE" />
+      <package value="Go-MQTT/gaca-ga" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^BenchmarkQAca_Run$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="BenchmarkQAca_Run in Go-MQTT/gaca-ga" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="Go-MQTT" />
+      <working_directory value="$PROJECT_DIR$/gaca-ga" />
+      <framework value="gobench" />
+      <kind value="PACKAGE" />
+      <package value="Go-MQTT/gaca-ga" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^BenchmarkQAca_Run$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestQAcaGa in Go-MQTT/gaca-ga (1)" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="Go-MQTT" />
+      <working_directory value="$PROJECT_DIR$/gaca-ga" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="Go-MQTT/gaca-ga" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^TestQAcaGa$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestQAcaGa in Go-MQTT/gaca-ga" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="Go-MQTT" />
+      <working_directory value="$PROJECT_DIR$/gaca-ga" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="Go-MQTT/gaca-ga" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^TestQAcaGa$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="qaca_ga_test.go (1)" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="Go-MQTT" />
+      <working_directory value="$PROJECT_DIR$/gaca-ga" />
+      <framework value="gotest" />
+      <kind value="FILE" />
+      <package value="Go-MQTT" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/gaca-ga/qaca_ga_test.go" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Go Test.TestQAcaGa in Go-MQTT/gaca-ga" />
+      <item itemvalue="Go Test.qaca_ga_test.go (1)" />
+      <item itemvalue="Go Test.TestQAcaGa in Go-MQTT/gaca-ga (1)" />
+      <item itemvalue="Go Test.BenchmarkQAca_Run in Go-MQTT/gaca-ga" />
+      <item itemvalue="Go Test.BenchmarkQAca_Run in Go-MQTT/gaca-ga (1)" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Test.TestQAcaGa in Go-MQTT/gaca-ga" />
+        <item itemvalue="Go Test.BenchmarkQAca_Run in Go-MQTT/gaca-ga (1)" />
+        <item itemvalue="Go Test.TestQAcaGa in Go-MQTT/gaca-ga (1)" />
+        <item itemvalue="Go Test.BenchmarkQAca_Run in Go-MQTT/gaca-ga" />
+        <item itemvalue="Go Test.qaca_ga_test.go (1)" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="1">
+          <value>
+            <State>
+              <option name="SHOW_ONLY_AFFECTED_CHANGES" value="true" />
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="roots">
+                    <value>
+                      <list>
+                        <option value="$PROJECT_DIR$" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="OPEN_TABS">
+      <set>
+        <option value="1" />
+      </set>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/jmqtt" />
+    </ignored-roots>
+  </component>
+  <component name="VgoProject">
+    <integration-enabled>true</integration-enabled>
+    <proxy>https://goproxy.io,direct</proxy>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="223" y="88" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1606916500975">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state x="223" y="88" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.864@0.0.1536.864" timestamp="1606916500975" />
+    <state x="499" y="179" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1606915458131">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state x="499" y="179" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1536.864@0.0.1536.864" timestamp="1606915458131" />
+    <state x="1033" y="127" key="#xdebugger.evaluate" timestamp="1610788570047">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state x="1033" y="127" key="#xdebugger.evaluate/0.0.1536.864@0.0.1536.864" timestamp="1610788570047" />
+    <state x="372" y="26" key="CommitChangelistDialog2" timestamp="1606917860934">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state x="372" y="26" key="CommitChangelistDialog2/0.0.1536.864@0.0.1536.864" timestamp="1606917860934" />
+    <state x="425" y="208" key="EditFileWatcherDialog" timestamp="1610631803263">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state x="425" y="208" key="EditFileWatcherDialog/0.0.1536.864@0.0.1536.864" timestamp="1610631803263" />
+    <state x="549" y="188" key="FileChooserDialogImpl" timestamp="1606982846788">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state x="549" y="188" key="FileChooserDialogImpl/0.0.1536.864@0.0.1536.864" timestamp="1606982846788" />
+    <state width="1493" height="490" key="GridCell.Tab.0.bottom" timestamp="1610851234342">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state width="1493" height="490" key="GridCell.Tab.0.bottom/0.0.1536.864@0.0.1536.864" timestamp="1610851234342" />
+    <state width="1493" height="490" key="GridCell.Tab.0.center" timestamp="1610851234341">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state width="1493" height="490" key="GridCell.Tab.0.center/0.0.1536.864@0.0.1536.864" timestamp="1610851234341" />
+    <state width="1493" height="490" key="GridCell.Tab.0.left" timestamp="1610851234341">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state width="1493" height="490" key="GridCell.Tab.0.left/0.0.1536.864@0.0.1536.864" timestamp="1610851234341" />
+    <state width="1493" height="490" key="GridCell.Tab.0.right" timestamp="1610851234341">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state width="1493" height="490" key="GridCell.Tab.0.right/0.0.1536.864@0.0.1536.864" timestamp="1610851234341" />
+    <state width="1493" height="163" key="GridCell.Tab.1.bottom" timestamp="1610809728299">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state width="1493" height="163" key="GridCell.Tab.1.bottom/0.0.1536.864@0.0.1536.864" timestamp="1610809728299" />
+    <state width="1493" height="163" key="GridCell.Tab.1.center" timestamp="1610809728299">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state width="1493" height="163" key="GridCell.Tab.1.center/0.0.1536.864@0.0.1536.864" timestamp="1610809728299" />
+    <state width="1493" height="163" key="GridCell.Tab.1.left" timestamp="1610809728299">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state width="1493" height="163" key="GridCell.Tab.1.left/0.0.1536.864@0.0.1536.864" timestamp="1610809728299" />
+    <state width="1493" height="163" key="GridCell.Tab.1.right" timestamp="1610809728299">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state width="1493" height="163" key="GridCell.Tab.1.right/0.0.1536.864@0.0.1536.864" timestamp="1610809728299" />
+    <state x="270" y="75" key="SettingsEditor" timestamp="1610845481495">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state x="270" y="75" key="SettingsEditor/0.0.1536.864@0.0.1536.864" timestamp="1610845481495" />
+    <state x="321" y="169" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1610795172624">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state x="321" y="169" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1536.864@0.0.1536.864" timestamp="1610795172624" />
+    <state x="439" y="95" width="782" height="600" key="find.popup" timestamp="1606916104319">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state x="439" y="95" width="782" height="600" key="find.popup/0.0.1536.864@0.0.1536.864" timestamp="1606916104319" />
+    <state x="953" y="185" width="672" height="678" key="search.everywhere.popup" timestamp="1610633176401">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state x="953" y="185" width="672" height="678" key="search.everywhere.popup/0.0.1536.864@0.0.1536.864" timestamp="1610633176401" />
+  </component>
+</project>
