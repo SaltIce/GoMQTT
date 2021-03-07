@@ -1,22 +1,237 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="bf51d1a7-8d25-4780-9e7d-def3d64000b1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/watcherTasks.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gaca-ga/constant.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gaca-ga/ga.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gaca-ga/ga_impl.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gaca-ga/ga_main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gaca-ga/qaca.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gaca-ga/qaca_ga_test.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gaca-ga/qaca_impl.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt/internal/config/config.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt/internal/doc.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt/internal/service/client.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt/internal/service/examples_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt/internal/service/misc.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt/internal/service/sendrecv_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt/internal/service/service_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt/internal/sessions/ackqueue.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt/internal/sessions/ackqueue_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt/internal/sessions/session.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt/internal/sessions/session_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt/internal/sessions/sessions.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt/internal/topics/memtopics_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt/internal/topics/topics.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/auth/authenticator.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/auth/default_auth.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/auth/init_auth.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/auth/mock_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/auth/mysql_auth.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/auth/redis_auth.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/comment/const.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/config/config.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/config/config.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/config/config_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/config/const.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/config/logger.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/config/net.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/config/readConfig.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/logger/logger.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/AUTHORS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/CONTRIBUTING.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/LICENSE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/connack.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/connack_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/connackcode.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/connect.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/connect_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/disconnect.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/disconnect_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/doc.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/header.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/header_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/message.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/message_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/ping_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/pingreq.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/pingresp.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/puback.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/puback_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/pubcomp.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/pubcomp_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/publish.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/publish_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/pubrec.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/pubrec_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/pubrel.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/pubrel_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/suback.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/suback_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/subscribe.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/subscribe_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/unsuback.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/unsuback_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/unsubscribe.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/message/unsubscribe_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/run/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/run/run.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/run/websocket.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/service/buffer.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/service/buffer_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/service/doc.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/service/helpers_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/service/paho_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/service/process.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/service/sendrecv.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/service/server.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/service/service.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/sessions/init_provider.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/sessions/memprovider.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/sessions/memprovider_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/sessions/redisprovider.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/topics/init_topic.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/topics/memtopics.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/topics/redistopics.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/utils/must.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqtt_v5/utils/util.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/.idea/HomeNetwork.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/.idea/watcherTasks.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/common/pool/pool.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/common/pool/pool_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/common/proto/proto.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/go.mod" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/go.sum" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/logger/logconf.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/logger/loghandle.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/logger/logmanage.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/logger/logmsg.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/logger/version" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/test/client_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/util/BaseBinary.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/util/BaseData.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/util/BaseDict.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/util/Convert.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/util/ErrHandel.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/util/Lock.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/util/PublicMethod.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/util/Queue.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/util/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/util/ReflectNew.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/util/StringBuilder.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/util/StringToArray.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/util/TimeConvert.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/util/WorkerID.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/util/flags/flag_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/util/flags/flagfile.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/util/flags/flagsenv.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/util/md5.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/util/string.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/util/symbol.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/util/threads/ThreadRun.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/way/connect.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/way/pipeline/channel_handle.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/way/pipeline/channel_handler_context.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/way/pipeline/channel_pipline.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/way/pipeline/handler.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../HomeNetwork/way/server.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/BurntSushi/toml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/Djarvur/go-err113" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/Masterminds/semver" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/OpenPeeDeeP/depguard" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/ashanbrown/forbidigo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/ashanbrown/makezero" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/bombsimon/wsl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/daixiang0/gci" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/denis-tingajkin/go-header" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/esimonov/ifshort" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../github.com/fatih/color" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../github.com/fhmq/rhmq/.idea/rhmq.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/go-critic/go-critic" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/go-toolsmith/astcast" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/go-toolsmith/astcopy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/go-toolsmith/astequal" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/go-toolsmith/astfmt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/go-toolsmith/astp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/go-toolsmith/strparse" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/go-toolsmith/typep" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/go-xmlfmt/xmlfmt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/gobwas/glob" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/gofrs/flock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/golangci/check" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/golangci/dupl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/golangci/errcheck" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/golangci/go-misc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/golangci/gocyclo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/golangci/gofmt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/golangci/golangci-lint" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/golangci/ineffassign" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/golangci/lint-1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/golangci/maligned" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/golangci/misspell" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/golangci/prealloc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/golangci/revgrep" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/golangci/unconvert" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/gostaticanalysis/analysisutil" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/gostaticanalysis/comment" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/kisielk/gotool" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/kyoh86/exportloopref" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/maratori/testpackage" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/matoous/godox" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/mattn/go-colorable" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/mbilski/exhaustivestruct" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/moricho/tparallel" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/nakabonne/nestif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/nbutton23/zxcvbn-go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/nishanths/exhaustive" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/nishanths/predeclared" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/oschwald/geoip2-golang" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/oschwald/maxminddb-golang" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../github.com/phachon/go-logger" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/phayes/checkstyle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/pkg/errors" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/polyfloyd/go-errorlint" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/quasilyte/go-ruleguard" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/quasilyte/regex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/ryancurrah/gomodguard" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/ryanrolds/sqlclosecheck" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/securego/gosec" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/shazow/go-diff" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/sirupsen/logrus" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/sonatard/noctx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/sourcegraph/go-diff" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/ssgreg/nlreturn" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/stretchr/objx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/tdakkota/asciicheck" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/tetafro/godot" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/timakin/bodyclose" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/tomarrell/wrapcheck" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/tommy-muehle/go-mnd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/ultraware/funlen" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/ultraware/whitespace" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../github.com/uudashr/gocognit" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../github.com/vmihailenco/msgpack" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../github.com/vmihailenco/tagparser" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../gogoWeb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../honnef.co/go/tools" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../study_one_day/.idea/dictionaries/liuyanbin.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../study_one_day/.idea/encodings.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../study_one_day/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
@@ -25,10 +240,109 @@
       <change afterPath="$PROJECT_DIR$/../study_one_day/check/util/CheckPeople.go" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../study_one_day/check/util/now.txt" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../study_one_day/check/util/target.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../study_one_day/geo/geo_test.go" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../study_one_day/gotcp/jsons/jsons.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../study_one_day/my_struct/my_struct.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../study_one_day/my_struct/struct_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tcp_util" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/web/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/watcherTasks.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/watcherTasks.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/auth/authenticator.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/auth/authenticator.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/auth/mock.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/auth/mock.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/auth/mock_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/auth/mock_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/auth/redismock.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/auth/redismock.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/benchmark/client_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/benchmark/client_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/benchmark/fan_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/benchmark/fan_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/benchmark/main/trie.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/benchmark/main/trie.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/benchmark/mesh_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/benchmark/mesh_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/colong/net.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/colong/net.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/colong/outtopic.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/colong/outtopic.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/colong/route.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/colong/route.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/colong/struct.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/colong/struct.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/comment/const.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/comment/const.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/config/config.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/config/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/config/config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/config/const.yml" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/config/const.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/config/logger.yml" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/config/logger.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/config/net.yml" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/config/net.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/config/readConfig.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/config/readConfig.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/doc.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/doc.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/examples/pingmq/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/examples/pingmq/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/examples/pingmq/pingmq.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/examples/pingmq/pingmq.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/examples/surgemq/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/examples/surgemq/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/examples/surgemq/surgemq.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/examples/surgemq/surgemq.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/examples/surgemq/websocket.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/examples/surgemq/websocket.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/logger/logger.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/logger/logger.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/AUTHORS" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/AUTHORS" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/CONTRIBUTING.md" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/CONTRIBUTING.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/LICENSE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/connack.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/connack.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/connack_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/connack_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/connackcode.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/connackcode.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/connect.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/connect.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/connect_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/connect_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/disconnect.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/disconnect.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/disconnect_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/disconnect_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/doc.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/doc.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/header.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/header.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/header_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/header_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/message.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/message.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/message_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/message_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/ping_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/ping_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/pingreq.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/pingreq.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/pingresp.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/pingresp.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/puback.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/puback.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/puback_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/puback_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/pubcomp.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/pubcomp.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/pubcomp_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/pubcomp_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/publish.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/publish.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/publish_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/publish_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/pubrec.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/pubrec.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/pubrec_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/pubrec_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/pubrel.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/pubrel.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/pubrel_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/pubrel_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/suback.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/suback.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/suback_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/suback_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/subscribe.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/subscribe.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/subscribe_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/subscribe_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/unsuback.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/unsuback.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/unsuback_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/unsuback_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/unsubscribe.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/unsubscribe.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/message/unsubscribe_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/message/unsubscribe_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/nodediscover/main/nodediscover.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/nodediscover/main/nodediscover.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/service/buffer.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/service/buffer.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/service/buffer_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/service/buffer_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/service/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/service/client.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/service/doc.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/service/doc.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/service/examples_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/service/examples_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/service/helpers_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/service/helpers_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/service/misc.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/service/misc.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/service/paho_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/service/paho_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/service/process.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/service/process.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/service/sendrecv.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/service/sendrecv.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/service/sendrecv_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/service/sendrecv_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/service/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/service/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/service/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/service/service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/service/service_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/service/service_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/sessions/ackqueue.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/sessions/ackqueue.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/sessions/ackqueue_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/sessions/ackqueue_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/sessions/memprovider.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/sessions/memprovider.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/sessions/memprovider_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/sessions/memprovider_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/sessions/redisprovider.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/sessions/redisprovider.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/sessions/session.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/sessions/session.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/sessions/session_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/sessions/session_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/sessions/sessions.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/sessions/sessions.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/topics/memtopics.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/topics/memtopics.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/topics/memtopics_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/topics/memtopics_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/topics/redistopics.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/topics/redistopics.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/topics/topics.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/topics/topics.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt/utils/util.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/utils/util.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/go_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/test/go_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/colong/net.go" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/colong/net.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/comment/const.go" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/comment/const.go" afterDir="false" />
@@ -68,6 +382,9 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="ROOT_SYNC" value="SYNC" />
   </component>
+  <component name="GitToolBoxStore">
+    <option name="projectConfigVersion" value="2" />
+  </component>
   <component name="GoLibraries">
     <option name="indexEntireGoPath" value="false" />
   </component>
@@ -77,12 +394,12 @@
   </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="DefaultGoTemplateProperty" value="Go File" />
+    <property name="GO_FMT" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -90,26 +407,39 @@
     <property name="configurable.Module.GOPATH.is.expanded" value="false" />
     <property name="configurable.Project.GOPATH.is.expanded" value="true" />
     <property name="go.import.settings.migrated" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../smartgo" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/mqtt_v5/auth" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="F:\Go_pro\src\Go-MQTT\gaca-ga" />
-      <recent name="F:\Go_pro\src\Go-MQTT\gaca-ga\constant" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="F:\Go_pro\src\Go-MQTT\mqtt_v5\auth" />
+      <recent name="F:\Go_pro\src\Go-MQTT\mqtt_v5" />
+      <recent name="F:\Go_pro\src\Go-MQTT\mqtt_v5\config" />
       <recent name="F:\Go_pro\src\Go-MQTT" />
       <recent name="F:\Go_pro\src\Go-MQTT\mqtt" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="F:\Go_pro\src\Go-MQTT\mqtt\internal" />
+      <recent name="F:\Go_pro\src\Go-MQTT\gaca-ga" />
+      <recent name="F:\Go_pro\src\Go-MQTT\gaca-ga\constant" />
+    </key>
   </component>
-  <component name="RunManager" selected="Go Test.TestQAcaGa in Go-MQTT/gaca-ga">
+  <component name="RunManager" selected="Go Build.go build Go-MQTT/mqtt_v5/run">
+    <configuration name="go build Go-MQTT/mqtt_v5/run" type="GoApplicationRunConfiguration" factoryName="Go Application" singleton="false" temporary="true" nameIsGenerated="true">
+      <module name="Go-MQTT" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <filePath value="$PROJECT_DIR$/mqtt_v5/run/surgemq.go" />
+      <package value="Go-MQTT/mqtt_v5/run" />
+      <directory value="$PROJECT_DIR$/" />
+      <method v="2" />
+    </configuration>
     <configuration name="BenchmarkQAca_Run in Go-MQTT/gaca-ga (1)" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="Go-MQTT" />
       <working_directory value="$PROJECT_DIR$/gaca-ga" />
@@ -121,26 +451,26 @@
       <pattern value="^BenchmarkQAca_Run$" />
       <method v="2" />
     </configuration>
-    <configuration name="BenchmarkQAca_Run in Go-MQTT/gaca-ga" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestConfigTest in Go-MQTT/mqtt_v5/config" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="Go-MQTT" />
-      <working_directory value="$PROJECT_DIR$/gaca-ga" />
-      <framework value="gobench" />
-      <kind value="PACKAGE" />
-      <package value="Go-MQTT/gaca-ga" />
-      <directory value="$PROJECT_DIR$/" />
-      <filePath value="$PROJECT_DIR$/" />
-      <pattern value="^BenchmarkQAca_Run$" />
-      <method v="2" />
-    </configuration>
-    <configuration name="TestQAcaGa in Go-MQTT/gaca-ga (1)" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="Go-MQTT" />
-      <working_directory value="$PROJECT_DIR$/gaca-ga" />
+      <working_directory value="$PROJECT_DIR$/mqtt_v5/config" />
       <framework value="gotest" />
       <kind value="PACKAGE" />
-      <package value="Go-MQTT/gaca-ga" />
+      <package value="Go-MQTT/mqtt_v5/config" />
       <directory value="$PROJECT_DIR$/" />
       <filePath value="$PROJECT_DIR$/" />
-      <pattern value="^TestQAcaGa$" />
+      <pattern value="^TestConfigTest$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestM1 in Go-MQTT/test" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="Go-MQTT" />
+      <working_directory value="$PROJECT_DIR$/test" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="Go-MQTT/test" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^TestM1$" />
       <method v="2" />
     </configuration>
     <configuration name="TestQAcaGa in Go-MQTT/gaca-ga" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -154,47 +484,25 @@
       <pattern value="^TestQAcaGa$" />
       <method v="2" />
     </configuration>
-    <configuration name="qaca_ga_test.go (1)" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="Go-MQTT" />
-      <working_directory value="$PROJECT_DIR$/gaca-ga" />
-      <framework value="gotest" />
-      <kind value="FILE" />
-      <package value="Go-MQTT" />
-      <directory value="$PROJECT_DIR$/" />
-      <filePath value="$PROJECT_DIR$/gaca-ga/qaca_ga_test.go" />
-      <method v="2" />
-    </configuration>
     <list>
+      <item itemvalue="Go Build.go build Go-MQTT/mqtt_v5/run" />
       <item itemvalue="Go Test.TestQAcaGa in Go-MQTT/gaca-ga" />
-      <item itemvalue="Go Test.qaca_ga_test.go (1)" />
-      <item itemvalue="Go Test.TestQAcaGa in Go-MQTT/gaca-ga (1)" />
-      <item itemvalue="Go Test.BenchmarkQAca_Run in Go-MQTT/gaca-ga" />
       <item itemvalue="Go Test.BenchmarkQAca_Run in Go-MQTT/gaca-ga (1)" />
+      <item itemvalue="Go Test.TestConfigTest in Go-MQTT/mqtt_v5/config" />
+      <item itemvalue="Go Test.TestM1 in Go-MQTT/test" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Test.TestQAcaGa in Go-MQTT/gaca-ga" />
+        <item itemvalue="Go Build.go build Go-MQTT/mqtt_v5/run" />
+        <item itemvalue="Go Test.TestM1 in Go-MQTT/test" />
+        <item itemvalue="Go Test.TestConfigTest in Go-MQTT/mqtt_v5/config" />
         <item itemvalue="Go Test.BenchmarkQAca_Run in Go-MQTT/gaca-ga (1)" />
-        <item itemvalue="Go Test.TestQAcaGa in Go-MQTT/gaca-ga (1)" />
-        <item itemvalue="Go Test.BenchmarkQAca_Run in Go-MQTT/gaca-ga" />
-        <item itemvalue="Go Test.qaca_ga_test.go (1)" />
+        <item itemvalue="Go Test.TestQAcaGa in Go-MQTT/gaca-ga" />
       </list>
     </recent_temporary>
   </component>
-  <component name="ServiceViewManager">
-    <option name="viewStates">
-      <list>
-        <serviceView>
-          <treeState>
-            <expand />
-            <select />
-          </treeState>
-        </serviceView>
-      </list>
-    </option>
-  </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="2" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -226,100 +534,129 @@
         </entry>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
-    <option name="OPEN_TABS">
-      <set>
-        <option value="1" />
-      </set>
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="1" value="TOOL_WINDOW" />
+      </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <ignored-roots>
       <path value="$PROJECT_DIR$/jmqtt" />
     </ignored-roots>
+    <MESSAGE value="feat:QAca-Ga" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat:QAca-Ga" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
+    <environment>
+      <map>
+        <entry key="GOPROXY" value="https://goproxy.io,direct" />
+      </map>
+    </environment>
     <proxy>https://goproxy.io,direct</proxy>
   </component>
   <component name="WindowStateProjectService">
-    <state x="223" y="88" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1606916500975">
+    <state x="223" y="88" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1614780620170">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="223" y="88" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.864@0.0.1536.864" timestamp="1606916500975" />
+    <state x="223" y="88" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.864@0.0.1536.864" timestamp="1614780620170" />
     <state x="499" y="179" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1606915458131">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="499" y="179" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1536.864@0.0.1536.864" timestamp="1606915458131" />
-    <state x="1033" y="127" key="#xdebugger.evaluate" timestamp="1610788570047">
+    <state x="1033" y="127" key="#xdebugger.evaluate" timestamp="1614776073723">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="1033" y="127" key="#xdebugger.evaluate/0.0.1536.864@0.0.1536.864" timestamp="1610788570047" />
-    <state x="372" y="26" key="CommitChangelistDialog2" timestamp="1606917860934">
+    <state x="1033" y="127" key="#xdebugger.evaluate/0.0.1536.864@0.0.1536.864" timestamp="1614776073723" />
+    <state x="372" y="26" key="CommitChangelistDialog2" timestamp="1610851550759">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="372" y="26" key="CommitChangelistDialog2/0.0.1536.864@0.0.1536.864" timestamp="1606917860934" />
+    <state x="372" y="26" key="CommitChangelistDialog2/0.0.1536.864@0.0.1536.864" timestamp="1610851550759" />
+    <state x="147" y="74" key="DiffContextDialog" timestamp="1610851518731">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state x="147" y="74" key="DiffContextDialog/0.0.1536.864@0.0.1536.864" timestamp="1610851518731" />
     <state x="425" y="208" key="EditFileWatcherDialog" timestamp="1610631803263">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="425" y="208" key="EditFileWatcherDialog/0.0.1536.864@0.0.1536.864" timestamp="1610631803263" />
-    <state x="549" y="188" key="FileChooserDialogImpl" timestamp="1606982846788">
+    <state x="549" y="188" key="FileChooserDialogImpl" timestamp="1614435633483">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="549" y="188" key="FileChooserDialogImpl/0.0.1536.864@0.0.1536.864" timestamp="1606982846788" />
-    <state width="1493" height="490" key="GridCell.Tab.0.bottom" timestamp="1610851234342">
+    <state x="549" y="188" key="FileChooserDialogImpl/0.0.1536.864@0.0.1536.864" timestamp="1614435633483" />
+    <state width="1493" height="262" key="GridCell.Tab.0.bottom" timestamp="1614997430124">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="490" key="GridCell.Tab.0.bottom/0.0.1536.864@0.0.1536.864" timestamp="1610851234342" />
-    <state width="1493" height="490" key="GridCell.Tab.0.center" timestamp="1610851234341">
+    <state width="1493" height="262" key="GridCell.Tab.0.bottom/0.0.1536.864@0.0.1536.864" timestamp="1614997430124" />
+    <state width="1493" height="262" key="GridCell.Tab.0.center" timestamp="1614997430124">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="490" key="GridCell.Tab.0.center/0.0.1536.864@0.0.1536.864" timestamp="1610851234341" />
-    <state width="1493" height="490" key="GridCell.Tab.0.left" timestamp="1610851234341">
+    <state width="1493" height="262" key="GridCell.Tab.0.center/0.0.1536.864@0.0.1536.864" timestamp="1614997430124" />
+    <state width="1493" height="262" key="GridCell.Tab.0.left" timestamp="1614997430124">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="490" key="GridCell.Tab.0.left/0.0.1536.864@0.0.1536.864" timestamp="1610851234341" />
-    <state width="1493" height="490" key="GridCell.Tab.0.right" timestamp="1610851234341">
+    <state width="1493" height="262" key="GridCell.Tab.0.left/0.0.1536.864@0.0.1536.864" timestamp="1614997430124" />
+    <state width="1493" height="262" key="GridCell.Tab.0.right" timestamp="1614997430124">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="490" key="GridCell.Tab.0.right/0.0.1536.864@0.0.1536.864" timestamp="1610851234341" />
-    <state width="1493" height="163" key="GridCell.Tab.1.bottom" timestamp="1610809728299">
+    <state width="1493" height="262" key="GridCell.Tab.0.right/0.0.1536.864@0.0.1536.864" timestamp="1614997430124" />
+    <state width="1493" height="234" key="GridCell.Tab.1.bottom" timestamp="1614997430108">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="163" key="GridCell.Tab.1.bottom/0.0.1536.864@0.0.1536.864" timestamp="1610809728299" />
-    <state width="1493" height="163" key="GridCell.Tab.1.center" timestamp="1610809728299">
+    <state width="1493" height="234" key="GridCell.Tab.1.bottom/0.0.1536.864@0.0.1536.864" timestamp="1614997430108" />
+    <state width="1493" height="234" key="GridCell.Tab.1.center" timestamp="1614997430108">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="163" key="GridCell.Tab.1.center/0.0.1536.864@0.0.1536.864" timestamp="1610809728299" />
-    <state width="1493" height="163" key="GridCell.Tab.1.left" timestamp="1610809728299">
+    <state width="1493" height="234" key="GridCell.Tab.1.center/0.0.1536.864@0.0.1536.864" timestamp="1614997430108" />
+    <state width="1493" height="234" key="GridCell.Tab.1.left" timestamp="1614997430108">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="163" key="GridCell.Tab.1.left/0.0.1536.864@0.0.1536.864" timestamp="1610809728299" />
-    <state width="1493" height="163" key="GridCell.Tab.1.right" timestamp="1610809728299">
+    <state width="1493" height="234" key="GridCell.Tab.1.left/0.0.1536.864@0.0.1536.864" timestamp="1614997430108" />
+    <state width="1493" height="234" key="GridCell.Tab.1.right" timestamp="1614997430108">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="163" key="GridCell.Tab.1.right/0.0.1536.864@0.0.1536.864" timestamp="1610809728299" />
-    <state x="270" y="75" key="SettingsEditor" timestamp="1610845481495">
+    <state width="1493" height="234" key="GridCell.Tab.1.right/0.0.1536.864@0.0.1536.864" timestamp="1614997430108" />
+    <state x="270" y="75" key="SettingsEditor" timestamp="1614608796422">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="270" y="75" key="SettingsEditor/0.0.1536.864@0.0.1536.864" timestamp="1610845481495" />
+    <state x="270" y="75" key="SettingsEditor/0.0.1536.864@0.0.1536.864" timestamp="1614608796422" />
+    <state x="361" y="166" key="Vcs.Push.Dialog.v2" timestamp="1610851569657">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state x="361" y="166" key="Vcs.Push.Dialog.v2/0.0.1536.864@0.0.1536.864" timestamp="1610851569657" />
+    <state width="775" height="439" key="XDebugger.FullValuePopup" timestamp="1614959500112">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state width="775" height="439" key="XDebugger.FullValuePopup/0.0.1536.864@0.0.1536.864" timestamp="1614959500112" />
     <state x="321" y="169" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1610795172624">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="321" y="169" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1536.864@0.0.1536.864" timestamp="1610795172624" />
-    <state x="439" y="95" width="782" height="600" key="find.popup" timestamp="1606916104319">
+    <state x="439" y="95" width="782" height="600" key="find.popup" timestamp="1614608754927">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="439" y="95" width="782" height="600" key="find.popup/0.0.1536.864@0.0.1536.864" timestamp="1606916104319" />
+    <state x="439" y="95" width="782" height="600" key="find.popup/0.0.1536.864@0.0.1536.864" timestamp="1614608754927" />
     <state x="953" y="185" width="672" height="678" key="search.everywhere.popup" timestamp="1610633176401">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="953" y="185" width="672" height="678" key="search.everywhere.popup/0.0.1536.864@0.0.1536.864" timestamp="1610633176401" />
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="GoApplicationRunConfiguration">
+        <watch expression="SVC" />
+        <watch expression="svr" />
+        <watch expression="defaultName" />
+        <watch expression="defaultPwd" />
+        <watch expression="providers" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>
