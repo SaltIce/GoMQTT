@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package service
+package colong
 
 import (
 	"Go-MQTT/mqtt_v5/logger"
@@ -35,7 +35,7 @@ var (
 )
 
 // buff 配置设置
-func QUICBuffConfigInit(bufferSize, readBlockSize, writeBlockSize uint64) {
+func BuffConfigInit(bufferSize, readBlockSize, writeBlockSize uint64) {
 	if bufferSize > math.MaxInt64 {
 		panic("bufferSize more than math.MaxInt64")
 	}

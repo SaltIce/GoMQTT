@@ -23,7 +23,6 @@ import (
 	"golang.org/x/net/websocket"
 	"io"
 	"log"
-	"math"
 	"net"
 	"net/http"
 	"net/url"
@@ -112,6 +111,11 @@ func main() {
 	}()
 
 	mqttaddr := "tcp://:1883"
+	saddr := "udp://127.0.0.1:8765"
+	caddr := "udp://127.0.0.1:8766"
+	//mqttaddr := "tcp://:1885"
+	//saddr := "udp://127.0.0.1:8766"
+	//caddr := "udp://127.0.0.1:8765"
 	BuffConfigInit()
 	if len(wsAddr) > 0 || len(wssAddr) > 0 {
 		addr := "tcp://127.0.0.1:1889"
@@ -128,7 +132,7 @@ func main() {
 	}
 
 	/* create plain MQTT listener */
-	err = svr.ListenAndServe(mqttaddr)
+	err = svr.ListenAndServe(mqttaddr, saddr, caddr)
 	if err != nil {
 		logger.Errorf(err, "MQTT 启动异常错误 surgemq/main: %v", err)
 	}
@@ -137,20 +141,20 @@ func main() {
 
 // buff 配置设置
 func BuffConfigInit() {
-	buff := config.ConstConf.MyBuff
-	if buff.BufferSize > math.MaxInt64 {
-		panic("config.ConstConf.MyBuff.BufferSize more than math.MaxInt64")
-	}
-	if buff.ReadBlockSize > math.MaxInt64 {
-		panic("config.ConstConf.MyBuff.ReadBlockSize more than math.MaxInt64")
-	}
-	if buff.WriteBlockSize > math.MaxInt64 {
-		panic("config.ConstConf.MyBuff.WriteBlockSize more than math.MaxInt64")
-	}
-	defaultBufferSize := buff.BufferSize
-	defaultReadBlockSize := buff.ReadBlockSize
-	defaultWriteBlockSize := buff.WriteBlockSize
-	service.BuffConfigInit(defaultBufferSize, defaultReadBlockSize, defaultWriteBlockSize)
+	//buff := config.ConstConf.MyBuff
+	//if buff.BufferSize > math.MaxInt64 {
+	//	panic("config.ConstConf.MyBuff.BufferSize more than math.MaxInt64")
+	//}
+	//if buff.ReadBlockSize > math.MaxInt64 {
+	//	panic("config.ConstConf.MyBuff.ReadBlockSize more than math.MaxInt64")
+	//}
+	//if buff.WriteBlockSize > math.MaxInt64 {
+	//	panic("config.ConstConf.MyBuff.WriteBlockSize more than math.MaxInt64")
+	//}
+	//defaultBufferSize := buff.BufferSize
+	//defaultReadBlockSize := buff.ReadBlockSize
+	//defaultWriteBlockSize := buff.WriteBlockSize
+	//service.BuffConfigInit(defaultBufferSize, defaultReadBlockSize, defaultWriteBlockSize)
 }
 func DefaultListenAndServeWebsocket() error {
 	if err := AddWebsocketHandler("/mqtt", "127.0.0.1:1883"); err != nil {

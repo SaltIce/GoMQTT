@@ -16,6 +16,7 @@ package service
 
 import (
 	"Go-MQTT/mqtt_v5/comment"
+	"Go-MQTT/mqtt_v5/internal/colong"
 	"Go-MQTT/mqtt_v5/logger"
 	"errors"
 	"fmt"
@@ -131,6 +132,9 @@ type Server struct {
 
 	subs []interface{}
 	qoss []byte
+
+	colongSvc *colong.ColongSvc // 自己充当服务端的服务器
+	client    []*colong.Server  // 自己充当客户端的那些连接
 }
 
 // ListenAndServe listents to connections on the URI requested, and handles any
@@ -144,7 +148,7 @@ type Server struct {
 //提供的格式应该是“protocol://host:port”，可以通过它进行解析
 // url.Parse ()。
 //例如，URI可以是“tcp://0.0.0.0:1883”。
-func (this *Server) ListenAndServe(uri string) error {
+func (this *Server) ListenAndServe(uri, surl, curl string) error {
 	defer atomic.CompareAndSwapInt32(&this.running, 1, 0)
 
 	// 防止重复启动
@@ -169,42 +173,13 @@ func (this *Server) ListenAndServe(uri string) error {
 	if err != nil {
 		panic(err)
 	}
-	logger.Infof("\n"+
-		"\\***\n"+
-		"*  _ooOoo_\n"+
-		"* o8888888o\n"+
-		"*'88' . '88' \n"+
-		"* (| -_- |)\n"+
-		"*  O\\ = /O\n"+
-		"* ___/`---'\\____\n"+
-		"* .   ' \\| |// `.\n"+
-		"* / \\\\||| : |||// \\\n*"+
-		" / _||||| -:- |||||- \\\n*"+
-		" | | \\\\\\ - /// | |\n"+
-		"* | \\_| ''\\---/'' | |\n"+
-		"* \\ .-\\__ `-` ___/-. /\n"+
-		"* ___`. .' /--.--\\ `. . __\n"+
-		"* .'' '< `.___\\_<|>_/___.' >''''.\n"+
-		"* | | : `- \\`.;`\\ _ /`;.`/ - ` : | |\n"+
-		"* \\ \\ `-. \\_ __\\ /__ _/ .-` / /\n"+
-		"* ======`-.____`-.___\\_____/___.-`____.-'======\n"+
-		"* `=---='\n"+
-		"*          .............................................\n"+
-		"*           佛曰：bug泛滥，我已瘫痪！\n"+
-		"*/\n"+"/****\n"+
-		"* ░▒█████▒█    ██  ▄████▄ ██ ▄█▀       ██████╗   ██╗   ██╗ ██████╗\n"+
-		"* ▓█     ▒ ██    ▓█ ▒▒██▀ ▀█  ██▄█▒        ██╔══██╗ ██║   ██║ ██╔════╝\n"+
-		"* ▒████ ░▓█   ▒██░▒▓█    ▄   ██▄░         ██████╔╝ ██║   ██║ ██║  ███╗\n"+
-		"* ░▓█▒    ░▓▓   ░██░▒▓▓▄ ▄█  ▒▓██▄       ██╔══██╗ ██║   ██║ ██║   ██║\n"+
-		"* ░▒█░    ▒▒█████▓ ▒ ▓███▀  ░▒██▒ █▄     ██████╔╝╚██████╔╝╚██████╔╝\n"+
-		"*  ▒ ░    ░▒▓▒ ▒ ▒ ░ ░▒ ▒  ░▒ ▒▒ ▓▒       ╚═════╝      ╚═════╝    ╚═════╝\n"+
-		"*  ░      ░░▒░ ░ ░   ░  ▒   ░ ░▒ ▒░\n"+
-		"*  ░ ░     ░░░ ░ ░ ░        ░ ░░ ░\n"+
-		"*             ░     ░ ░      ░  ░\n"+
-		"*/"+
-		"服务器准备就绪: server is ready...version：%s", comment.ServerVersion)
+	print()
 	var tempDelay time.Duration // how long to sleep on accept failure 接受失败要睡多久，默认5ms，最大1s
-
+	this.CreatQUICServer(surl)  // QUIC server
+	go func() {
+		time.Sleep(15 * time.Second)
+		this.CreatQUICClient("n", curl) // QUIC client
+	}()
 	for {
 		conn, err := this.ln.Accept()
 
@@ -245,12 +220,88 @@ func (this *Server) ListenAndServe(uri string) error {
 		}()
 	}
 }
+func print() {
+	logger.Infof("\n"+
+		"\\***\n"+
+		"*  _ooOoo_\n"+
+		"* o8888888o\n"+
+		"*'88' . '88' \n"+
+		"* (| -_- |)\n"+
+		"*  O\\ = /O\n"+
+		"* ___/`---'\\____\n"+
+		"* .   ' \\| |// `.\n"+
+		"* / \\\\||| : |||// \\\n*"+
+		" / _||||| -:- |||||- \\\n*"+
+		" | | \\\\\\ - /// | |\n"+
+		"* | \\_| ''\\---/'' | |\n"+
+		"* \\ .-\\__ `-` ___/-. /\n"+
+		"* ___`. .' /--.--\\ `. . __\n"+
+		"* .'' '< `.___\\_<|>_/___.' >''''.\n"+
+		"* | | : `- \\`.;`\\ _ /`;.`/ - ` : | |\n"+
+		"* \\ \\ `-. \\_ __\\ /__ _/ .-` / /\n"+
+		"* ======`-.____`-.___\\_____/___.-`____.-'======\n"+
+		"* `=---='\n"+
+		"*          .............................................\n"+
+		"*           佛曰：bug泛滥，我已瘫痪！\n"+
+		"*/\n"+"/****\n"+
+		"* ░▒█████▒█    ██  ▄████▄ ██ ▄█▀       ██████╗   ██╗   ██╗ ██████╗\n"+
+		"* ▓█     ▒ ██    ▓█ ▒▒██▀ ▀█  ██▄█▒        ██╔══██╗ ██║   ██║ ██╔════╝\n"+
+		"* ▒████ ░▓█   ▒██░▒▓█    ▄   ██▄░         ██████╔╝ ██║   ██║ ██║  ███╗\n"+
+		"* ░▓█▒    ░▓▓   ░██░▒▓▓▄ ▄█  ▒▓██▄       ██╔══██╗ ██║   ██║ ██║   ██║\n"+
+		"* ░▒█░    ▒▒█████▓ ▒ ▓███▀  ░▒██▒ █▄     ██████╔╝╚██████╔╝╚██████╔╝\n"+
+		"*  ▒ ░    ░▒▓▒ ▒ ▒ ░ ░▒ ▒  ░▒ ▒▒ ▓▒       ╚═════╝      ╚═════╝    ╚═════╝\n"+
+		"*  ░      ░░▒░ ░ ░   ░  ▒   ░ ░▒ ▒░\n"+
+		"*  ░ ░     ░░░ ░ ░ ░        ░ ░░ ░\n"+
+		"*             ░     ░ ░      ░  ░\n"+
+		"*/"+
+		"服务器准备就绪: server is ready...version：%s", comment.ServerVersion)
+}
 
-// Publish sends a single MQTT PUBLISH message to the server. On completion, the
-// supplied OnCompleteFunc is called. For QOS 0 messages, onComplete is called
-// immediately after the message is sent to the outgoing buffer. For QOS 1 messages,
-// onComplete is called when PUBACK is received. For QOS 2 messages, onComplete is
-// called after the PUBCOMP message is received.
+// 创建本服务的QUIC服务器
+func (this *Server) CreatQUICServer(url string) {
+	svr := &colong.Server{
+		KeepAlive:      this.KeepAlive,
+		ConnectTimeout: this.ConnectTimeout,
+		AckTimeout:     this.AckTimeout,
+		TimeoutRetries: this.TimeoutRetries,
+	}
+	go svr.ListenAndServe(url, func(msg interface{}) error {
+		if msgP, ok := msg.(colong.PublishMessage); ok {
+			pub := message.NewPublishMessage()
+			dst := make([]byte, msgP.Len())
+			_, _ = msgP.Encode(dst)
+			_, _ = pub.Decode(dst)
+			this.Publish(pub, nil)
+		}
+		return nil
+	})
+}
+
+// 创建连接到其它QUIC服务的客户端连接
+func (this *Server) CreatQUICClient(name, url string) {
+	for _, c := range this.client {
+		if c.Name == name {
+			return
+		}
+	}
+	client := &colong.Server{
+		KeepAlive:      this.KeepAlive,
+		ConnectTimeout: this.ConnectTimeout,
+		AckTimeout:     this.AckTimeout,
+		TimeoutRetries: this.TimeoutRetries,
+		Name:           name,
+	}
+	go func() {
+		client.ListenAndClient(url)
+		this.client = append(this.client, client)
+	}()
+}
+
+// Publish向服务器发送单个MQTT发布消息。在完成,
+// OnCompleteFunc被调用。对于QOS 0消息，调用onComplete
+//在消息被发送到传出缓冲区后立即发送。对于QOS 1消息，
+// onComplete在接收到PUBACK时被调用。对于QOS 2消息，onComplete是
+//接收到PUBCOMP消息后调用。2
 func (this *Server) Publish(msg *message.PublishMessage, onComplete OnCompleteFunc) error {
 	if err := this.checkConfiguration(); err != nil {
 		return err
@@ -275,7 +326,7 @@ func (this *Server) Publish(msg *message.PublishMessage, onComplete OnCompleteFu
 			if !ok {
 				logger.Info("Invalid onPublish Function")
 			} else {
-				(*fn)(msg)
+				(*fn)(msg, false)
 			}
 		}
 	}
@@ -391,6 +442,18 @@ func (this *Server) handleConnection(c io.Closer) (svc *service, err error) {
 		conn:      conn,
 		sessMgr:   this.sessMgr,
 		topicsMgr: this.topicsMgr,
+		clientLinkPub: func(msg interface{}) error {
+			if msgP, ok := msg.(*message.PublishMessage); ok {
+				b := make([]byte, msgP.Len())
+				msgP.Encode(b)
+				m := colong.NewPublishMessage()
+				m.Decode(b)
+				for _, cl := range this.client { //发送到其它节点
+					cl.Svc.Publish(m, nil)
+				}
+			}
+			return nil
+		},
 	}
 	err = this.getSession(svc, req, resp)
 	if err != nil {

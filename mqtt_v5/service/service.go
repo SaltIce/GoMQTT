@@ -29,7 +29,7 @@ import (
 type (
 	//完成的回调方法
 	OnCompleteFunc func(msg, ack message.Message, err error) error
-	OnPublishFunc  func(msg *message.PublishMessage) error
+	OnPublishFunc  func(msg *message.PublishMessage, toClu bool) error
 )
 
 type stat struct {
@@ -154,6 +154,8 @@ type service struct {
 	subs  []interface{}
 	qoss  []byte
 	rmsgs []*message.PublishMessage
+
+	clientLinkPub func(msg interface{}) error // 当前服务连接到其它服务的连接处理方法
 }
 
 func (this *service) start() error {
@@ -174,7 +176,10 @@ func (this *service) start() error {
 	// If this is a server
 	if !this.client {
 		// Creat the onPublishFunc so it can be used for published messages
-		this.onpub = func(msg *message.PublishMessage) error {
+		this.onpub = func(msg *message.PublishMessage, toClu bool) error {
+			if toClu {
+				_ = this.clientLinkPub(msg) // FIX
+			}
 			if err := this.publish(msg, nil); err != nil {
 				logger.Errorf(err, "service/onPublish: Error publishing message: %v", err)
 				return err

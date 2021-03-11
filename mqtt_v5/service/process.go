@@ -195,30 +195,6 @@ func (this *service) processIncoming(msg message.Message) error {
 	return err
 }
 
-//集群其它节点发送来的mqtt消息的处理
-func (this *service) ProcessIncoming02(msg message.Message) error {
-	var err error = nil
-
-	switch msg := msg.(type) {
-	case *message.PublishMessage:
-		// For PUBLISH message, we should figure out what QoS it is and process accordingly
-		// If QoS == 0, we should just take the next step, no ack required
-		// If QoS == 1, we should send back PUBACK, then take the next step
-		// If QoS == 2, we need to put it in the ack queue, send back PUBREC
-		err = this.processPublish02(msg)
-		//下面的可以不看了，因为其它节点发送来的只有上面这个类型的
-
-	default:
-		return fmt.Errorf("cluser: (%s) invalid message type %s.", this.cid(), msg.Name())
-	}
-
-	if err != nil {
-		logger.Debugf("cluser: (%s) Error processing acked message: %v", this.cid(), err)
-	}
-
-	return err
-}
-
 func (this *service) processAcked(ackq *sessions.Ackqueue) {
 	for _, ackmsg := range ackq.Acked() {
 		// Let's get the messages from the saved message byte slices.
@@ -314,80 +290,6 @@ func (this *service) processAcked(ackq *sessions.Ackqueue) {
 	}
 }
 
-//集群发来的消息处理
-func (this *service) processAcked02(ackq *sessions.Ackqueue) {
-	v := ackq.Acked02()
-	for _, ackmsg := range v {
-		// Let's get the messages from the saved message byte slices.
-		//让我们从保存的消息字节片获取消息。
-		msg, err := ackmsg.Mtype.New()
-		if err != nil {
-			logger.Errorf(err, "process/processAcked: Unable to creating new %s message: %v", ackmsg.Mtype, err)
-			continue
-		}
-
-		if _, err := msg.Decode(ackmsg.Msgbuf); err != nil {
-			logger.Errorf(err, "process/processAcked: Unable to decode %s message: %v", ackmsg.Mtype, err)
-			continue
-		}
-
-		//glog.Debugf("(%s) Processing acked message: %v", this.cid(), ack)
-
-		// - PUBACK if it's QoS 1 message. This is on the client side.
-		// - PUBREL if it's QoS 2 message. This is on the server side.
-		// - PUBCOMP if it's QoS 2 message. This is on the client side.
-		// - SUBACK if it's a subscribe message. This is on the client side.
-		// - UNSUBACK if it's a unsubscribe message. This is on the client side.
-		//如果是QoS 1消息，则返回。这是在客户端。
-		//- PUBREL，如果它是QoS 2消息。这是在服务器端。
-		//如果是QoS 2消息，则为PUBCOMP。这是在客户端。
-		//- SUBACK如果它是一个订阅消息。这是在客户端。
-		//- UNSUBACK如果它是一个取消订阅的消息。这是在客户端。
-		switch ackmsg.State {
-		case message.PUBREL, message.RESERVED2:
-			// If ack is PUBREL, that means the QoS 2 message sent by a remote client is
-			// releassed, so let's publish it to other subscribers.
-			//如果ack为PUBREL，则表示远程客户端发送的QoS 2消息为
-			//发布了，让我们把它发布给其他订阅者吧。
-			if err = this.onPublish(msg.(*message.PublishMessage)); err != nil {
-				logger.Errorf(err, "(%s) Error processing ack'ed %s message: %v", this.cid(), ackmsg.Mtype, err)
-			}
-
-		case message.PUBACK, message.PUBCOMP, message.SUBACK, message.UNSUBACK, message.PINGRESP:
-			logger.Debugf("process/processAcked: %s", msg)
-			// If ack is PUBACK, that means the QoS 1 message sent by this service got
-			// ack'ed. There's nothing to do other than calling onComplete() below.
-			//如果ack是PUBACK，则表示此服务发送的QoS 1消息已获取
-			// ack。除了调用下面的onComplete()之外，没有什么可以做的。
-
-			// If ack is PUBCOMP, that means the QoS 2 message sent by this service got
-			// ack'ed. There's nothing to do other than calling onComplete() below.
-			//如果ack为PUBCOMP，则表示此服务发送的QoS 2消息已获得
-			// ack。除了调用下面的onComplete()之外，没有什么可以做的。
-
-			// If ack is SUBACK, that means the SUBSCRIBE message sent by this service
-			// got ack'ed. There's nothing to do other than calling onComplete() below.
-			//如果ack是SUBACK，则表示此服务发送的订阅消息
-			//得到“消”。除了调用下面的onComplete()之外，没有什么可以做的。
-
-			// If ack is UNSUBACK, that means the SUBSCRIBE message sent by this service
-			// got ack'ed. There's nothing to do other than calling onComplete() below.
-			//如果ack是UNSUBACK，则表示此服务发送的订阅消息
-			//得到“消”。除了调用下面的onComplete()之外，没有什么可以做的。
-
-			// If ack is PINGRESP, that means the PINGREQ message sent by this service
-			// got ack'ed. There's nothing to do other than calling onComplete() below.
-			//如果ack是PINGRESP，则表示此服务发送的PINGREQ消息
-			//得到“消”。除了调用下面的onComplete()之外，没有什么可以做的。
-			err = nil
-
-		default:
-			logger.Errorf(err, "(%s) Invalid ack message type %s.", this.cid(), ackmsg.State)
-			continue
-		}
-	}
-}
-
 // For PUBLISH message, we should figure out what QoS it is and process accordingly
 // If QoS == 0, we should just take the next step, no ack required
 // If QoS == 1, we should send back PUBACK, then take the next step
@@ -416,43 +318,6 @@ func (this *service) processPublish(msg *message.PublishMessage) error {
 			return err
 		}
 
-		return this.onPublish(msg)
-
-	case message.QosAtMostOnce:
-		return this.onPublish(msg)
-	}
-
-	return fmt.Errorf("(%s) invalid message QoS %d.", this.cid(), msg.QoS())
-}
-
-//集群其它节点发送来的mqtt消息的处理
-func (this *service) processPublish02(msg *message.PublishMessage) error {
-
-	switch msg.QoS() {
-	case message.QosExactlyOnce:
-		err := this.sess.Pub2out.Wait(msg, nil)
-		if err != nil {
-			fmt.Errorf(err.Error(), err)
-		}
-		this.sess.Pub2out.SetCluserTag(msg.PacketId())
-		//if err := this.sess.Pub2in.Ack(msg); err != nil {
-		//	err = fmt.Errorf(err.Error(),err)
-		//	break
-		//}
-		this.processAcked02(this.sess.Pub2out)
-		//resp := message.NewPubrecMessage()
-		//resp.SetPacketId(msg.PacketId())
-		//
-		//_, err := this.writeMessage(resp)
-		return nil
-
-	case message.QosAtLeastOnce:
-		//resp := message.NewPubackMessage()
-		//resp.SetPacketId(msg.PacketId())
-		//
-		//if _, err := this.writeMessage(resp); err != nil {
-		//	return err
-		//}
 		return this.onPublish(msg)
 
 	case message.QosAtMostOnce:
@@ -576,9 +441,9 @@ func (this *service) onPublish(msg *message.PublishMessage) error {
 				return fmt.Errorf("Invalid onPublish Function")
 			} else {
 				_ = msg.SetQoS(this.qoss[i]) // 设置为该发的qos级别
-				err = (*fn)(msg)
+				err = (*fn)(msg, true)
 				if err == io.EOF {
-					// 断线了，是否对于qos=1和2的保存至离线消息
+					// TODO 断线了，是否对于qos=1和2的保存至离线消息
 				}
 			}
 		}
