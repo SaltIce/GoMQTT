@@ -3,11 +3,11 @@
 ##  常量配置文件
 ##
 serverversion: "3.1.0"
-brokerurl : "tcp://:1885"
+brokerurl : "tcp://:1883"
 cluster:
     enabled: true
-    name : "node2" # 当前节点name，不要与其它节点冲突
-    hostip : "udp://127.0.0.1:8766" #当前节点的外网访问地址
+    name : "node1" # 当前节点name，不要与其它节点冲突
+    hostip : "udp://127.0.0.1:8765" #当前节点的外网访问地址
     zkurl : "10.112.26.131:2181" ## zk集群的写法 10.112.26.131:2181,10.112.26.131:2181
     zktimeout : 5 # zk超时
     zkmqroot : "/mqRoot" # zk根

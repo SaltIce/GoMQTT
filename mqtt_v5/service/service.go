@@ -29,7 +29,7 @@ import (
 type (
 	//完成的回调方法
 	OnCompleteFunc func(msg, ack message.Message, err error) error
-	OnPublishFunc  func(msg *message.PublishMessage, toClu bool) error
+	OnPublishFunc  func(msg *message.PublishMessage) error
 )
 
 type stat struct {
@@ -143,8 +143,7 @@ type service struct {
 	//对于服务器，当这个方法被调用时，它意味着有一个消息
 	//应该发布到连接另一端的客户端。所以我们
 	//将调用publish()发送消息。
-	onpub OnPublishFunc
-
+	onpub   OnPublishFunc
 	inStat  stat // 输入的记录
 	outStat stat // 输出的记录
 
@@ -176,10 +175,8 @@ func (this *service) start() error {
 	// If this is a server
 	if !this.client {
 		// Creat the onPublishFunc so it can be used for published messages
-		this.onpub = func(msg *message.PublishMessage, toClu bool) error {
-			if toClu {
-				_ = this.clientLinkPub(msg) // FIX
-			}
+		// 这个是发送给订阅者的，是每个订阅者都有一份的方法
+		this.onpub = func(msg *message.PublishMessage) error {
 			if err := this.publish(msg, nil); err != nil {
 				logger.Errorf(err, "service/onPublish: Error publishing message: %v", err)
 				return err

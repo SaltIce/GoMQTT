@@ -423,6 +423,7 @@ func (this *service) onPublish(msg *message.PublishMessage) error {
 			logger.Errorf(err, "(%s) Error retaining message: %v", this.cid(), err)
 		}
 	}
+	_ = this.clientLinkPub(msg) // 发送到集群其它节点
 
 	err := this.topicsMgr.Subscribers(msg.Topic(), msg.QoS(), &this.subs, &this.qoss)
 	if err != nil {
@@ -441,7 +442,7 @@ func (this *service) onPublish(msg *message.PublishMessage) error {
 				return fmt.Errorf("Invalid onPublish Function")
 			} else {
 				_ = msg.SetQoS(this.qoss[i]) // 设置为该发的qos级别
-				err = (*fn)(msg, true)
+				err = (*fn)(msg)
 				if err == io.EOF {
 					// TODO 断线了，是否对于qos=1和2的保存至离线消息
 				}

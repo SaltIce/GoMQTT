@@ -301,7 +301,7 @@ func (this *Server) CreatQUICServer(url string) {
 			dst := make([]byte, msgP.Len())
 			_, _ = msgP.Encode(dst)
 			_, _ = pub.Decode(dst)
-			this.Publish(pub, nil)
+			_ = this.Publish(pub, nil) // 发送给当前节点下的订阅者们
 		}
 		return nil
 	})
@@ -356,7 +356,7 @@ func (this *Server) Publish(msg *message.PublishMessage, onComplete OnCompleteFu
 			if !ok {
 				logger.Info("Invalid onPublish Function")
 			} else {
-				(*fn)(msg, false)
+				(*fn)(msg)
 			}
 		}
 	}

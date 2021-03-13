@@ -20,7 +20,7 @@ var (
 type (
 	//完成的回调方法
 	OnCompleteFunc func(msg, ack Message, err error) error
-	OnPublishFunc  func(msg *PublishMessage, toClu bool) error
+	OnPublishFunc  func(msg *PublishMessage) error
 )
 
 type stat struct {

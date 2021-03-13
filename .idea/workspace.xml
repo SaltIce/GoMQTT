@@ -20,8 +20,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bf51d1a7-8d25-4780-9e7d-def3d64000b1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/mqtt_v5/internal/common/common.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mqtt_v5/internal/nodediscover/nodediscover.go" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../HomeNetwork/.idea/.gitignore" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../HomeNetwork/.idea/HomeNetwork.iml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../HomeNetwork/.idea/misc.xml" afterDir="false" />
@@ -161,13 +159,11 @@
       <change afterPath="$PROJECT_DIR$/../study_one_day/my_struct/struct_test.go" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../tcp_util" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/config/config.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mqtt_v5/config/const.yml" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/config/const.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/run/run.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/run/run.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt_v5/internal/colong/quic_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/internal/colong/quic_service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt_v5/service/process.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/service/process.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mqtt_v5/service/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/service/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt_v5/service/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/service/service.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/colong/net.go" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/colong/net.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/comment/const.go" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/comment/const.go" afterDir="false" />
@@ -377,7 +373,8 @@
     <MESSAGE value="feat:重构GoMQTT集群" />
     <MESSAGE value="feat:重构GoMQTT架构" />
     <MESSAGE value="feat:重构GoMQTT集群架构" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat:重构GoMQTT集群架构" />
+    <MESSAGE value="feat:采用zk作为节点注册发现中心" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat:采用zk作为节点注册发现中心" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
@@ -401,10 +398,10 @@
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="1033" y="127" key="#xdebugger.evaluate/0.0.1536.864@0.0.1536.864" timestamp="1615617474041" />
-    <state x="372" y="0" key="CommitChangelistDialog2" timestamp="1615480074529">
+    <state x="372" y="0" key="CommitChangelistDialog2" timestamp="1615621797664">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="372" y="0" key="CommitChangelistDialog2/0.0.1536.864@0.0.1536.864" timestamp="1615480074529" />
+    <state x="372" y="0" key="CommitChangelistDialog2/0.0.1536.864@0.0.1536.864" timestamp="1615621797664" />
     <state x="147" y="74" key="DiffContextDialog" timestamp="1610851518731">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
@@ -417,38 +414,38 @@
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="549" y="188" key="FileChooserDialogImpl/0.0.1536.864@0.0.1536.864" timestamp="1614435633483" />
-    <state width="1493" height="546" key="GridCell.Tab.0.bottom" timestamp="1615620933464">
+    <state width="1493" height="546" key="GridCell.Tab.0.bottom" timestamp="1615622471312">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="546" key="GridCell.Tab.0.bottom/0.0.1536.864@0.0.1536.864" timestamp="1615620933464" />
-    <state width="1493" height="546" key="GridCell.Tab.0.center" timestamp="1615620933464">
+    <state width="1493" height="546" key="GridCell.Tab.0.bottom/0.0.1536.864@0.0.1536.864" timestamp="1615622471312" />
+    <state width="1493" height="546" key="GridCell.Tab.0.center" timestamp="1615622471312">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="546" key="GridCell.Tab.0.center/0.0.1536.864@0.0.1536.864" timestamp="1615620933464" />
-    <state width="1493" height="546" key="GridCell.Tab.0.left" timestamp="1615620933464">
+    <state width="1493" height="546" key="GridCell.Tab.0.center/0.0.1536.864@0.0.1536.864" timestamp="1615622471312" />
+    <state width="1493" height="546" key="GridCell.Tab.0.left" timestamp="1615622471312">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="546" key="GridCell.Tab.0.left/0.0.1536.864@0.0.1536.864" timestamp="1615620933464" />
-    <state width="1493" height="546" key="GridCell.Tab.0.right" timestamp="1615620933464">
+    <state width="1493" height="546" key="GridCell.Tab.0.left/0.0.1536.864@0.0.1536.864" timestamp="1615622471312" />
+    <state width="1493" height="546" key="GridCell.Tab.0.right" timestamp="1615622471312">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="546" key="GridCell.Tab.0.right/0.0.1536.864@0.0.1536.864" timestamp="1615620933464" />
-    <state width="1493" height="546" key="GridCell.Tab.1.bottom" timestamp="1615620933464">
+    <state width="1493" height="546" key="GridCell.Tab.0.right/0.0.1536.864@0.0.1536.864" timestamp="1615622471312" />
+    <state width="1493" height="546" key="GridCell.Tab.1.bottom" timestamp="1615622471312">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="546" key="GridCell.Tab.1.bottom/0.0.1536.864@0.0.1536.864" timestamp="1615620933464" />
-    <state width="1493" height="546" key="GridCell.Tab.1.center" timestamp="1615620933464">
+    <state width="1493" height="546" key="GridCell.Tab.1.bottom/0.0.1536.864@0.0.1536.864" timestamp="1615622471312" />
+    <state width="1493" height="546" key="GridCell.Tab.1.center" timestamp="1615622471312">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="546" key="GridCell.Tab.1.center/0.0.1536.864@0.0.1536.864" timestamp="1615620933464" />
-    <state width="1493" height="546" key="GridCell.Tab.1.left" timestamp="1615620933464">
+    <state width="1493" height="546" key="GridCell.Tab.1.center/0.0.1536.864@0.0.1536.864" timestamp="1615622471312" />
+    <state width="1493" height="546" key="GridCell.Tab.1.left" timestamp="1615622471312">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="546" key="GridCell.Tab.1.left/0.0.1536.864@0.0.1536.864" timestamp="1615620933464" />
-    <state width="1493" height="546" key="GridCell.Tab.1.right" timestamp="1615620933464">
+    <state width="1493" height="546" key="GridCell.Tab.1.left/0.0.1536.864@0.0.1536.864" timestamp="1615622471312" />
+    <state width="1493" height="546" key="GridCell.Tab.1.right" timestamp="1615622471312">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="546" key="GridCell.Tab.1.right/0.0.1536.864@0.0.1536.864" timestamp="1615620933464" />
+    <state width="1493" height="546" key="GridCell.Tab.1.right/0.0.1536.864@0.0.1536.864" timestamp="1615622471312" />
     <state x="270" y="75" key="SettingsEditor" timestamp="1614608796422">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
