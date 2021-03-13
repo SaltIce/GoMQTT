@@ -327,11 +327,7 @@ func (this *Server) CreatQUICClient(name, url string) {
 	}()
 }
 
-// Publish向服务器发送单个MQTT发布消息。在完成,
-// OnCompleteFunc被调用。对于QOS 0消息，调用onComplete
-//在消息被发送到传出缓冲区后立即发送。对于QOS 1消息，
-// onComplete在接收到PUBACK时被调用。对于QOS 2消息，onComplete是
-//接收到PUBCOMP消息后调用。2
+// 其它节点发来的消息处理
 func (this *Server) Publish(msg *message.PublishMessage, onComplete OnCompleteFunc) error {
 	if err := this.checkConfiguration(); err != nil {
 		return err
@@ -350,13 +346,16 @@ func (this *Server) Publish(msg *message.PublishMessage, onComplete OnCompleteFu
 	msg.SetRetain(false)
 
 	//glog.Debugf("(server) Publishing to topic %q and %d subscribers", string(msg.Topic()), len(this.subs))
-	for _, s := range this.subs {
+	for i, s := range this.subs {
 		if s != nil {
 			fn, ok := s.(*OnPublishFunc)
 			if !ok {
 				logger.Info("Invalid onPublish Function")
 			} else {
+				oldQos := msg.QoS()
+				msg.SetQoS(this.qoss[i])
 				(*fn)(msg)
+				msg.SetQoS(oldQos)
 			}
 		}
 	}
