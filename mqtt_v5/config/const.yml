@@ -3,13 +3,13 @@
 ##  常量配置文件
 ##
 serverversion: "3.1.0"
-brokerurl : "tcp://:1883"
+brokerurl : "tcp://:1887"
 cluster:
     enabled: true
-    name : "node1" # 当前节点name，不要与其它节点冲突
-    hostip : "udp://127.0.0.1:8765" #当前节点的外网访问地址
+    name : "node7" # 当前节点name，不要与其它节点冲突
+    hostip : "udp://127.0.0.1:8767" #当前节点的外网访问地址
     zkurl : "10.112.26.131:2181" ## zk集群的写法 10.112.26.131:2181,10.112.26.131:2181
-    zktimeout : 5 # zk超时
+    zktimeout : 5 # zk超时 单位秒
     zkmqroot : "/mqRoot" # zk根
 # 下面mybuff没啥用的，只能写死在service/buffer:go里面:
 mybuff:
@@ -30,15 +30,14 @@ defaultconst:
     #      //还有redis的，也在上面两个文件包下
     sessionsprovider: "mem"  #//保存至内存中
     topicsprovider: "mem"
-    #      //下面两个修改了，也要要去auth/mock.go文件中修改
     authenticator: "" # 不填则会采用默认，开启身份验证的验证钩子，可选【"default","mysql","redis"】
     redis:
-      redisurl: "47.103.1.210:6379"
-      password: "ltbo99lyb"
+      redisurl: "10.112.26.131:6379"
+      password: "root"
       db: 1
       rsize: 15 #redis池大小
     mysql:
-      mysqlurl: "47.103.1.210:3306"
+      mysqlurl: "10.112.26.131:3306"
       account: "root"
       password: "root"
       database: "mqtt"

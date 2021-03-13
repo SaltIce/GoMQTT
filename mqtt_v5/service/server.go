@@ -137,8 +137,9 @@ type Server struct {
 	subs []interface{}
 	qoss []byte
 
-	colongSvc *colong.ColongSvc // 自己充当服务端的服务器
-	client    []*colong.Server  // 自己充当客户端的那些连接
+	colongSvc *colong.ColongSvc         // 自己充当服务端的服务器
+	client    map[string]*colong.Server // 自己充当客户端的那些连接
+	clientWg  *sync.RWMutex             // 控制客户端连接的锁
 }
 
 // ListenAndServe listents to connections on the URI requested, and handles any
@@ -159,7 +160,12 @@ func (this *Server) ListenAndServe(uri string) error {
 	if !atomic.CompareAndSwapInt32(&this.running, 0, 1) {
 		return fmt.Errorf("server/ListenAndServe: Server is already running")
 	}
-
+	if this.clientWg == nil {
+		this.clientWg = &sync.RWMutex{}
+	}
+	if this.client == nil {
+		this.client = make(map[string]*colong.Server)
+	}
 	this.quit = make(chan struct{})
 
 	u, err := url.Parse(uri)
@@ -184,32 +190,53 @@ func (this *Server) ListenAndServe(uri string) error {
 		ip, err := url.Parse(ul)
 		utils.MustPanic(err)
 		this.CreatQUICServer("udp://0.0.0.0:" + strings.Split(ip.Host, ":")[1]) // QUIC server
-		go func() {
+		var autoUpdate = func(s *Server) error {
+			defer func() {
+				if e := recover(); e != nil {
+					logger.Error(err, "自动更新节点状态错误")
+				}
+			}()
 			for {
 				<-common.NodeChanged
 				if common.NodeTableOld == nil {
-					common.NodeTableOld = common.NodeTable
-					common.NodeTable = common.NewSafeMap()
+					common.Exchange()
 					for k, v := range common.NodeTableOld.GetMap() {
-						this.CreatQUICClient(k, v.Ip) // QUIC client
+						s.CreatQUICClient(k, v.Ip) // QUIC client
 					}
 				} else {
 					for k, v := range common.NodeTable.GetMap() {
 						if old, ok := common.NodeTableOld.Load(k); ok {
 							if old.Version != v.Version {
-								this.CreatQUICClient(k, v.Ip) // QUIC client
+								s.clientWg.Lock()
+								_ = s.client[k].Close()
+								s.clientWg.Unlock()
+								logger.Infof("节点%v重连", k)
+								s.CreatQUICClient(k, v.Ip) // QUIC client
 							}
+							common.NodeTableOld.Delete(k)
 						} else {
-							this.CreatQUICClient(k, v.Ip) // QUIC client
+							s.CreatQUICClient(k, v.Ip) // QUIC client
 						}
 					}
-					common.NodeTableOld = common.NodeTable
-					common.NodeTable = common.NewSafeMap()
+					mp := common.NodeTableOld.GetMap()
+					s.clientWg.Lock()
+					// 移除不要的
+					for i, _ := range mp {
+						if c, ok := this.client[i]; ok {
+							_ = c.Close()
+							delete(this.client, i)
+							logger.Infof("节点%v断线", c.Name)
+						}
+					}
+					s.clientWg.Unlock()
+					common.Exchange()
 				}
 			}
+		}
+		go func() {
+			_ = autoUpdate(this)
 		}()
 	}
-
 	for {
 		conn, err := this.ln.Accept()
 
@@ -309,10 +336,9 @@ func (this *Server) CreatQUICServer(url string) {
 
 // 创建连接到其它QUIC服务的客户端连接
 func (this *Server) CreatQUICClient(name, url string) {
-	for _, c := range this.client {
-		if c.Name == name {
-			c.Close()
-		}
+	if _, ok := this.client[name]; ok {
+		logger.Infof("重复创建client: %v，url: %v", name, url)
+		return
 	}
 	client := &colong.Server{
 		KeepAlive:      this.KeepAlive,
@@ -322,8 +348,14 @@ func (this *Server) CreatQUICClient(name, url string) {
 		Name:           name,
 	}
 	go func() {
-		client.ListenAndClient(url)
-		this.client = append(this.client, client)
+		this.clientWg.Lock()
+		defer this.clientWg.Unlock()
+		err := client.ListenAndClient(url)
+		if err != nil {
+			logger.Errorf(err, "客户端%v监听错误：%v", client.Name, url)
+			return
+		}
+		this.client[name] = client
 	}()
 }
 

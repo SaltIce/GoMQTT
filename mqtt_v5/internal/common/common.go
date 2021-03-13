@@ -24,6 +24,11 @@ func (s *SafeMap) Load(k string) (n *Node, exist bool) {
 	n, exist = s.v[k]
 	return
 }
+func (s *SafeMap) Delete(k string) {
+	s.wg.Lock()
+	defer s.wg.Unlock()
+	delete(s.v, k)
+}
 func (s *SafeMap) GetMap() map[string]*Node {
 	s.wg.RLock()
 	defer s.wg.RUnlock()
@@ -64,6 +69,11 @@ func DeepCopyMap(dis, src *SafeMap) {
 		}
 	}
 	dis.v = vn
+}
+func Exchange() {
+	NodeTableOld = NewSafeMap()
+	DeepCopyMap(NodeTableOld, NodeTable)
+	NodeTable = NewSafeMap()
 }
 
 var (

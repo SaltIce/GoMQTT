@@ -218,6 +218,7 @@ func (this *Server) ListenAndClient(uri string) error {
 	if !atomic.CompareAndSwapInt32(&this.running, 0, 1) {
 		return fmt.Errorf("server/ListenAndServe: Server is already running")
 	}
+
 	this.quit = make(chan struct{})
 	u, err := url.Parse(uri)
 	if err != nil {
@@ -306,12 +307,18 @@ func generateTLSConfig() *tls.Config {
 // Close terminates the server by shutting down all the client connections and closing
 // the listener. It will, as best it can, clean up after itself.
 func (this *Server) Close() error {
+	defer func() {
+		if err := recover(); err != nil {
+			logger.Errorf(err.(error), "%v 节点关闭连接失败", this.Name)
+		}
+	}()
 	// By closing the quit channel, we are telling the server to stop accepting new
 	// connection.
 	close(this.quit)
 
 	// We then close the net.Listener, which will force Accept() to return if it's
 	// blocked waiting for new connections.
+
 	this.ln.Close()
 
 	for _, svc := range this.svcs {

@@ -183,8 +183,8 @@ func update() {
 		} else {
 			common.NodeTable.Store(node.Name, &node)
 		}
-		common.NodeChanged <- struct{}{}
 	}
+	common.NodeChanged <- struct{}{}
 }
 
 func checkError(err error) {
