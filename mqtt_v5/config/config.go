@@ -10,6 +10,7 @@ type MyConst struct {
 	MyAuth        AuthConfig
 	Cluster       Cluster
 	Logger        Logger
+	BrokerUrl     string
 }
 type Logger struct {
 	InfoOpen  bool
@@ -18,7 +19,12 @@ type Logger struct {
 	LogPath   string
 }
 type Cluster struct {
-	Enabled bool
+	Enabled   bool
+	ZkUrl     string
+	Name      string
+	HostIp    string
+	ZkTimeOut int
+	ZkMqRoot  string
 }
 
 type Version struct {

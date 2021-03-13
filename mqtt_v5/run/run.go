@@ -17,6 +17,7 @@ package main
 import (
 	"Go-MQTT/mqtt_v5/comment"
 	"Go-MQTT/mqtt_v5/config"
+	_ "Go-MQTT/mqtt_v5/internal/nodediscover"
 	"Go-MQTT/mqtt_v5/logger"
 	"Go-MQTT/mqtt_v5/service"
 	"flag"
@@ -29,6 +30,7 @@ import (
 	"os"
 	"os/signal"
 	"runtime/pprof"
+	"strings"
 )
 
 var (
@@ -111,8 +113,9 @@ func main() {
 	}()
 
 	mqttaddr := "tcp://:1883"
-	saddr := "udp://127.0.0.1:8765"
-	caddr := "udp://127.0.0.1:8766"
+	if strings.TrimSpace(config.ConstConf.BrokerUrl) != "" {
+		mqttaddr = strings.TrimSpace(config.ConstConf.BrokerUrl)
+	}
 	//mqttaddr := "tcp://:1885"
 	//saddr := "udp://127.0.0.1:8766"
 	//caddr := "udp://127.0.0.1:8765"
@@ -132,7 +135,7 @@ func main() {
 	}
 
 	/* create plain MQTT listener */
-	err = svr.ListenAndServe(mqttaddr, saddr, caddr)
+	err = svr.ListenAndServe(mqttaddr)
 	if err != nil {
 		logger.Errorf(err, "MQTT 启动异常错误 surgemq/main: %v", err)
 	}

@@ -16,13 +16,17 @@ package service
 
 import (
 	"Go-MQTT/mqtt_v5/comment"
+	"Go-MQTT/mqtt_v5/config"
 	"Go-MQTT/mqtt_v5/internal/colong"
+	"Go-MQTT/mqtt_v5/internal/common"
 	"Go-MQTT/mqtt_v5/logger"
+	"Go-MQTT/mqtt_v5/utils"
 	"errors"
 	"fmt"
 	"io"
 	"net"
 	"net/url"
+	"strings"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -148,7 +152,7 @@ type Server struct {
 //提供的格式应该是“protocol://host:port”，可以通过它进行解析
 // url.Parse ()。
 //例如，URI可以是“tcp://0.0.0.0:1883”。
-func (this *Server) ListenAndServe(uri, surl, curl string) error {
+func (this *Server) ListenAndServe(uri string) error {
 	defer atomic.CompareAndSwapInt32(&this.running, 1, 0)
 
 	// 防止重复启动
@@ -175,11 +179,37 @@ func (this *Server) ListenAndServe(uri, surl, curl string) error {
 	}
 	print()
 	var tempDelay time.Duration // how long to sleep on accept failure 接受失败要睡多久，默认5ms，最大1s
-	this.CreatQUICServer(surl)  // QUIC server
-	go func() {
-		time.Sleep(15 * time.Second)
-		this.CreatQUICClient("n", curl) // QUIC client
-	}()
+	if config.ConstConf.Cluster.Enabled {
+		ul := config.ConstConf.Cluster.HostIp
+		ip, err := url.Parse(ul)
+		utils.MustPanic(err)
+		this.CreatQUICServer("udp://0.0.0.0:" + strings.Split(ip.Host, ":")[1]) // QUIC server
+		go func() {
+			for {
+				<-common.NodeChanged
+				if common.NodeTableOld == nil {
+					common.NodeTableOld = common.NodeTable
+					common.NodeTable = common.NewSafeMap()
+					for k, v := range common.NodeTableOld.GetMap() {
+						this.CreatQUICClient(k, v.Ip) // QUIC client
+					}
+				} else {
+					for k, v := range common.NodeTable.GetMap() {
+						if old, ok := common.NodeTableOld.Load(k); ok {
+							if old.Version != v.Version {
+								this.CreatQUICClient(k, v.Ip) // QUIC client
+							}
+						} else {
+							this.CreatQUICClient(k, v.Ip) // QUIC client
+						}
+					}
+					common.NodeTableOld = common.NodeTable
+					common.NodeTable = common.NewSafeMap()
+				}
+			}
+		}()
+	}
+
 	for {
 		conn, err := this.ln.Accept()
 
@@ -281,7 +311,7 @@ func (this *Server) CreatQUICServer(url string) {
 func (this *Server) CreatQUICClient(name, url string) {
 	for _, c := range this.client {
 		if c.Name == name {
-			return
+			c.Close()
 		}
 	}
 	client := &colong.Server{
