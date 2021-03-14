@@ -160,12 +160,7 @@
       <change afterPath="$PROJECT_DIR$/../tcp_util" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/config/const.yml" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/config/const.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/internal/colong/quic_server.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/internal/colong/quic_server.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/internal/common/common.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/internal/common/common.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/internal/nodediscover/nodediscover.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/internal/nodediscover/nodediscover.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/service/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/service/server.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/sessions/session.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/sessions/session.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/colong/net.go" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/colong/net.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/comment/const.go" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/comment/const.go" afterDir="false" />
@@ -378,7 +373,8 @@
     <MESSAGE value="feat:采用zk作为节点注册发现中心" />
     <MESSAGE value="fix:解决其它节点发来的消息转发给当前节点下的客户端逻辑bug" />
     <MESSAGE value="fix:修复其它节点发来的消息转发给当前节点下客户端的qos等级处理不正确bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix:修复其它节点发来的消息转发给当前节点下客户端的qos等级处理不正确bug" />
+    <MESSAGE value="fix:修复超过两个节点启动失败bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix:修复超过两个节点启动失败bug" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
@@ -398,10 +394,10 @@
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="1033" y="127" key="#xdebugger.evaluate/0.0.1536.864@0.0.1536.864" timestamp="1615617474041" />
-    <state x="372" y="0" key="CommitChangelistDialog2" timestamp="1615623196536">
+    <state x="372" y="0" key="CommitChangelistDialog2" timestamp="1615654013720">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="372" y="0" key="CommitChangelistDialog2/0.0.1536.864@0.0.1536.864" timestamp="1615623196536" />
+    <state x="372" y="0" key="CommitChangelistDialog2/0.0.1536.864@0.0.1536.864" timestamp="1615654013720" />
     <state x="147" y="74" key="DiffContextDialog" timestamp="1610851518731">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
@@ -414,22 +410,22 @@
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="549" y="188" key="FileChooserDialogImpl/0.0.1536.864@0.0.1536.864" timestamp="1614435633483" />
-    <state width="1493" height="318" key="GridCell.Tab.0.bottom" timestamp="1615653801546">
+    <state width="1493" height="190" key="GridCell.Tab.0.bottom" timestamp="1615691689282">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="318" key="GridCell.Tab.0.bottom/0.0.1536.864@0.0.1536.864" timestamp="1615653801546" />
-    <state width="1493" height="318" key="GridCell.Tab.0.center" timestamp="1615653801546">
+    <state width="1493" height="190" key="GridCell.Tab.0.bottom/0.0.1536.864@0.0.1536.864" timestamp="1615691689282" />
+    <state width="1493" height="190" key="GridCell.Tab.0.center" timestamp="1615691689281">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="318" key="GridCell.Tab.0.center/0.0.1536.864@0.0.1536.864" timestamp="1615653801546" />
-    <state width="1493" height="318" key="GridCell.Tab.0.left" timestamp="1615653801546">
+    <state width="1493" height="190" key="GridCell.Tab.0.center/0.0.1536.864@0.0.1536.864" timestamp="1615691689281" />
+    <state width="1493" height="190" key="GridCell.Tab.0.left" timestamp="1615691689279">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="318" key="GridCell.Tab.0.left/0.0.1536.864@0.0.1536.864" timestamp="1615653801546" />
-    <state width="1493" height="318" key="GridCell.Tab.0.right" timestamp="1615653801546">
+    <state width="1493" height="190" key="GridCell.Tab.0.left/0.0.1536.864@0.0.1536.864" timestamp="1615691689279" />
+    <state width="1493" height="190" key="GridCell.Tab.0.right" timestamp="1615691689281">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="318" key="GridCell.Tab.0.right/0.0.1536.864@0.0.1536.864" timestamp="1615653801546" />
+    <state width="1493" height="190" key="GridCell.Tab.0.right/0.0.1536.864@0.0.1536.864" timestamp="1615691689281" />
     <state width="1493" height="457" key="GridCell.Tab.1.bottom" timestamp="1615650334337">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
@@ -450,10 +446,10 @@
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="270" y="75" key="SettingsEditor/0.0.1536.864@0.0.1536.864" timestamp="1614608796422" />
-    <state x="361" y="166" key="Vcs.Push.Dialog.v2" timestamp="1615637974194">
+    <state x="361" y="166" key="Vcs.Push.Dialog.v2" timestamp="1615654022085">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="361" y="166" key="Vcs.Push.Dialog.v2/0.0.1536.864@0.0.1536.864" timestamp="1615637974194" />
+    <state x="361" y="166" key="Vcs.Push.Dialog.v2/0.0.1536.864@0.0.1536.864" timestamp="1615654022085" />
     <state width="775" height="439" key="XDebugger.FullValuePopup" timestamp="1615622845313">
       <screen x="0" y="0" width="1536" height="864" />
     </state>

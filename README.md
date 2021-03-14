@@ -1,23 +1,24 @@
 # Go-MQTT
 
 #### 介绍
-Go语言的MQTT
+Go语言的MQTT，采用surgemq进行的二次开发，目前只支持mqtt3 ，5版本准备搞了
 
 #### 软件架构
-软件架构说明
-
+支持集群部署，目前集群方案为zk+quic
+监听zk获取节点变化情况，自动与其它节点创建quic协议的udp连接
+节点间目前只是转发消息过去，还未完全实现可靠的确认机制
 
 #### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.  配置文件在 mqtt_v5/config/const.yml
+2.  修改zk路径即可，各个节点的集群中的名称都是唯一的
+3.  配置自己的quic ip和端口
+4.  启动mqtt_v5\run\run.go即可
 
-#### 使用说明
+#### 存在问题
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.  每个客户端连接都是采用单独的一份数据存储，不容易管理
+2.  节点间数据交互未实现确认机制
 
 #### 参与贡献
 
@@ -25,13 +26,3 @@ Go语言的MQTT
 2.  新建 Feat_xxx 分支
 3.  提交代码
 4.  新建 Pull Request
-
-
-#### 特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
