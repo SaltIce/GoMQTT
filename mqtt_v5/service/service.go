@@ -259,8 +259,8 @@ func (this *service) stop() {
 	this.wgStopped.Wait()
 
 	//打印该客户端生命周期内的接收字节与消息条数、发送字节与消息条数
-	logger.Debugf("(%s) Received %d bytes in %d messages.", this.cid(), this.inStat.bytes, this.inStat.msgs)
-	logger.Debugf("(%s) Sent %d bytes in %d messages.", this.cid(), this.outStat.bytes, this.outStat.msgs)
+	logger.Infof("(%s) Received %d bytes in %d messages.", this.cid(), this.inStat.bytes, this.inStat.msgs)
+	logger.Infof("(%s) Sent %d bytes in %d messages.", this.cid(), this.outStat.bytes, this.outStat.msgs)
 
 	// Unsubscribe from all the topics for this client, only for the server side though
 	// 取消订阅该客户机的所有主题，但只针对服务器端

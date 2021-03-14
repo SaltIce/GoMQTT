@@ -145,6 +145,7 @@
       <change afterPath="$PROJECT_DIR$/../github.com/vmihailenco/tagparser" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../gogoWeb" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../honnef.co/go/tools" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../qaca-ga" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../study_one_day/.idea/dictionaries/liuyanbin.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../study_one_day/.idea/encodings.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../study_one_day/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
@@ -160,7 +161,6 @@
       <change afterPath="$PROJECT_DIR$/../tcp_util" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/colong/net.go" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/colong/net.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/comment/const.go" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/comment/const.go" afterDir="false" />
@@ -225,7 +225,7 @@
     <property name="configurable.Module.GOPATH.is.expanded" value="false" />
     <property name="configurable.Project.GOPATH.is.expanded" value="true" />
     <property name="go.import.settings.migrated" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/mqtt_v5/internal" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../qaca-ga" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -250,7 +250,7 @@
       <recent name="F:\Go_pro\src\Go-MQTT\mqtt_v5\auth" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Build.go build run.go (1)">
+  <component name="RunManager" selected="Go Test.TestGoMqtt in Go-MQTT/test">
     <configuration name="go build Go-MQTT/mqtt_v5/internal/nodediscover/main" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="Go-MQTT" />
       <working_directory value="$PROJECT_DIR$" />
@@ -278,15 +278,15 @@
       <directory value="$PROJECT_DIR$/" />
       <method v="2" />
     </configuration>
-    <configuration name="TestName in Go-MQTT/mqtt_v5/internal/colong" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestGoMqtt in Go-MQTT/test" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="Go-MQTT" />
-      <working_directory value="$PROJECT_DIR$/mqtt_v5/internal/colong" />
+      <working_directory value="$PROJECT_DIR$/test" />
       <framework value="gotest" />
       <kind value="PACKAGE" />
-      <package value="Go-MQTT/mqtt_v5/internal/colong" />
+      <package value="Go-MQTT/test" />
       <directory value="$PROJECT_DIR$/" />
       <filePath value="$PROJECT_DIR$/" />
-      <pattern value="^TestName$" />
+      <pattern value="^TestGoMqtt$" />
       <method v="2" />
     </configuration>
     <configuration name="TestName in Go-MQTT/quic/client" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -304,16 +304,16 @@
       <item itemvalue="Go Build.go build Go-MQTT/quic/test" />
       <item itemvalue="Go Build.go build run.go (1)" />
       <item itemvalue="Go Build.go build Go-MQTT/mqtt_v5/internal/nodediscover/main" />
-      <item itemvalue="Go Test.TestName in Go-MQTT/mqtt_v5/internal/colong" />
       <item itemvalue="Go Test.TestName in Go-MQTT/quic/client" />
+      <item itemvalue="Go Test.TestGoMqtt in Go-MQTT/test" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Test.TestGoMqtt in Go-MQTT/test" />
         <item itemvalue="Go Build.go build run.go (1)" />
         <item itemvalue="Go Build.go build Go-MQTT/mqtt_v5/internal/nodediscover/main" />
         <item itemvalue="Go Test.TestName in Go-MQTT/quic/client" />
         <item itemvalue="Go Build.go build Go-MQTT/quic/test" />
-        <item itemvalue="Go Test.TestName in Go-MQTT/mqtt_v5/internal/colong" />
       </list>
     </recent_temporary>
   </component>
@@ -374,7 +374,9 @@
     <MESSAGE value="fix:解决其它节点发来的消息转发给当前节点下的客户端逻辑bug" />
     <MESSAGE value="fix:修复其它节点发来的消息转发给当前节点下客户端的qos等级处理不正确bug" />
     <MESSAGE value="fix:修复超过两个节点启动失败bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix:修复超过两个节点启动失败bug" />
+    <MESSAGE value="更新readme" />
+    <MESSAGE value="新增压测脚本" />
+    <option name="LAST_COMMIT_MESSAGE" value="新增压测脚本" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
@@ -394,10 +396,10 @@
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="1033" y="127" key="#xdebugger.evaluate/0.0.1536.864@0.0.1536.864" timestamp="1615617474041" />
-    <state x="372" y="0" key="CommitChangelistDialog2" timestamp="1615654013720">
+    <state x="372" y="0" key="CommitChangelistDialog2" timestamp="1615722427650">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="372" y="0" key="CommitChangelistDialog2/0.0.1536.864@0.0.1536.864" timestamp="1615654013720" />
+    <state x="372" y="0" key="CommitChangelistDialog2/0.0.1536.864@0.0.1536.864" timestamp="1615722427650" />
     <state x="147" y="74" key="DiffContextDialog" timestamp="1610851518731">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
@@ -406,50 +408,50 @@
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="425" y="208" key="EditFileWatcherDialog/0.0.1536.864@0.0.1536.864" timestamp="1610631803263" />
-    <state x="549" y="188" key="FileChooserDialogImpl" timestamp="1614435633483">
+    <state x="549" y="188" key="FileChooserDialogImpl" timestamp="1615737736717">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="549" y="188" key="FileChooserDialogImpl/0.0.1536.864@0.0.1536.864" timestamp="1614435633483" />
-    <state width="1493" height="190" key="GridCell.Tab.0.bottom" timestamp="1615691689282">
+    <state x="549" y="188" key="FileChooserDialogImpl/0.0.1536.864@0.0.1536.864" timestamp="1615737736717" />
+    <state width="1493" height="333" key="GridCell.Tab.0.bottom" timestamp="1615722553510">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="190" key="GridCell.Tab.0.bottom/0.0.1536.864@0.0.1536.864" timestamp="1615691689282" />
-    <state width="1493" height="190" key="GridCell.Tab.0.center" timestamp="1615691689281">
+    <state width="1493" height="333" key="GridCell.Tab.0.bottom/0.0.1536.864@0.0.1536.864" timestamp="1615722553510" />
+    <state width="1493" height="333" key="GridCell.Tab.0.center" timestamp="1615722553510">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="190" key="GridCell.Tab.0.center/0.0.1536.864@0.0.1536.864" timestamp="1615691689281" />
-    <state width="1493" height="190" key="GridCell.Tab.0.left" timestamp="1615691689279">
+    <state width="1493" height="333" key="GridCell.Tab.0.center/0.0.1536.864@0.0.1536.864" timestamp="1615722553510" />
+    <state width="1493" height="333" key="GridCell.Tab.0.left" timestamp="1615722553510">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="190" key="GridCell.Tab.0.left/0.0.1536.864@0.0.1536.864" timestamp="1615691689279" />
-    <state width="1493" height="190" key="GridCell.Tab.0.right" timestamp="1615691689281">
+    <state width="1493" height="333" key="GridCell.Tab.0.left/0.0.1536.864@0.0.1536.864" timestamp="1615722553510" />
+    <state width="1493" height="333" key="GridCell.Tab.0.right" timestamp="1615722553510">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="190" key="GridCell.Tab.0.right/0.0.1536.864@0.0.1536.864" timestamp="1615691689281" />
-    <state width="1493" height="457" key="GridCell.Tab.1.bottom" timestamp="1615650334337">
+    <state width="1493" height="333" key="GridCell.Tab.0.right/0.0.1536.864@0.0.1536.864" timestamp="1615722553510" />
+    <state width="1493" height="114" key="GridCell.Tab.1.bottom" timestamp="1615722553495">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="457" key="GridCell.Tab.1.bottom/0.0.1536.864@0.0.1536.864" timestamp="1615650334337" />
-    <state width="1493" height="457" key="GridCell.Tab.1.center" timestamp="1615650334337">
+    <state width="1493" height="114" key="GridCell.Tab.1.bottom/0.0.1536.864@0.0.1536.864" timestamp="1615722553495" />
+    <state width="1493" height="114" key="GridCell.Tab.1.center" timestamp="1615722553494">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="457" key="GridCell.Tab.1.center/0.0.1536.864@0.0.1536.864" timestamp="1615650334337" />
-    <state width="1493" height="457" key="GridCell.Tab.1.left" timestamp="1615650334337">
+    <state width="1493" height="114" key="GridCell.Tab.1.center/0.0.1536.864@0.0.1536.864" timestamp="1615722553494" />
+    <state width="1493" height="114" key="GridCell.Tab.1.left" timestamp="1615722553494">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="457" key="GridCell.Tab.1.left/0.0.1536.864@0.0.1536.864" timestamp="1615650334337" />
-    <state width="1493" height="457" key="GridCell.Tab.1.right" timestamp="1615650334337">
+    <state width="1493" height="114" key="GridCell.Tab.1.left/0.0.1536.864@0.0.1536.864" timestamp="1615722553494" />
+    <state width="1493" height="114" key="GridCell.Tab.1.right" timestamp="1615722553495">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="457" key="GridCell.Tab.1.right/0.0.1536.864@0.0.1536.864" timestamp="1615650334337" />
+    <state width="1493" height="114" key="GridCell.Tab.1.right/0.0.1536.864@0.0.1536.864" timestamp="1615722553495" />
     <state x="270" y="75" key="SettingsEditor" timestamp="1614608796422">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="270" y="75" key="SettingsEditor/0.0.1536.864@0.0.1536.864" timestamp="1614608796422" />
-    <state x="361" y="166" key="Vcs.Push.Dialog.v2" timestamp="1615654022085">
+    <state x="361" y="166" key="Vcs.Push.Dialog.v2" timestamp="1615722439306">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="361" y="166" key="Vcs.Push.Dialog.v2/0.0.1536.864@0.0.1536.864" timestamp="1615654022085" />
+    <state x="361" y="166" key="Vcs.Push.Dialog.v2/0.0.1536.864@0.0.1536.864" timestamp="1615722439306" />
     <state width="775" height="439" key="XDebugger.FullValuePopup" timestamp="1615622845313">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
@@ -458,27 +460,27 @@
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="321" y="169" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1536.864@0.0.1536.864" timestamp="1610795172624" />
-    <state x="439" y="95" width="782" height="600" key="find.popup" timestamp="1615479823047">
+    <state x="439" y="95" width="782" height="600" key="find.popup" timestamp="1615715604282">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="439" y="95" width="782" height="600" key="find.popup/0.0.1536.864@0.0.1536.864" timestamp="1615479823047" />
-    <state x="953" y="185" width="672" height="678" key="search.everywhere.popup" timestamp="1615600103332">
+    <state x="439" y="95" width="782" height="600" key="find.popup/0.0.1536.864@0.0.1536.864" timestamp="1615715604282" />
+    <state x="953" y="185" width="672" height="678" key="search.everywhere.popup" timestamp="1615696913360">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="953" y="185" width="672" height="678" key="search.everywhere.popup/0.0.1536.864@0.0.1536.864" timestamp="1615600103332" />
+    <state x="953" y="185" width="672" height="678" key="search.everywhere.popup/0.0.1536.864@0.0.1536.864" timestamp="1615696913360" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/mqtt_v5/topics/memtopics.go</url>
-          <line>294</line>
-          <option name="timeStamp" value="34" />
+          <url>file://$PROJECT_DIR$/mqtt_v5/service/sendrecv.go</url>
+          <line>216</line>
+          <option name="timeStamp" value="40" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/mqtt_v5/topics/memtopics.go</url>
-          <line>578</line>
-          <option name="timeStamp" value="35" />
+          <url>file://$PROJECT_DIR$/mqtt_v5/service/sendrecv.go</url>
+          <line>206</line>
+          <option name="timeStamp" value="41" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
