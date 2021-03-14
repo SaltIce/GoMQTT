@@ -19,7 +19,7 @@ var MqttAgent *Agent
 
 const (
 	MQTT_QOS     = 3
-	MQTTBroker   = "tcp://127.0.0.1:1883"
+	MQTTBroker   = "tcp://127.0.0.1:1883 "
 	MQTTClientId = "00000001"
 )
 
