@@ -286,6 +286,30 @@ func (this *snode) sremove(topic []byte, sub interface{}) error {
 //没有通配符(发布主题)，它返回订阅的订阅方列表
 //回到主题。对于每个级别名称，它都是匹配的
 // -如果“#”中有订阅者，那么所有的订阅者都将被添加到结果集中
+
+//非规范评注
+//例如, 如果客户端订阅主题 “sport/tennis/player1/#”, 它会收到使用下列主题名发布的消息:
+//• “sport/tennis/player1”
+//• “sport/tennis/player1/ranking
+//• “sport/tennis/player1/score/wimbledon”
+//
+//非规范评注
+//• “sport/#”也匹配单独的“sport”主题名, 因为#包括它的父级.
+//• “#”是有效的, 会收到所有的应用消息.
+//• “sport/tennis/#”也是有效的.
+//• “sport/tennis#”是无效的.
+//• “sport/tennis/#/ranking”是无效的.
+
+//非规范评注
+//例如, “sport/tennis/+”匹配“sport/tennis/player1”和“sport/tennis/player2”,
+//但是不匹配“sport/tennis/player1/ranking”.同时, 由于单层通配符只能匹配一个层级,
+//“sport/+”不匹配“sport”但是却匹配“sport/”.
+//• “+”是有效的.
+//• “+/tennis/#”是有效的.
+//• “sport+”是无效的.
+//• “sport/+/player1”是有效的.
+//• “/finance”匹配“+/+”和“/+”, 但是不匹配“+”.
+
 func (this *snode) smatch(topic []byte, qos byte, subs *[]interface{}, qoss *[]byte) error {
 	// If the topic is empty, it means we are at the final matching snode. If so,
 	// let's find the subscribers that match the qos and append them to the list.
@@ -293,10 +317,19 @@ func (this *snode) smatch(topic []byte, qos byte, subs *[]interface{}, qoss *[]b
 	//让我们找到与qos匹配的订阅服务器并将它们附加到列表中。
 	if len(topic) == 0 {
 		this.matchQos(qos, subs, qoss)
+		if v, ok := this.snodes["#"]; ok {
+			v.matchQos(qos, subs, qoss)
+		}
+		if v, ok := this.snodes["+"]; ok {
+			v.matchQos(qos, subs, qoss)
+		}
 		return nil
 	}
 
 	// ntl = next topic level
+	//rem和err都等于nil，意味着是 sss/sss这种后面没有/结尾的
+	//len(rem)==0和err等于nil，意味着是 sss/sss/这种后面有/结尾的
+	// rem用来做 #和+匹配时有用
 	ntl, rem, err := nextTopicLevel(topic)
 	if err != nil {
 		return err
@@ -308,8 +341,15 @@ func (this *snode) smatch(topic []byte, qos byte, subs *[]interface{}, qoss *[]b
 		if k == MWC {
 			n.matchQos(qos, subs, qoss)
 		} else if k == SWC || k == level {
-			if err := n.smatch(rem, qos, subs, qoss); err != nil {
-				return err
+			if rem != nil {
+				if err := n.smatch(rem, qos, subs, qoss); err != nil {
+					return err
+				}
+			} else { // 这个不需要匹配最后还有+的订阅者
+				n.matchQos(qos, subs, qoss)
+				if v, ok := n.snodes["#"]; ok {
+					v.matchQos(qos, subs, qoss)
+				}
 			}
 		}
 	}
