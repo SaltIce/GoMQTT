@@ -1,26 +1,5 @@
-// Copyright (c) 2014 The SurgeMQ Authors. All rights reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-// Package topics deals with MQTT topic names, topic filters and subscriptions.
-// - "Topic name" is a / separated string that could contain #, * and $
-// - / in topic name separates the string into "topic levels"
-// - # is a multi-level wildcard, and it must be the last character in the
-//   topic name. It represents the parent and all children levels.
-// - + is a single level wildwcard. It must be the only character in the
-//   topic level. It represents all names in the current level.
-// - $ is a special character that says the topic is a system level topic
-package topics
+// 共享订阅
+package sys
 
 import (
 	"Go-MQTT/mqtt_v5/logger"
@@ -55,20 +34,20 @@ var (
 	// It probably hasn't been registered yet.
 	ErrAuthProviderNotFound = errors.New("auth: Authentication provider not found")
 
-	providers = make(map[string]TopicsProvider)
+	providers = make(map[string]SysTopicsProvider)
 )
 
 // TopicsProvider
-type TopicsProvider interface {
+type SysTopicsProvider interface {
 	Subscribe(topic []byte, qos byte, subscriber interface{}) (byte, error)
 	Unsubscribe(topic []byte, subscriber interface{}) error
-	Subscribers(topic []byte, qos byte, subs *[]interface{}, qoss *[]byte, svc bool) error // svc 表示是服务端下发的数据
+	Subscribers(topic []byte, qos byte, subs *[]interface{}, qoss *[]byte) error
 	Retain(msg *message.PublishMessage) error
 	Retained(topic []byte, msgs *[]*message.PublishMessage) error
 	Close() error
 }
 
-func Register(name string, provider TopicsProvider) {
+func Register(name string, provider SysTopicsProvider) {
 	if provider == nil {
 		panic("topics: Register provide is nil")
 	}
@@ -86,7 +65,7 @@ func Unregister(name string) {
 }
 
 type Manager struct {
-	p TopicsProvider
+	p SysTopicsProvider
 }
 
 func NewManager(providerName string) (*Manager, error) {
@@ -106,8 +85,8 @@ func (this *Manager) Unsubscribe(topic []byte, subscriber interface{}) error {
 	return this.p.Unsubscribe(topic, subscriber)
 }
 
-func (this *Manager) Subscribers(topic []byte, qos byte, subs *[]interface{}, qoss *[]byte, svc bool) error {
-	return this.p.Subscribers(topic, qos, subs, qoss, svc)
+func (this *Manager) Subscribers(topic []byte, qos byte, subs *[]interface{}, qoss *[]byte) error {
+	return this.p.Subscribers(topic, qos, subs, qoss)
 }
 
 func (this *Manager) Retain(msg *message.PublishMessage) error {

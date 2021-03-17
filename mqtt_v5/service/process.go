@@ -425,15 +425,15 @@ func (this *service) onPublish(msg *message.PublishMessage) error {
 	}
 	_ = this.clientLinkPub(msg) // 发送到集群其它节点
 
-	err := this.topicsMgr.Subscribers(msg.Topic(), msg.QoS(), &this.subs, &this.qoss)
+	err := this.topicsMgr.Subscribers(msg.Topic(), msg.QoS(), &this.subs, &this.qoss, false)
 	if err != nil {
-		logger.Errorf(err, "(%s) Error retrieving subscribers list: %v", this.cid(), err)
+		//logger.Errorf(err, "(%s) Error retrieving subscribers list: %v", this.cid(), err)
 		return err
 	}
 
 	msg.SetRetain(false)
 
-	//glog.Debugf("(%s) Publishing to topic %q and %d subscribers", this.cid(), string(msg.Topic()), len(this.subs))
+	logger.Debugf("(%s) Publishing to topic %q and %d subscribers", this.cid(), string(msg.Topic()), len(this.subs))
 	for i, s := range this.subs {
 		if s != nil {
 			fn, ok := s.(*OnPublishFunc)

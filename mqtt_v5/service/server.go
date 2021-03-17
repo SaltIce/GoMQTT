@@ -370,8 +370,8 @@ func (this *Server) Publish(msg *message.PublishMessage, onComplete OnCompleteFu
 			logger.Errorf(err, "Error retaining message: %v", err)
 		}
 	}
-
-	if err := this.topicsMgr.Subscribers(msg.Topic(), msg.QoS(), &this.subs, &this.qoss); err != nil {
+	// TODO 下面svc默认都是普通共享与非共享消息了，之后处理系统消息
+	if err := this.topicsMgr.Subscribers(msg.Topic(), msg.QoS(), &this.subs, &this.qoss, false); err != nil {
 		return err
 	}
 
