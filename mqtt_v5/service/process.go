@@ -425,7 +425,7 @@ func (this *service) onPublish(msg *message.PublishMessage) error {
 	}
 	_ = this.clientLinkPub(msg) // 发送到集群其它节点
 
-	err := this.topicsMgr.Subscribers(msg.Topic(), msg.QoS(), &this.subs, &this.qoss, false)
+	err := this.topicsMgr.Subscribers(msg.Topic(), msg.QoS(), &this.subs, &this.qoss, false, false)
 	if err != nil {
 		//logger.Errorf(err, "(%s) Error retrieving subscribers list: %v", this.cid(), err)
 		return err

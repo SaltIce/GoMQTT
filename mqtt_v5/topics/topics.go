@@ -62,7 +62,7 @@ var (
 type TopicsProvider interface {
 	Subscribe(topic []byte, qos byte, subscriber interface{}) (byte, error)
 	Unsubscribe(topic []byte, subscriber interface{}) error
-	Subscribers(topic []byte, qos byte, subs *[]interface{}, qoss *[]byte, svc bool) error // svc 表示是服务端下发的数据
+	Subscribers(topic []byte, qos byte, subs *[]interface{}, qoss *[]byte, svc, needShare bool) error // svc 表示是服务端下发的数据
 	Retain(msg *message.PublishMessage) error
 	Retained(topic []byte, msgs *[]*message.PublishMessage) error
 	Close() error
@@ -106,8 +106,8 @@ func (this *Manager) Unsubscribe(topic []byte, subscriber interface{}) error {
 	return this.p.Unsubscribe(topic, subscriber)
 }
 
-func (this *Manager) Subscribers(topic []byte, qos byte, subs *[]interface{}, qoss *[]byte, svc bool) error {
-	return this.p.Subscribers(topic, qos, subs, qoss, svc)
+func (this *Manager) Subscribers(topic []byte, qos byte, subs *[]interface{}, qoss *[]byte, svc, needShare bool) error {
+	return this.p.Subscribers(topic, qos, subs, qoss, svc, needShare)
 }
 
 func (this *Manager) Retain(msg *message.PublishMessage) error {

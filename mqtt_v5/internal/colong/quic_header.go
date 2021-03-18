@@ -226,6 +226,51 @@ func (this *header) decode(src []byte) (int, error) {
 	return total, nil
 }
 
+// publish转sys的
+func (this *header) decodeToSys(src []byte) (int, error) {
+	total := 0
+
+	this.dbuf = src
+
+	mtype := this.Type()
+	//mtype := MessageType(0)
+
+	this.mtypeflags = src[total : total+1]
+	//mtype := MessageType(src[total] >> 4)
+	if !this.Type().Valid() {
+		return total, fmt.Errorf("header/Decode: Invalid message type %d.", mtype)
+	}
+	// publish -> sys
+	if mtype != SYS && PUBLISH != this.Type() {
+		return total, fmt.Errorf("header/Decode: Invalid message type %d. Expecting %d.", this.Type(), mtype)
+	}
+
+	//this.flags = src[total] & 0x0f
+	if this.Type() != PUBLISH && this.Flags() != this.Type().DefaultFlags() {
+		return total, fmt.Errorf("header/Decode: Invalid message (%d) flags. Expecting %d, got %d", this.Type(), this.Type().DefaultFlags(), this.Flags())
+	}
+
+	if this.Type() == PUBLISH && !ValidQos((this.Flags()>>1)&0x3) {
+		return total, fmt.Errorf("header/Decode: Invalid QoS (%d) for PUBLISH message.", (this.Flags()>>1)&0x3)
+	}
+	this.SetType(mtype)
+	total++
+
+	remlen, m := binary.Uvarint(src[total:])
+	total += m
+	this.remlen = int32(remlen)
+
+	if this.remlen > maxRemainingLength || remlen < 0 {
+		return total, fmt.Errorf("header/Decode: Remaining length (%d) out of bound (max %d, min 0)", this.remlen, maxRemainingLength)
+	}
+
+	if int(this.remlen) > len(src[total:]) {
+		return total, fmt.Errorf("header/Decode: Remaining length (%d) is greater than remaining buffer (%d)", this.remlen, len(src[total:]))
+	}
+
+	return total, nil
+}
+
 func (this *header) msglen() int {
 	// message type and flag byte
 	total := 1

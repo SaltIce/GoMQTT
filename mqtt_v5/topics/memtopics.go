@@ -189,7 +189,8 @@ func (this *memTopics) Unsubscribe(topic []byte, sub interface{}) error {
 // Returned values will be invalidated by the next Subscribers call
 //返回的值将在下一次订阅者调用时失效
 // svc==true表示这是当前系统或者其它集群节点的系统消息，svc==false表示是客户端或者集群其它节点发来的普通共享、非共享消息
-func (this *memTopics) Subscribers(topic []byte, qos byte, subs *[]interface{}, qoss *[]byte, svc bool) error {
+// ,needShare == true表示是否需要获取当前服务节点的共享订阅节点
+func (this *memTopics) Subscribers(topic []byte, qos byte, subs *[]interface{}, qoss *[]byte, svc, needShare bool) error {
 	if !message.ValidQos(qos) {
 		return fmt.Errorf("Invalid QoS %d", qos)
 	}
@@ -209,9 +210,11 @@ func (this *memTopics) Subscribers(topic []byte, qos byte, subs *[]interface{}, 
 		}
 		return fmt.Errorf("memtopics/Subscribers: Publish error message to $sys/ topics")
 	}
-	err := this.share.Subscribers(topic, nil, qos, subs, qoss)
-	if err != nil {
-		return err
+	if needShare {
+		err := this.share.Subscribers(topic, nil, qos, subs, qoss)
+		if err != nil {
+			return err
+		}
 	}
 	return this.sroot.smatch(topic, qos, subs, qoss)
 }

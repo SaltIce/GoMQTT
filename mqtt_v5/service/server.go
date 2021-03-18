@@ -137,7 +137,7 @@ type Server struct {
 	subs []interface{}
 	qoss []byte
 
-	colongSvc *colong.ColongSvc         // 自己充当服务端的服务器
+	colongSvc *colong.Server            // 自己充当服务端的服务器
 	client    map[string]*colong.Server // 自己充当客户端的那些连接
 	clientWg  *sync.RWMutex             // 控制客户端连接的锁
 }
@@ -183,7 +183,7 @@ func (this *Server) ListenAndServe(uri string) error {
 	if err != nil {
 		panic(err)
 	}
-	print()
+	printBanner()
 	var tempDelay time.Duration // how long to sleep on accept failure 接受失败要睡多久，默认5ms，最大1s
 	if config.ConstConf.Cluster.Enabled {
 		ul := config.ConstConf.Cluster.HostIp
@@ -237,6 +237,17 @@ func (this *Server) ListenAndServe(uri string) error {
 			_ = autoUpdate(this)
 		}()
 	}
+	//go func() {
+	//	for {
+	//		time.Sleep(10 * time.Second)
+	//		msg := message.NewPublishMessage()
+	//		msg.SetQoS(0x02)
+	//		msg.SetTopic([]byte("$sys/1"))
+	//		msg.SetPacketId(uint16(1))
+	//		msg.SetPayload([]byte("lalalala"))
+	//		this.PublishSys(msg, nil)
+	//	}
+	//}()
 	for {
 		conn, err := this.ln.Accept()
 
@@ -277,7 +288,9 @@ func (this *Server) ListenAndServe(uri string) error {
 		}()
 	}
 }
-func print() {
+
+// 打印启动banner
+func printBanner() {
 	logger.Infof("\n"+
 		"\\***\n"+
 		"*  _ooOoo_\n"+
@@ -322,13 +335,24 @@ func (this *Server) CreatQUICServer(url string) {
 		AckTimeout:     this.AckTimeout,
 		TimeoutRetries: this.TimeoutRetries,
 	}
+	this.colongSvc = svr
 	go svr.ListenAndServe(url, func(msg interface{}) error {
-		if msgP, ok := msg.(colong.PublishMessage); ok {
+		if msgP, ok := msg.(*colong.PublishMessage); ok {
 			pub := message.NewPublishMessage()
 			dst := make([]byte, msgP.Len())
 			_, _ = msgP.Encode(dst)
 			_, _ = pub.Decode(dst)
-			_ = this.Publish(pub, nil) // 发送给当前节点下的订阅者们
+			_ = this.publish(pub, nil) // 发送给当前节点下的订阅者们
+		}
+		return nil
+	}, func(msg interface{}) error {
+		if msgP, ok := msg.(*colong.SysMessage); ok {
+			msgP.SetType(colong.PUBLISH)
+			pub := message.NewPublishMessage()
+			dst := make([]byte, msgP.Len())
+			_, _ = msgP.Encode(dst)
+			_, _ = pub.Decode(dst)
+			_ = this.sysPublish(pub, nil) // 从其它节点接收到$sys/消息，发送sys消息给当前节点下的订阅者们
 		}
 		return nil
 	})
@@ -359,8 +383,8 @@ func (this *Server) CreatQUICClient(name, url string) {
 	}()
 }
 
-// 其它节点发来的消息处理
-func (this *Server) Publish(msg *message.PublishMessage, onComplete OnCompleteFunc) error {
+// 其它节点发来的普通消息处理
+func (this *Server) publish(msg *message.PublishMessage, onComplete OnCompleteFunc) error {
 	if err := this.checkConfiguration(); err != nil {
 		return err
 	}
@@ -370,8 +394,8 @@ func (this *Server) Publish(msg *message.PublishMessage, onComplete OnCompleteFu
 			logger.Errorf(err, "Error retaining message: %v", err)
 		}
 	}
-	// TODO 下面svc默认都是普通共享与非共享消息了，之后处理系统消息
-	if err := this.topicsMgr.Subscribers(msg.Topic(), msg.QoS(), &this.subs, &this.qoss, false); err != nil {
+	// TODO 下面svc默认都是普通共享,之后处理非共享消息与系统消息
+	if err := this.topicsMgr.Subscribers(msg.Topic(), msg.QoS(), &this.subs, &this.qoss, false, false); err != nil {
 		return err
 	}
 
@@ -392,6 +416,55 @@ func (this *Server) Publish(msg *message.PublishMessage, onComplete OnCompleteFu
 		}
 	}
 
+	return nil
+}
+
+// 其它节点发来的$sys/消息消息处理
+func (this *Server) sysPublish(msg *message.PublishMessage, onComplete OnCompleteFunc) error {
+	if err := this.checkConfiguration(); err != nil {
+		return err
+	}
+
+	if err := this.topicsMgr.Subscribers(msg.Topic(), msg.QoS(), &this.subs, &this.qoss, true, false); err != nil {
+		return err
+	}
+
+	msg.SetRetain(false)
+
+	//glog.Debugf("(server) Publishing to topic %q and %d subscribers", string(msg.Topic()), len(this.subs))
+	for i, s := range this.subs {
+		if s != nil {
+			fn, ok := s.(*OnPublishFunc)
+			if !ok {
+				logger.Info("Invalid onPublish Function")
+			} else {
+				oldQos := msg.QoS()
+				msg.SetQoS(this.qoss[i])
+				(*fn)(msg)
+				msg.SetQoS(oldQos)
+			}
+		}
+	}
+
+	return nil
+}
+
+// 当前节点向其它节点发送$sys/主题下的消息，系统服务可调用
+// FIXME 会变成qos=0
+func (this *Server) PublishSys(msg *message.PublishMessage, onComplete OnCompleteFunc) error {
+	this.clientWg.Lock()
+	defer this.clientWg.Unlock()
+	if len(this.client) == 0 {
+		return nil
+	}
+	b := make([]byte, msg.Len())
+	msg.Encode(b)
+	m := colong.NewSysMessage()
+	m.Decode(b)
+	for _, cl := range this.client { //发送到其它节点
+		cl.Svc.Publish(m, nil)
+	}
+	logger.Debug("发送一次sys消息")
 	return nil
 }
 
@@ -504,6 +577,7 @@ func (this *Server) handleConnection(c io.Closer) (svc *service, err error) {
 		sessMgr:   this.sessMgr,
 		topicsMgr: this.topicsMgr,
 		clientLinkPub: func(msg interface{}) error {
+			// 发送普通消息
 			if msgP, ok := msg.(*message.PublishMessage); ok {
 				b := make([]byte, msgP.Len())
 				msgP.Encode(b)
@@ -513,6 +587,8 @@ func (this *Server) handleConnection(c io.Closer) (svc *service, err error) {
 					cl.Svc.Publish(m, nil)
 				}
 			}
+			// TODO 需要实现集群共享消息
+			// 。。。
 			return nil
 		},
 	}

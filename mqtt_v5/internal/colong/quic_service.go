@@ -37,6 +37,7 @@ var (
 	gsvcid uint64 = 0
 )
 
+// 集群节点服务，服务器的连接数据
 type ColongSvc struct {
 	// The ID of this service, it's not related to the Client ID, just a number that's
 	// incremented for every new service.
@@ -134,12 +135,17 @@ type ColongSvc struct {
 	qoss  []byte
 	rmsgs []*PublishMessage
 
-	pubFunc func(msg interface{}) error
+	// 服务端使用
+	pubFunc func(msg interface{}) error // 其它节点发来的消息处理
+	sysFunc func(msg interface{}) error // 其它节点发来的$sys消息处理
+	// 客户端连接使用
+	pubSys func(msg interface{}) error // 向其它节点发送$sys消息处理
 }
 
-func (this *ColongSvc) start(pubFunc func(msg interface{}) error) error {
+func (this *ColongSvc) start(pubFunc, sysFunc func(msg interface{}) error) error {
 	var err error
 	this.pubFunc = pubFunc
+	this.sysFunc = sysFunc
 	// Create the incoming ring buffer
 	this.in, err = newBuffer(defaultBufferSize)
 	if err != nil {
@@ -179,9 +185,8 @@ func (this *ColongSvc) start(pubFunc func(msg interface{}) error) error {
 
 	return nil
 }
-func (this *ColongSvc) startC(pubFunc func(msg interface{}) error) error {
+func (this *ColongSvc) startC() error {
 	var err error
-	this.pubFunc = pubFunc
 	// Create the incoming ring buffer
 	this.in, err = newBuffer(defaultBufferSize)
 	if err != nil {
@@ -264,17 +269,18 @@ func (this *ColongSvc) stop() {
 	this.out = nil
 }
 
-func (this *ColongSvc) publish(msg *PublishMessage, onComplete OnCompleteFunc) error {
-
+// TODO 这个是确认处理模板
+func (this *ColongSvc) publish(msg Message, onComplete OnCompleteFunc) error {
 	_, err := this.writeMessage(msg)
 	if err != nil {
 		return fmt.Errorf("(%s) Error sending %s message: %v", this.cid(), msg.Name(), err)
 	}
-	// TODO 等待这个消息确认
+	// 等待这个消息确认
 	return this.sess.Msgack.Wait(msg, onComplete)
 }
 
-func (this *ColongSvc) Publish(msg *PublishMessage, onComplete OnCompleteFunc) error {
+// TODO 目前是直接发送到其它节点，没有写确认处理
+func (this *ColongSvc) Publish(msg Message, onComplete OnCompleteFunc) error {
 	_, err := this.writeMessage(msg)
 	if err != nil {
 		return fmt.Errorf("(%s) Error sending %s message to cluser: %v", this.cid(), msg.Name(), err)
