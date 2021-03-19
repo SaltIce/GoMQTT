@@ -144,6 +144,13 @@ func (this *memTopics) Subscribe(topic []byte, qos byte, sub interface{}) (byte,
 		{
 			if len(topic)-len(shareByte) >= 2+index && topic[index+len(shareByte)] == '/' {
 				//shareName := string(topic[len(shareByte) : index+len(shareByte)])
+				// {ShareName} 是一个不包含 "/", "+" 以及 "#" 的字符串。
+				for _, t := range topic[len(shareByte) : index+len(shareByte)] {
+					switch t {
+					case '+', '#':
+						return message.QosFailure, fmt.Errorf("share topic ${shareName} did not allow have + or #")
+					}
+				}
 				return this.share.Subscribe(topic[len(shareByte)+2:], topic[len(shareByte):index+len(shareByte)], qos, sub)
 			}
 		}
