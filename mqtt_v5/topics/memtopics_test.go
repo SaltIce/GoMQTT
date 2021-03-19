@@ -544,12 +544,12 @@ func TestMemTopicsSubscription(t *testing.T) {
 	subs := make([]interface{}, 5)
 	qoss := make([]byte, 5)
 
-	err = mgr.Subscribers([]byte("sports/tennis/anzel/stats"), 2, &subs, &qoss)
+	err = mgr.Subscribers([]byte("sports/tennis/anzel/stats"), 2, &subs, &qoss, false, false)
 
 	require.NoError(t, err)
 	require.Equal(t, 0, len(subs))
 
-	err = mgr.Subscribers([]byte("sports/tennis/anzel/stats"), 1, &subs, &qoss)
+	err = mgr.Subscribers([]byte("sports/tennis/anzel/stats"), 1, &subs, &qoss, false, false)
 
 	require.NoError(t, err)
 	require.Equal(t, 1, len(subs))

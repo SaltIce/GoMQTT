@@ -1,18 +1,5 @@
-// Copyright (c) 2014 The SurgeMQ Authors. All rights reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-package topics
+// 系统主题
+package sys
 
 import (
 	"Go-MQTT/mqtt_v5/config"
@@ -27,9 +14,9 @@ var (
 	MaxQosAllowed_redis = message.QosExactlyOnce
 )
 
-var _ TopicsProvider = (*redisTopics)(nil)
+var _ SysTopicsProvider = (*memTopics)(nil)
 
-type redisTopics struct {
+type memTopics struct {
 	// Sub/unsub mutex
 	smu sync.RWMutex
 	// Subscription tree
@@ -41,31 +28,39 @@ type redisTopics struct {
 	rroot *rRnode
 }
 
-var (
-	redisTopicsProvider = "redis"
+const (
+	stateCHR byte = iota // Regular character 普通字符
+	stateMWC             // Multi-level wildcard 多层次的通配符
+	stateSWC             // Single-level wildcard 单层通配符
+	stateSEP             // Topic level separator 主题水平分隔符
+	stateSYS             // System level topic ($) 系统级主题($)
 )
 
-func redisTopicInit() {
+var (
+	memTopicsProvider = "mem"
+)
+
+func memTopicInit() {
 	consts := config.ConstConf
-	if redisTopicsProvider == consts.DefaultConst.TopicsProvider {
-		Register(redisTopicsProvider, NewRedisProvider())
+	if memTopicsProvider == consts.DefaultConst.TopicsProvider {
+		Register(memTopicsProvider, NewMemProvider())
 	}
 }
 
-var _ TopicsProvider = (*redisTopics)(nil)
+var _ SysTopicsProvider = (*memTopics)(nil)
 
 // NewMemProvider returns an new instance of the memTopics, which is implements the
 // TopicsProvider interface. memProvider is a hidden struct that stores the topic
 // subscriptions and retained messages in memory. The content is not persistend so
 // when the server goes, everything will be gone. Use with care.
-func NewRedisProvider() *redisTopics {
-	return &redisTopics{
+func NewMemProvider() *memTopics {
+	return &memTopics{
 		sroot: newRSNode(),
 		rroot: newRRNode(),
 	}
 }
 
-func (this *redisTopics) Subscribe(topic []byte, qos byte, sub interface{}) (byte, error) {
+func (this *memTopics) Subscribe(topic []byte, qos byte, sub interface{}) (byte, error) {
 	if !message.ValidQos(qos) {
 		return message.QosFailure, fmt.Errorf("Invalid QoS %d", qos)
 	}
@@ -88,7 +83,7 @@ func (this *redisTopics) Subscribe(topic []byte, qos byte, sub interface{}) (byt
 	return qos, nil
 }
 
-func (this *redisTopics) Unsubscribe(topic []byte, sub interface{}) error {
+func (this *memTopics) Unsubscribe(topic []byte, sub interface{}) error {
 	this.smu.Lock()
 	defer this.smu.Unlock()
 
@@ -96,7 +91,7 @@ func (this *redisTopics) Unsubscribe(topic []byte, sub interface{}) error {
 }
 
 // Returned values will be invalidated by the next Subscribers call
-func (this *redisTopics) Subscribers(topic []byte, qos byte, subs *[]interface{}, qoss *[]byte, svc, needShare bool) error {
+func (this *memTopics) Subscribers(topic []byte, qos byte, subs *[]interface{}, qoss *[]byte) error {
 	if !message.ValidQos(qos) {
 		return fmt.Errorf("Invalid QoS %d", qos)
 	}
@@ -110,7 +105,7 @@ func (this *redisTopics) Subscribers(topic []byte, qos byte, subs *[]interface{}
 	return this.sroot.smatch(topic, qos, subs, qoss)
 }
 
-func (this *redisTopics) Retain(msg *message.PublishMessage) error {
+func (this *memTopics) Retain(msg *message.PublishMessage) error {
 	this.rmu.Lock()
 	defer this.rmu.Unlock()
 
@@ -124,14 +119,14 @@ func (this *redisTopics) Retain(msg *message.PublishMessage) error {
 	return this.rroot.rinsert(msg.Topic(), msg)
 }
 
-func (this *redisTopics) Retained(topic []byte, msgs *[]*message.PublishMessage) error {
+func (this *memTopics) Retained(topic []byte, msgs *[]*message.PublishMessage) error {
 	this.rmu.RLock()
 	defer this.rmu.RUnlock()
 
 	return this.rroot.rmatch(topic, msgs)
 }
 
-func (this *redisTopics) Close() error {
+func (this *memTopics) Close() error {
 	this.sroot = nil
 	this.rroot = nil
 	return nil
@@ -517,7 +512,7 @@ func (this *rSnode) matchQos(qos byte, subs *[]interface{}, qoss *[]byte) {
 	}
 }
 
-func requal(k1, k2 interface{}) bool {
+func equal(k1, k2 interface{}) bool {
 	if reflect.TypeOf(k1) != reflect.TypeOf(k2) {
 		return false
 	}
@@ -575,4 +570,67 @@ func requal(k1, k2 interface{}) bool {
 	}
 
 	return false
+}
+
+// Returns topic level, remaining topic levels and any errors
+//返回主题级别、剩余的主题级别和任何错误
+func nextTopicLevel(topic []byte) ([]byte, []byte, error) {
+	s := stateCHR
+
+	//遍历topic，判断是何种类型的主题
+	for i, c := range topic {
+		switch c {
+		case '/':
+			if s == stateMWC {
+				//多层次通配符发现的主题，它不是在最后一层
+				return nil, nil, fmt.Errorf("memtopics/nextTopicLevel: Multi-level wildcard found in topic and it's not at the last level")
+			}
+
+			if i == 0 {
+				return []byte(SWC), topic[i+1:], nil
+			}
+
+			return topic[:i], topic[i+1:], nil
+
+		case '#':
+			if i != 0 {
+				//通配符“#”必须占据整个主题级别
+				return nil, nil, fmt.Errorf("memtopics/nextTopicLevel: Wildcard character '#' must occupy entire topic level")
+			}
+
+			s = stateMWC
+
+		case '+':
+			if i != 0 {
+				//通配符“+”必须占据整个主题级别
+				return nil, nil, fmt.Errorf("memtopics/nextTopicLevel: Wildcard character '+' must occupy entire topic level")
+			}
+
+			s = stateSWC
+
+		case '$':
+			if i == 0 {
+				//不能发布到$ topics
+				return nil, nil, fmt.Errorf("memtopics/nextTopicLevel: Cannot publish to $ topics")
+			}
+
+			s = stateSYS
+
+		default:
+			if s == stateMWC || s == stateSWC {
+				//通配符“#”和“+”必须占据整个主题级别
+				return nil, nil, fmt.Errorf("memtopics/nextTopicLevel: Wildcard characters '#' and '+' must occupy entire topic level")
+			}
+
+			s = stateCHR
+		}
+	}
+
+	// If we got here that means we didn't hit the separator along the way, so the
+	// topic is either empty, or does not contain a separator. Either way, we return
+	// the full topic
+	//如果我们到了这里，那就意味着我们没有中途到达分隔符，所以
+	//主题要么为空，要么不包含分隔符。不管怎样，我们都会回来
+	//完整的主题
+	return topic, nil, nil
 }

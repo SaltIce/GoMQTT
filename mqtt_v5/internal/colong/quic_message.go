@@ -153,6 +153,8 @@ const (
 	// RESERVED2是一个保留值，应该被认为是一个无效的消息类型。
 	// 两个RESERVED是方便做校验，直接判断是否处在这两个中间即可判断合法性
 	RESERVED2
+	SYS = SUBSCRIBE // 节点间sys消息，因为type只能在0-15范围内，所以拿SUBSCRIBE这个位代替
+	SHARE
 )
 
 func (this MessageType) String() string {
@@ -180,14 +182,6 @@ func (this MessageType) Name() string {
 		return "PUBREL"
 	case PUBCOMP:
 		return "PUBCOMP"
-	case SUBSCRIBE:
-		return "SUBSCRIBE"
-	case SUBACK:
-		return "SUBACK"
-	case UNSUBSCRIBE:
-		return "UNSUBSCRIBE"
-	case UNSUBACK:
-		return "UNSUBACK"
 	case PINGREQ:
 		return "PINGREQ"
 	case PINGRESP:
@@ -196,6 +190,8 @@ func (this MessageType) Name() string {
 		return "DISCONNECT"
 	case RESERVED2:
 		return "RESERVED2"
+	case SYS:
+		return "SYS"
 	}
 
 	return "UNKNOWN"
@@ -219,14 +215,6 @@ func (this MessageType) Desc() string {
 		return "Publish release (assured delivery part 2)"
 	case PUBCOMP:
 		return "Publish complete (assured delivery part 3)"
-	case SUBSCRIBE:
-		return "Client subscribe request"
-	case SUBACK:
-		return "Subscribe acknowledgement"
-	case UNSUBSCRIBE:
-		return "Unsubscribe request"
-	case UNSUBACK:
-		return "Unsubscribe acknowledgement"
 	case PINGREQ:
 		return "PING request"
 	case PINGRESP:
@@ -235,6 +223,8 @@ func (this MessageType) Desc() string {
 		return "Client is disconnecting"
 	case RESERVED2:
 		return "Reserved"
+	case SYS:
+		return "SYS message"
 	}
 
 	return "UNKNOWN"
@@ -260,14 +250,6 @@ func (this MessageType) DefaultFlags() byte {
 		return 2
 	case PUBCOMP:
 		return 0
-	case SUBSCRIBE:
-		return 2
-	case SUBACK:
-		return 0
-	case UNSUBSCRIBE:
-		return 2
-	case UNSUBACK:
-		return 0
 	case PINGREQ:
 		return 0
 	case PINGRESP:
@@ -275,6 +257,8 @@ func (this MessageType) DefaultFlags() byte {
 	case DISCONNECT:
 		return 0
 	case RESERVED2:
+		return 0
+	case SYS:
 		return 0
 	}
 
@@ -300,6 +284,8 @@ func (this MessageType) New() (Message, error) {
 		return NewConnectMessage(), nil
 	case CONNACK:
 		return NewConnackMessage(), nil
+	case SYS:
+		return NewSysMessage(), nil
 	}
 
 	return nil, fmt.Errorf("msgtype/NewMessage: Invalid message type %d", this)

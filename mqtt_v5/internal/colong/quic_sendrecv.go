@@ -44,7 +44,7 @@ func (this *ColongSvc) receiver() {
 	this.wgStarted.Done()
 
 	switch conn := this.conn.(type) {
-	// 普通tcp连接
+	// quic版udp连接
 	case quic.Stream:
 		//glog.Debugf("server/handleConnection: Setting read deadline to %d", time.Second*time.Duration(this.keepAlive))
 		keepAlive := time.Second * time.Duration(this.keepAlive)

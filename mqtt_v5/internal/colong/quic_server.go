@@ -35,7 +35,11 @@ var SVC *ColongSvc
 // with the MQTT 3.1 and 3.1.1 specs.
 // Server是MQTT服务器的一个库实现，它尽其所能遵守
 //使用MQTT 3.1和3.1.1规范。
+// 集群节点服务端
+// 集群连接管理器
 type Server struct {
+	//服务端还是客户端
+	isClient bool
 	// The number of seconds to keep the connection live if there's no data.
 	// If not set then default to 5 mins.
 	//如果没有数据，保持连接的秒数。
@@ -102,12 +106,6 @@ type Server struct {
 
 	ln quic.Listener
 
-	// A list of services created by the server. We keep track of them so we can
-	// gracefully shut them down if they are still alive when the server goes down.
-	//服务器创建的服务列表。我们跟踪他们，这样我们就可以
-	//当服务器宕机时，如果它们仍然存在，那么可以优雅地关闭它们。
-	svcs []*ColongSvc
-
 	// Mutex for updating svcs
 	//用于更新svc的互斥锁
 	mu sync.Mutex
@@ -123,9 +121,9 @@ type Server struct {
 	subs []interface{}
 	qoss []byte
 
-	pubFunc func(msg interface{}) error
-
-	// 客户端
+	pubFunc func(msg interface{}) error // 其它节点发来的普通消息处理
+	sysFunc func(msg interface{}) error // 其它节点发来的$sys/消息处理
+	// 客户端或者服务端的连接数据
 	Svc *ColongSvc
 	// 客户端名称
 	Name string
@@ -142,7 +140,7 @@ type Server struct {
 //提供的格式应该是“protocol://host:port”，可以通过它进行解析
 // url.Parse ()。
 //例如，URI可以是“tcp://0.0.0.0:1883”。
-func (this *Server) ListenAndServe(uri string, pubFunc func(msg interface{}) error) error {
+func (this *Server) ListenAndServe(uri string, pubFunc, sysFuc func(msg interface{}) error) error {
 	defer atomic.CompareAndSwapInt32(&this.running, 1, 0)
 	// 防止重复启动
 	if !atomic.CompareAndSwapInt32(&this.running, 0, 1) {
@@ -150,8 +148,9 @@ func (this *Server) ListenAndServe(uri string, pubFunc func(msg interface{}) err
 	}
 	bg := context.Background()
 	this.pubFunc = pubFunc
-
+	this.sysFunc = sysFuc
 	this.quit = make(chan struct{})
+	this.isClient = false
 
 	u, err := url.Parse(uri)
 	if err != nil {
@@ -218,7 +217,7 @@ func (this *Server) ListenAndClient(uri string) error {
 	if !atomic.CompareAndSwapInt32(&this.running, 0, 1) {
 		return fmt.Errorf("server/ListenAndServe: Server is already running")
 	}
-
+	this.isClient = true
 	this.quit = make(chan struct{})
 	u, err := url.Parse(uri)
 	if err != nil {
@@ -264,10 +263,15 @@ func (this *Server) ListenAndClient(uri string) error {
 			return
 		}
 	}()
+	//ck := NewConnectMessage()
+	//ck.SetClientId([]byte(this.Name))
+	//ck.SetPacketId(uint16(1))
+	//ck.SetCleanSession(true)
+	//ck.SetVersion()
 	login := []byte{16, 72, 0, 4, 77, 81, 84, 84, 4, 238, 0, 60, 0, 32, 49, 100, 49, 100, 100, 49, 102, 56, 49, 52, 51, 52, 52, 55, 102, 100, 56, 49, 98, 57, 50, 99, 101, 99, 97, 100, 101, 100, 48, 56, 57, 100, 0, 6, 119, 105, 108, 108, 47, 49, 0, 3, 49, 49, 49, 0, 5, 97, 100, 109, 105, 110, 0, 6, 49, 50, 51, 52, 53, 54}
 	_, err = stream.Write(login)
 	if err != nil {
-		fmt.Println(err)
+		logger.Errorf(err, "节点认证数据发送错误")
 	}
 	//pub := []byte{48, 11, 0, 6, 48, 48, 47, 53, 47, 50, 97, 97, 97}
 	//_, err = stream.Write(pub)
@@ -321,11 +325,6 @@ func (this *Server) Close() error {
 
 	this.ln.Close()
 
-	for _, svc := range this.svcs {
-		logger.Infof("Stopping service %d", svc.id)
-		svc.stop()
-	}
-
 	if this.sessMgr != nil {
 		this.sessMgr.Close()
 	}
@@ -337,8 +336,7 @@ func (this *Server) Close() error {
 	return nil
 }
 
-// HandleConnection is for the broker to handle an incoming connection from a client
-// HandleConnection用于代理处理来自客户机的传入连接
+// HandleConnection用于代理处理来自其它节点的传入连接
 func (this *Server) handleConnection(ctx context.Context, c quic.Session) (svc *ColongSvc, err error) {
 	if c == nil {
 		return nil, ErrInvalidConnectionType
@@ -382,7 +380,7 @@ func (this *Server) handleConnection(ctx context.Context, c quic.Session) (svc *
 		conn:           conn,
 		sess:           sess,
 	}
-	if err := svc.start(this.pubFunc); err != nil {
+	if err := svc.start(this.pubFunc, this.sysFunc); err != nil {
 		svc.stop()
 		return nil, err
 	}
@@ -396,6 +394,7 @@ func (this *Server) handleConnection(ctx context.Context, c quic.Session) (svc *
 	return svc, nil
 }
 
+// 连接到其它节点服务
 func (this *Server) handleServerConnection(ctx context.Context, c quic.Stream) error {
 	if c == nil {
 		return ErrInvalidConnectionType
@@ -429,7 +428,7 @@ func (this *Server) handleServerConnection(ctx context.Context, c quic.Stream) e
 			}
 		}
 	}()
-	if err := svc.startC(this.pubFunc); err != nil {
+	if err := svc.startC(); err != nil {
 		svc.stop()
 		return err
 	}

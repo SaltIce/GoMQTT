@@ -161,6 +161,7 @@ func (this *ColongSvc) processorC() {
 func (this *ColongSvc) processIncoming(msg Message) error {
 	var err error = nil
 	switch msg := msg.(type) {
+	// TODO 统一做PublishMessage和SysMessage消息确认机制
 	case *PublishMessage:
 		// For PUBLISH message, we should figure out what QoS it is and process accordingly
 		// If QoS == 0, we should just take the next step, no ack required
@@ -178,6 +179,8 @@ func (this *ColongSvc) processIncoming(msg Message) error {
 	case *ConnectMessage:
 		cack := NewConnackMessage()
 		_, err = this.writeMessage(cack)
+	case *SysMessage:
+		err = this.processSys(msg) // 发送给当前节点的客户端
 	default:
 		return fmt.Errorf("(%s) invalid message type %s.", this.cid(), msg.Name())
 	}
@@ -219,7 +222,12 @@ func (this *ColongSvc) processIncomingC(msg Message) error {
 // 要发给当前节点的处理协程去处理
 // 这是其它节点发来消息的处理
 func (this *ColongSvc) processPublish(msg *PublishMessage) error {
-	return this.pubFunc(*msg)
+	return this.pubFunc(msg)
+}
+
+// 处理其它节点发来的$sys消息
+func (this *ColongSvc) processSys(msg *SysMessage) error {
+	return this.sysFunc(msg)
 }
 func (this *ColongSvc) processAcked(ackq *Ackqueue) {
 	for _, ackmsg := range ackq.Acked() {
