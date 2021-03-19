@@ -161,9 +161,7 @@
       <change afterPath="$PROJECT_DIR$/../study_one_day/my_struct/struct_test.go" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../tcp_util" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mqtt_v5/service/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/service/server.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/topics/memtopics.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/topics/memtopics.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/colong/net.go" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/colong/net.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/comment/const.go" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/comment/const.go" afterDir="false" />
@@ -424,7 +422,8 @@
     <MESSAGE value="feat:修复+和#订阅的匹配问题，新增了s/s和s/s/都能够被s/s/#匹配到，s/s/能被s/s/+匹配到，但s/s不能被s/s/+匹配到" />
     <MESSAGE value="feat:新增系统主题订阅与单机共享订阅实现" />
     <MESSAGE value="feat:新增节点间$sys/消息发送" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat:新增节点间$sys/消息发送" />
+    <MESSAGE value="feat:添加共享主题的{ShareName} 是一个不包含 &quot;/&quot;, &quot;+&quot; 以及 &quot;#&quot; 的字符串限制" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat:添加共享主题的{ShareName} 是一个不包含 &quot;/&quot;, &quot;+&quot; 以及 &quot;#&quot; 的字符串限制" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
@@ -444,10 +443,10 @@
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="1033" y="127" key="#xdebugger.evaluate/0.0.1536.864@0.0.1536.864" timestamp="1615901432769" />
-    <state x="372" y="0" key="CommitChangelistDialog2" timestamp="1616078558628">
+    <state x="372" y="0" key="CommitChangelistDialog2" timestamp="1616164809366">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="372" y="0" key="CommitChangelistDialog2/0.0.1536.864@0.0.1536.864" timestamp="1616078558628" />
+    <state x="372" y="0" key="CommitChangelistDialog2/0.0.1536.864@0.0.1536.864" timestamp="1616164809366" />
     <state x="147" y="74" width="1228" height="719" key="DiffContextDialog" timestamp="1615911863927">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
@@ -496,10 +495,10 @@
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="270" y="75" key="SettingsEditor/0.0.1536.864@0.0.1536.864" timestamp="1615896637440" />
-    <state x="361" y="166" key="Vcs.Push.Dialog.v2" timestamp="1616078598258">
+    <state x="361" y="166" key="Vcs.Push.Dialog.v2" timestamp="1616164860516">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="361" y="166" key="Vcs.Push.Dialog.v2/0.0.1536.864@0.0.1536.864" timestamp="1616078598258" />
+    <state x="361" y="166" key="Vcs.Push.Dialog.v2/0.0.1536.864@0.0.1536.864" timestamp="1616164860516" />
     <state width="775" height="439" key="XDebugger.FullValuePopup" timestamp="1616077847231">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
