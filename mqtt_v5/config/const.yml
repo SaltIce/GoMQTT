@@ -3,9 +3,10 @@
 ##  常量配置文件
 ##
 serverversion: "3.1.0"
-brokerurl : "tcp://:1887"
+brokerurl : "tcp://:1887" # mqtt服务
+wsbrokerurl : ":8883" # ws路径
 cluster:
-    enabled: true
+    enabled: false
     name : "node7" # 当前节点name，不要与其它节点冲突
     hostip : "udp://127.0.0.1:8767" #当前节点的外网访问地址
     zkurl : "10.112.26.131:2181" ## zk集群的写法 10.112.26.131:2181,10.112.26.131:2181

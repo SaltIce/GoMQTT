@@ -161,6 +161,11 @@
       <change afterPath="$PROJECT_DIR$/../study_one_day/my_struct/struct_test.go" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../tcp_util" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt_v5/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/config/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt_v5/config/const.yml" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/config/const.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt_v5/run/run.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/run/run.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt_v5/run/websocket.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/run/websocket.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mqtt_v5/service/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/service/server.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/colong/net.go" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/colong/net.go" afterDir="false" />
@@ -416,14 +421,14 @@
     <MESSAGE value="fix:解决其它节点发来的消息转发给当前节点下的客户端逻辑bug" />
     <MESSAGE value="fix:修复其它节点发来的消息转发给当前节点下客户端的qos等级处理不正确bug" />
     <MESSAGE value="fix:修复超过两个节点启动失败bug" />
-    <MESSAGE value="更新readme" />
     <MESSAGE value="新增压测脚本" />
     <MESSAGE value="commit" />
     <MESSAGE value="feat:修复+和#订阅的匹配问题，新增了s/s和s/s/都能够被s/s/#匹配到，s/s/能被s/s/+匹配到，但s/s不能被s/s/+匹配到" />
     <MESSAGE value="feat:新增系统主题订阅与单机共享订阅实现" />
     <MESSAGE value="feat:新增节点间$sys/消息发送" />
     <MESSAGE value="feat:添加共享主题的{ShareName} 是一个不包含 &quot;/&quot;, &quot;+&quot; 以及 &quot;#&quot; 的字符串限制" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat:添加共享主题的{ShareName} 是一个不包含 &quot;/&quot;, &quot;+&quot; 以及 &quot;#&quot; 的字符串限制" />
+    <MESSAGE value="更新readme" />
+    <option name="LAST_COMMIT_MESSAGE" value="更新readme" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
@@ -443,10 +448,10 @@
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="1033" y="127" key="#xdebugger.evaluate/0.0.1536.864@0.0.1536.864" timestamp="1615901432769" />
-    <state x="372" y="0" key="CommitChangelistDialog2" timestamp="1616164809366">
+    <state x="372" y="0" key="CommitChangelistDialog2" timestamp="1616165372720">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="372" y="0" key="CommitChangelistDialog2/0.0.1536.864@0.0.1536.864" timestamp="1616164809366" />
+    <state x="372" y="0" key="CommitChangelistDialog2/0.0.1536.864@0.0.1536.864" timestamp="1616165372720" />
     <state x="147" y="74" width="1228" height="719" key="DiffContextDialog" timestamp="1615911863927">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
@@ -459,46 +464,46 @@
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="549" y="188" key="FileChooserDialogImpl/0.0.1536.864@0.0.1536.864" timestamp="1615737736717" />
-    <state width="1493" height="252" key="GridCell.Tab.0.bottom" timestamp="1616157600977">
+    <state width="1493" height="324" key="GridCell.Tab.0.bottom" timestamp="1616207012389">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="252" key="GridCell.Tab.0.bottom/0.0.1536.864@0.0.1536.864" timestamp="1616157600977" />
-    <state width="1493" height="252" key="GridCell.Tab.0.center" timestamp="1616157600977">
+    <state width="1493" height="324" key="GridCell.Tab.0.bottom/0.0.1536.864@0.0.1536.864" timestamp="1616207012389" />
+    <state width="1493" height="324" key="GridCell.Tab.0.center" timestamp="1616207012389">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="252" key="GridCell.Tab.0.center/0.0.1536.864@0.0.1536.864" timestamp="1616157600977" />
-    <state width="1493" height="252" key="GridCell.Tab.0.left" timestamp="1616157600977">
+    <state width="1493" height="324" key="GridCell.Tab.0.center/0.0.1536.864@0.0.1536.864" timestamp="1616207012389" />
+    <state width="1493" height="324" key="GridCell.Tab.0.left" timestamp="1616207012389">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="252" key="GridCell.Tab.0.left/0.0.1536.864@0.0.1536.864" timestamp="1616157600977" />
-    <state width="1493" height="252" key="GridCell.Tab.0.right" timestamp="1616157600977">
+    <state width="1493" height="324" key="GridCell.Tab.0.left/0.0.1536.864@0.0.1536.864" timestamp="1616207012389" />
+    <state width="1493" height="324" key="GridCell.Tab.0.right" timestamp="1616207012389">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="252" key="GridCell.Tab.0.right/0.0.1536.864@0.0.1536.864" timestamp="1616157600977" />
-    <state width="1493" height="252" key="GridCell.Tab.1.bottom" timestamp="1616157600977">
+    <state width="1493" height="324" key="GridCell.Tab.0.right/0.0.1536.864@0.0.1536.864" timestamp="1616207012389" />
+    <state width="1493" height="577" key="GridCell.Tab.1.bottom" timestamp="1616207001074">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="252" key="GridCell.Tab.1.bottom/0.0.1536.864@0.0.1536.864" timestamp="1616157600977" />
-    <state width="1493" height="252" key="GridCell.Tab.1.center" timestamp="1616157600977">
+    <state width="1493" height="577" key="GridCell.Tab.1.bottom/0.0.1536.864@0.0.1536.864" timestamp="1616207001074" />
+    <state width="1493" height="577" key="GridCell.Tab.1.center" timestamp="1616207001074">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="252" key="GridCell.Tab.1.center/0.0.1536.864@0.0.1536.864" timestamp="1616157600977" />
-    <state width="1493" height="252" key="GridCell.Tab.1.left" timestamp="1616157600977">
+    <state width="1493" height="577" key="GridCell.Tab.1.center/0.0.1536.864@0.0.1536.864" timestamp="1616207001074" />
+    <state width="1493" height="577" key="GridCell.Tab.1.left" timestamp="1616207001074">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="252" key="GridCell.Tab.1.left/0.0.1536.864@0.0.1536.864" timestamp="1616157600977" />
-    <state width="1493" height="252" key="GridCell.Tab.1.right" timestamp="1616157600977">
+    <state width="1493" height="577" key="GridCell.Tab.1.left/0.0.1536.864@0.0.1536.864" timestamp="1616207001074" />
+    <state width="1493" height="577" key="GridCell.Tab.1.right" timestamp="1616207001074">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="252" key="GridCell.Tab.1.right/0.0.1536.864@0.0.1536.864" timestamp="1616157600977" />
+    <state width="1493" height="577" key="GridCell.Tab.1.right/0.0.1536.864@0.0.1536.864" timestamp="1616207001074" />
     <state x="270" y="75" key="SettingsEditor" timestamp="1615896637440">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="270" y="75" key="SettingsEditor/0.0.1536.864@0.0.1536.864" timestamp="1615896637440" />
-    <state x="361" y="166" key="Vcs.Push.Dialog.v2" timestamp="1616164860516">
+    <state x="361" y="166" key="Vcs.Push.Dialog.v2" timestamp="1616165384793">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="361" y="166" key="Vcs.Push.Dialog.v2/0.0.1536.864@0.0.1536.864" timestamp="1616164860516" />
+    <state x="361" y="166" key="Vcs.Push.Dialog.v2/0.0.1536.864@0.0.1536.864" timestamp="1616165384793" />
     <state width="775" height="439" key="XDebugger.FullValuePopup" timestamp="1616077847231">
       <screen x="0" y="0" width="1536" height="864" />
     </state>

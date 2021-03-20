@@ -11,6 +11,7 @@ type MyConst struct {
 	Cluster       Cluster
 	Logger        Logger
 	BrokerUrl     string
+	WsBrokerUrl   string
 }
 type Logger struct {
 	InfoOpen  bool
