@@ -19,6 +19,7 @@ import (
 	"Go-MQTT/mqtt_v5/message"
 	"Go-MQTT/mqtt_v5/topics/share"
 	"Go-MQTT/mqtt_v5/topics/sys"
+	"Go-MQTT/redis"
 	"fmt"
 	"reflect"
 	"sync"
@@ -47,6 +48,7 @@ type memTopics struct {
 
 var (
 	topicsProvider = "mem"
+	nodeName       = config.ConstConf.Cluster.Name
 )
 
 func memTopicInit() {
@@ -151,6 +153,8 @@ func (this *memTopics) Subscribe(topic []byte, qos byte, sub interface{}) (byte,
 						return message.QosFailure, fmt.Errorf("share topic ${shareName} did not allow have + or #")
 					}
 				}
+				// TODO 注册共享订阅到redis
+				redis.SubShare(string(topic[len(shareByte)+2:]), string(topic[len(shareByte):index+len(shareByte)]), nodeName)
 				return this.share.Subscribe(topic[len(shareByte)+2:], topic[len(shareByte):index+len(shareByte)], qos, sub)
 			}
 		}
@@ -186,6 +190,8 @@ func (this *memTopics) Unsubscribe(topic []byte, sub interface{}) error {
 		{
 			if len(topic)-len(shareByte) >= 2+index && topic[index+len(shareByte)] == '/' {
 				//shareName := string(topic[len(shareByte) : index+len(shareByte)])
+				// TODO 取消注册共享订阅到redis
+				redis.UnSubShare(string(topic[len(shareByte)+2:]), string(topic[len(shareByte):index+len(shareByte)]), nodeName)
 				return this.share.Unsubscribe(topic[2+len(topic)-len(shareByte):], topic[len(shareByte):index+len(shareByte)], sub)
 			}
 		}
@@ -196,8 +202,8 @@ func (this *memTopics) Unsubscribe(topic []byte, sub interface{}) error {
 // Returned values will be invalidated by the next Subscribers call
 //返回的值将在下一次订阅者调用时失效
 // svc==true表示这是当前系统或者其它集群节点的系统消息，svc==false表示是客户端或者集群其它节点发来的普通共享、非共享消息
-// ,needShare == true表示是否需要获取当前服务节点的共享订阅节点
-func (this *memTopics) Subscribers(topic []byte, qos byte, subs *[]interface{}, qoss *[]byte, svc, needShare bool) error {
+// needShare != ""表示是否需要获取当前服务节点下共享组名为shareName的一个共享订阅节点
+func (this *memTopics) Subscribers(topic []byte, qos byte, subs *[]interface{}, qoss *[]byte, svc bool, shareName string, onlyShare bool) error {
 	if !message.ValidQos(qos) {
 		return fmt.Errorf("Invalid QoS %d", qos)
 	}
@@ -217,10 +223,13 @@ func (this *memTopics) Subscribers(topic []byte, qos byte, subs *[]interface{}, 
 		}
 		return fmt.Errorf("memtopics/Subscribers: Publish error message to $sys/ topics")
 	}
-	if needShare {
-		err := this.share.Subscribers(topic, nil, qos, subs, qoss)
+	if shareName != "" {
+		err := this.share.Subscribers(topic, []byte(shareName), qos, subs, qoss)
 		if err != nil {
 			return err
+		}
+		if onlyShare {
+			return nil
 		}
 	}
 	return this.sroot.smatch(topic, qos, subs, qoss)

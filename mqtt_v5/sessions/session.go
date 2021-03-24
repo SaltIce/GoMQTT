@@ -23,7 +23,7 @@ import (
 const (
 	// Queue size for the ack queue
 	//队列的队列大小
-	defaultQueueSize = 1024 * 2
+	defaultQueueSize = 1024 >> 2
 )
 
 // 客户端会话

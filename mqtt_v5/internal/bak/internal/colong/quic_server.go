@@ -39,7 +39,7 @@ var SVC *ColongSvc
 // 集群连接管理器
 type Server struct {
 	//服务端还是客户端
-	IsClient bool
+	isClient bool
 	// The number of seconds to keep the connection live if there's no data.
 	// If not set then default to 5 mins.
 	//如果没有数据，保持连接的秒数。
@@ -152,7 +152,7 @@ func (this *Server) ListenAndServe(uri string, pubFunc, sysFuc, sharePubFunc fun
 	this.sysFunc = sysFuc
 	this.sharePubFunc = sharePubFunc
 	this.quit = make(chan struct{})
-	this.IsClient = false
+	this.isClient = false
 
 	u, err := url.Parse(uri)
 	if err != nil {
@@ -219,7 +219,7 @@ func (this *Server) ListenAndClient(uri string) error {
 	if !atomic.CompareAndSwapInt32(&this.running, 0, 1) {
 		return fmt.Errorf("server/ListenAndServe: Server is already running")
 	}
-	this.IsClient = true
+	this.isClient = true
 	this.quit = make(chan struct{})
 	u, err := url.Parse(uri)
 	if err != nil {
@@ -280,7 +280,12 @@ func (this *Server) ListenAndClient(uri string) error {
 	//if err != nil {
 	//	fmt.Println(err)
 	//}
-	err = this.handleServerConnection(bg, stream)
+	go func() {
+		err = this.handleServerConnection(bg, stream)
+		if err != nil {
+			panic(err)
+		}
+	}()
 	return err
 }
 
@@ -368,7 +373,7 @@ func (this *Server) handleConnection(ctx context.Context, c quic.Session) (svc *
 	}
 	svc = &ColongSvc{
 		id:     atomic.AddUint64(&gsvcid, 1),
-		client: false, // 当前作为服务端接收的客户端，这个不需要为true,只有当前作为客户端连接其它服务端节点才为true
+		client: false,
 
 		keepAlive:      this.KeepAlive,
 		connectTimeout: this.ConnectTimeout,
@@ -377,7 +382,7 @@ func (this *Server) handleConnection(ctx context.Context, c quic.Session) (svc *
 		conn:           conn,
 		sess:           sess,
 	}
-	if err := svc.start(this.pubFunc, this.sysFunc, this.sharePubFunc); err != nil {
+	if err := svc.start(this.pubFunc, this.sysFunc); err != nil {
 		svc.stop()
 		return nil, err
 	}
