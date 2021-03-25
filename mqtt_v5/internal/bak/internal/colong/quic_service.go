@@ -138,18 +138,16 @@ type ColongSvc struct {
 	rmsgs []*PublishMessage
 
 	// 服务端使用
-	pubFunc   func(msg interface{}) error // 其它节点发来的消息处理
-	sysFunc   func(msg interface{}) error // 其它节点发来的$sys消息处理
-	shareFunc func(msg interface{}) error // 其它节点发来的$share消息处理
+	pubFunc func(msg interface{}) error // 其它节点发来的消息处理
+	sysFunc func(msg interface{}) error // 其它节点发来的$sys消息处理
 	// 客户端连接使用
 	pubSys func(msg interface{}) error // 向其它节点发送$sys消息处理
 }
 
-func (this *ColongSvc) start(pubFunc, sysFunc, shareFunc func(msg interface{}) error) error {
+func (this *ColongSvc) start(pubFunc, sysFunc func(msg interface{}) error) error {
 	var err error
 	this.pubFunc = pubFunc
 	this.sysFunc = sysFunc
-	this.shareFunc = shareFunc
 	// Create the incoming ring buffer
 	this.in, err = newBuffer(defaultBufferSize)
 	if err != nil {
@@ -282,15 +280,25 @@ func (this *ColongSvc) Publish(msg Message, onComplete interface{}) error {
 		if err != nil {
 			return fmt.Errorf("(%s) Error sending %s message to cluser: %v", this.cid(), msg.Name(), err)
 		}
-		//return this.sess.SysMsgack.Wait(msg, onComplete)
-		return nil
-	case *SharePubMessage, *PublishMessage:
+		return this.sess.SysMsgack.Wait(msg, onComplete)
+	case *ShareReqMessage:
+		// 等待ShareAck，再进行筛选出发出sharePub，其余发出publish
+		// 直接发送，并等待确认
 		_, err := this.writeMessage(msg)
 		if err != nil {
 			return fmt.Errorf("(%s) Error sending %s message to cluser: %v", this.cid(), msg.Name(), err)
 		}
-		//return this.sess.Msgack.Wait(msg, onComplete)
-		return nil
+		return this.sess.ShareReqMsgAck.Wait(msg, onComplete)
+	case *SharePubMessage, *PublishMessage:
+		// 等接收到超过半数的节点响应，根据响应的权重，做选择
+		// 选择出的那个节点发送SharePublish消息，
+		//          （收到该消息的节点，再确认接收之后，就需要发给其下的客户端，包括了订阅共享主题的客户端）
+		// 其余发送普通Publish消息
+		_, err := this.writeMessage(msg)
+		if err != nil {
+			return fmt.Errorf("(%s) Error sending %s message to cluser: %v", this.cid(), msg.Name(), err)
+		}
+		return this.sess.Msgack.Wait(msg, onComplete)
 	default:
 		return nil
 	}

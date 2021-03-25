@@ -157,7 +157,9 @@ const (
 	// 下面的并没有等号后面的那个的意思
 	// 下面只是一个标志，实际载体还是publish消息
 	SYS          = SUBSCRIBE   // 节点间sys消息，因为type只能在0-15范围内，所以拿SUBSCRIBE这个位代替
-	SHAREPUBLISH = UNSUBSCRIBE // 选出的那个,发送共享消息
+	SHAREREQ     = UNSUBSCRIBE // 发起共享消息确认
+	SHAREACK     = UNSUBACK    // 回复SHARE消息的，携带是否可以参与筛选共享消息的选择的客户端数，按shareName分别提供一个权重
+	SHAREPUBLISH = SUBACK      // 选出的那个
 
 )
 
@@ -196,6 +198,10 @@ func (this MessageType) Name() string {
 		return "RESERVED2"
 	case SYS:
 		return "SYS"
+	case SHAREREQ:
+		return "SHAREREQ"
+	case SHAREACK:
+		return "SHAREACK"
 	case SHAREPUBLISH:
 		return "SHAREPUBLISH"
 	}
@@ -231,6 +237,10 @@ func (this MessageType) Desc() string {
 		return "Reserved"
 	case SYS:
 		return "SYS message"
+	case SHAREREQ:
+		return "SHAREREQ message"
+	case SHAREACK:
+		return "SHAREACK message"
 	case SHAREPUBLISH:
 		return "SHAREPUBLISH message"
 	}
@@ -268,6 +278,10 @@ func (this MessageType) DefaultFlags() byte {
 		return 0
 	case SYS:
 		return 2
+	case SHAREREQ:
+		return 2
+	case SHAREACK:
+		return 0
 	case SHAREPUBLISH:
 		return 0
 	}
@@ -296,6 +310,10 @@ func (this MessageType) New() (Message, error) {
 		return NewConnackMessage(), nil
 	case SYS:
 		return NewSysMessage(), nil
+	case SHAREREQ:
+		return NewShareReqMessage(), nil
+	case SHAREACK:
+		return NewShareAckMessage(), nil
 	case SHAREPUBLISH:
 		return NewSharePubMessage(), nil
 	}

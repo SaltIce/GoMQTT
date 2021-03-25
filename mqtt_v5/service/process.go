@@ -113,8 +113,6 @@ func (this *service) processIncoming(msg message.Message) error {
 		// If QoS == 1, we should send back PUBACK, then take the next step
 		// If QoS == 2, we need to put it in the ack queue, send back PUBREC
 		err = this.processPublish(msg)
-		//发送给其它节点
-		//go utils.WriteMqtt(msg)
 
 	case *message.PubackMessage:
 		// For PUBACK message, it means QoS 1, we should send to ack queue
@@ -417,38 +415,45 @@ func (this *service) processUnsubscribe(msg *message.UnsubscribeMessage) error {
 // onPublish()在服务器接收到发布消息并完成时调用
 // ack循环。此方法将根据发布获取订阅服务器列表
 //主题，并将消息发布到订阅方列表。
-func (this *service) onPublish(msg *message.PublishMessage) error {
-	if msg.Retain() {
-		if err := this.topicsMgr.Retain(msg); err != nil {
+func (this *service) onPublish(msg1 *message.PublishMessage) error {
+	if msg1.Retain() {
+		if err := this.topicsMgr.Retain(msg1); err != nil {
 			logger.Errorf(err, "(%s) Error retaining message: %v", this.cid(), err)
 		}
 	}
-	_ = this.clientLinkPub(msg) // 发送到集群其它节点
-
-	err := this.topicsMgr.Subscribers(msg.Topic(), msg.QoS(), &this.subs, &this.qoss, false, false)
-	if err != nil {
-		//logger.Errorf(err, "(%s) Error retrieving subscribers list: %v", this.cid(), err)
-		return err
-	}
-
-	msg.SetRetain(false)
-
-	logger.Debugf("(%s) Publishing to topic %q and %d subscribers", this.cid(), string(msg.Topic()), len(this.subs))
-	for i, s := range this.subs {
-		if s != nil {
-			fn, ok := s.(*OnPublishFunc)
-			if !ok {
-				logger.Errorf(nil, "Invalid onPublish Function")
-				return fmt.Errorf("Invalid onPublish Function")
-			} else {
-				_ = msg.SetQoS(this.qoss[i]) // 设置为该发的qos级别
-				err = (*fn)(msg)
-				if err == io.EOF {
-					// TODO 断线了，是否对于qos=1和2的保存至离线消息
+	pubFn := func(msg *message.PublishMessage, shareName string, onlyShare bool) error {
+		err := this.topicsMgr.Subscribers(msg.Topic(), msg.QoS(), &this.subs, &this.qoss, false, shareName, onlyShare)
+		if err != nil {
+			//logger.Errorf(err, "(%s) Error retrieving subscribers list: %v", this.cid(), err)
+			return err
+		}
+		msg.SetRetain(false)
+		logger.Debugf("(%s) Publishing to topic %q and %d subscribers", this.cid(), string(msg.Topic()), len(this.subs))
+		for i, s := range this.subs {
+			if s != nil {
+				fn, ok := s.(*OnPublishFunc)
+				if !ok {
+					logger.Errorf(nil, "Invalid onPublish Function")
+					return fmt.Errorf("Invalid onPublish Function")
+				} else {
+					_ = msg.SetQoS(this.qoss[i]) // 设置为该发的qos级别
+					err = (*fn)(msg)
+					if err == io.EOF {
+						// TODO 断线了，是否对于qos=1和2的保存至离线消息
+					}
 				}
 			}
 		}
+		return nil
+	}
+	err := this.clientLinkPub(msg1, func(shareName string) error {
+		// 只发送共享组
+		return pubFn(msg1, shareName, true)
+	}) // TODO 发送到集群其它节点
+
+	if err != nil {
+		logger.Errorf(err, "%v向集群发送消息错误：%+v", this.cid(), *msg1)
 	}
 
-	return nil
+	return pubFn(msg1, "", false)
 }

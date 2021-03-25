@@ -96,7 +96,7 @@ func (this *redisTopics) Unsubscribe(topic []byte, sub interface{}) error {
 }
 
 // Returned values will be invalidated by the next Subscribers call
-func (this *redisTopics) Subscribers(topic []byte, qos byte, subs *[]interface{}, qoss *[]byte, svc, needShare bool) error {
+func (this *redisTopics) Subscribers(topic []byte, qos byte, subs *[]interface{}, qoss *[]byte, svc bool, shareName string, onlyShare bool) error {
 	if !message.ValidQos(qos) {
 		return fmt.Errorf("Invalid QoS %d", qos)
 	}

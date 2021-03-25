@@ -195,7 +195,7 @@ func (this *SysMessage) Encode(dst []byte) (int, error) {
 
 	total := 0
 
-	n, err := this.header.encode(dst[total:])
+	n, err := this.header.decodeSysToPub(dst[total:])
 	total += n
 	if err != nil {
 		return total, err
