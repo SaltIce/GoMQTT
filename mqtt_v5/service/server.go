@@ -647,8 +647,8 @@ func (this *Server) handleConnection(c io.Closer) (svc *service, err error) {
 				}
 				check := v.RandShare()
 				// 加锁,防止更新客户端节点的时候起冲突
-				this.clientWg.Lock()
-				defer this.clientWg.Unlock()
+				this.clientWg.RLock()
+				defer this.clientWg.RUnlock()
 				for _, cl := range this.client {
 					if shareName, ok := check[cl.Name]; ok {
 						for _, sname := range shareName {

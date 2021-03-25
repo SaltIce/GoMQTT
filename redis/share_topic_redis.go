@@ -10,7 +10,21 @@ import (
 	"time"
 )
 
-var R *redis.Client
+var (
+	r            *redis.Client
+	cacheGlobal  *cacheInfo
+	cacheOutTime = 1 * time.Second
+)
+
+type tn struct {
+	v *ShareNameInfo
+	*time.Timer
+}
+type global map[string]*tn
+type cacheInfo struct {
+	sync.RWMutex
+	global
+}
 
 func init() {
 	redisSUrl := config.ConstConf.DefaultConst.Redis.RedisUrl
@@ -19,11 +33,35 @@ func init() {
 	if isEmpty(redisSUrl) {
 		panic("redis info have empty")
 	}
-	R = redis.NewClient(&redis.Options{DB: int(redisSDB), Password: redisSPassword, Addr: redisSUrl, Network: "tcp"})
-	_, err := R.Ping().Result()
+	r = redis.NewClient(&redis.Options{DB: int(redisSDB), Password: redisSPassword, Addr: redisSUrl, Network: "tcp"})
+	_, err := r.Ping().Result()
 	if err != nil {
 		panic(err)
 	}
+	cacheGlobal = &cacheInfo{
+		RWMutex: sync.RWMutex{},
+		global:  make(map[string]*tn),
+	}
+	cacheGlobal.autoClea()
+}
+
+// 定时清理缓存
+func (cg *cacheInfo) autoClea() {
+	go func() {
+		c := time.Tick(cacheOutTime)
+		for _ = range c {
+			cacheGlobal.Lock()
+			for k, v := range cacheGlobal.global {
+				select {
+				case <-v.C:
+					delete(cacheGlobal.global, k)
+				default:
+					continue
+				}
+			}
+			cacheGlobal.Unlock()
+		}
+	}()
 }
 func isEmpty(str ...string) bool {
 	for _, v := range str {
@@ -101,46 +139,74 @@ var del = `
 	end
 	return 0
 `
+var merge = &Group{}
+
+func reqMerge(topic string) (*ShareNameInfo, error) {
+	ret := merge.DoChan(topic, func() (interface{}, error) {
+		v, err := redis.NewScript(tp).Run(r, []string{topic}).Result()
+		if err != nil {
+			return nil, fmt.Errorf("脚本执行错误：%v", err)
+		}
+		if v1, ok := v.([]interface{}); ok {
+			ln := len(v1)
+			if ln == 0 || ln == 1 {
+				return nil, fmt.Errorf("未查询到数据")
+			}
+			name := v1[ln-1].([]interface{})
+			retdata := make([][]interface{}, 0)
+			for i := 0; i < ln-1; i++ {
+				retdata = append(retdata, v1[i].([]interface{}))
+			}
+			sni := NewShareNameInfo()
+			for i, da := range name {
+				tv := 0
+				mp := make(map[string]int)
+				for j := 0; j < len(retdata[i]); j += 2 {
+					ii, err := strconv.Atoi(retdata[i][j+1].(string))
+					if err != nil {
+						return nil, err
+					}
+					mp[retdata[i][j].(string)] = ii
+					tv += ii
+				}
+				sni.V[da.(string)] = mp
+				sni.t[da.(string)] = tv
+			}
+			cacheGlobal.Lock()
+			cacheGlobal.global[topic] = &tn{
+				v:     sni,
+				Timer: time.NewTimer(cacheOutTime),
+			}
+			cacheGlobal.Unlock()
+			return sni, nil
+		}
+		return nil, fmt.Errorf("获取数据错误")
+	})
+	select {
+	case p := <-ret:
+		if p.Err != nil {
+			return &ShareNameInfo{}, p.Err
+		}
+		return p.Val.(*ShareNameInfo), nil
+	case <-time.After(time.Millisecond * 300):
+		return nil, fmt.Errorf("请求超时")
+	}
+}
 
 // 获取topic的共享主题信息
 func GetTopicShare(topic string) (*ShareNameInfo, error) {
-	v, err := redis.NewScript(tp).Run(R, []string{topic}).Result()
-	if err != nil {
-		return nil, fmt.Errorf("脚本执行错误：%v", err)
+	cacheGlobal.RLock()
+	if v, ok := cacheGlobal.global[topic]; ok {
+		defer cacheGlobal.RUnlock()
+		return v.v, nil
 	}
-	if v1, ok := v.([]interface{}); ok {
-		ln := len(v1)
-		if ln == 0 || ln == 1 {
-			return nil, fmt.Errorf("未查询到数据")
-		}
-		name := v1[ln-1].([]interface{})
-		retdata := make([][]interface{}, 0)
-		for i := 0; i < ln-1; i++ {
-			retdata = append(retdata, v1[i].([]interface{}))
-		}
-		sni := NewShareNameInfo()
-		for i, da := range name {
-			tv := 0
-			mp := make(map[string]int)
-			for j := 0; j < len(retdata[i]); j += 2 {
-				ii, err := strconv.Atoi(retdata[i][j+1].(string))
-				if err != nil {
-					return nil, err
-				}
-				mp[retdata[i][j].(string)] = ii
-				tv += ii
-			}
-			sni.V[da.(string)] = mp
-			sni.t[da.(string)] = tv
-		}
-		return sni, nil
-	}
-	return nil, fmt.Errorf("获取数据错误")
+	cacheGlobal.RUnlock()
+	return reqMerge(topic)
 }
 
 // 新增一个topic下某个shareName的订阅
 func SubShare(topic, shareName, nodeName string) bool {
-	v, err := redis.NewScript(sr).Run(R, []string{topic, shareName, nodeName}, 1, 1).Result()
+	v, err := redis.NewScript(sr).Run(r, []string{topic, shareName, nodeName}, 1, 1).Result()
 	if err != nil {
 		return false
 	}
@@ -149,7 +215,7 @@ func SubShare(topic, shareName, nodeName string) bool {
 
 // 取消一个topic下某个shareName的订阅
 func UnSubShare(topic, shareName, nodeName string) bool {
-	v, err := redis.NewScript(sr).Run(R, []string{topic, shareName, nodeName}, 0, -1).Result()
+	v, err := redis.NewScript(sr).Run(r, []string{topic, shareName, nodeName}, 0, -1).Result()
 	if err != nil {
 		return false
 	}
@@ -158,7 +224,7 @@ func UnSubShare(topic, shareName, nodeName string) bool {
 
 // 删除主题
 func DelTopic(topic string) error {
-	_, err := redis.NewScript(del).Run(R, []string{topic}).Result()
+	_, err := redis.NewScript(del).Run(r, []string{topic}).Result()
 	if err != nil {
 		return fmt.Errorf("删除topic：%v下的共享信息出错：%v", topic, err)
 	}
@@ -185,15 +251,15 @@ func (s *ShareNameInfo) RandShare() map[string][]string {
 	defer s.RUnlock()
 	ret := make(map[string][]string)
 	for shareName, nodes := range s.V {
+		if s.t[shareName] <= 0 {
+			continue
+		}
 		randN := rand.New(rand.NewSource(time.Now().UnixNano())).Intn(s.t[shareName])
 		for k, v := range nodes {
 			randN -= v
 			if randN > 0 {
 				continue
 			}
-			//if _,ok := ret[k];ok{
-			//
-			//}
 			ret[k] = append(ret[k], shareName)
 		}
 	}

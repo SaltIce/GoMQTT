@@ -192,7 +192,7 @@ func (this *memTopics) Unsubscribe(topic []byte, sub interface{}) error {
 				//shareName := string(topic[len(shareByte) : index+len(shareByte)])
 				// TODO 取消注册共享订阅到redis
 				redis.UnSubShare(string(topic[len(shareByte)+2:]), string(topic[len(shareByte):index+len(shareByte)]), nodeName)
-				return this.share.Unsubscribe(topic[2+len(topic)-len(shareByte):], topic[len(shareByte):index+len(shareByte)], sub)
+				return this.share.Unsubscribe(topic[2+len(shareByte):], topic[len(shareByte):index+len(shareByte)], sub)
 			}
 		}
 	}
