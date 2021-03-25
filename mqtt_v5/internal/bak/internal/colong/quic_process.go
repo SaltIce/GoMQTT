@@ -162,33 +162,25 @@ func (this *ColongSvc) processIncoming(msg Message) error {
 	var err error = nil
 	switch msg := msg.(type) {
 	// TODO 统一做PublishMessage和SysMessage消息确认机制
-	case *PublishMessage: // 客户端发来的普通消息
+	case *PublishMessage:
 		// For PUBLISH message, we should figure out what QoS it is and process accordingly
 		// If QoS == 0, we should just take the next step, no ack required
 		// If QoS == 1, we should send back PUBACK, then take the next step
 		// If QoS == 2, we need to put it in the ack queue, send back PUBREC
 		err = this.processPublish(msg) // 发送给当前节点的客户端
 		// 答复该客户端来的该条消息
-	case *SharePubMessage: // 客户端发来的共享消息
-		// For PUBLISH message, we should figure out what QoS it is and process accordingly
-		// If QoS == 0, we should just take the next step, no ack required
-		// If QoS == 1, we should send back PUBACK, then take the next step
-		// If QoS == 2, we need to put it in the ack queue, send back PUBREC
-		err = this.processSharePublish(msg) // 发送给当前节点的客户端
-		// 答复该客户端来的该条消息
-	case *PingreqMessage: // 客户端发来的心跳
+	case *PingreqMessage:
 		// For PINGREQ message, we should send back PINGRESP
 		resp := NewPingrespMessage()
 		_, err = this.writeMessage(resp)
-	case *DisconnectMessage: // 客户端发来的断开连接请求
+	case *DisconnectMessage:
 		// For DISCONNECT message, we should quit
 		return errDisconnect
-	case *ConnectMessage: // 客户端发来的连接包
+	case *ConnectMessage:
 		cack := NewConnackMessage()
 		_, err = this.writeMessage(cack)
-	case *SysMessage: // 客户端发来的系统消息
+	case *SysMessage:
 		err = this.processSys(msg) // 发送给当前节点的客户端
-
 	default:
 		return fmt.Errorf("(%s) invalid message type %s.", this.cid(), msg.Name())
 	}
@@ -203,17 +195,20 @@ func (this *ColongSvc) processIncomingC(msg Message) error {
 	var err error = nil
 	switch msg := msg.(type) {
 	// 作为客户端会收到的消息
-	case *PingrespMessage: // 心跳响应
+	case *PingrespMessage:
 		// 接收到其它节点的心跳响应
-		//this.sess.Pingack.Ack(msg)
-		//this.processAcked(this.sess.Pingack) // 提醒处理
-	case *DisconnectMessage: // 服务端主动关闭连接
+		this.sess.Pingack.Ack(msg)
+		this.processAcked(this.sess.Pingack) // 提醒处理
+	case *DisconnectMessage:
 		// For DISCONNECT message, we should quit
 		// TODO 需要进一步处理断开连接
 		return errDisconnect
-	case *ConnackMessage: // 连接响应
+	case *ConnackMessage:
 		// 客户端连接服务端认证成功
 		logger.Info("连接认证成功")
+		// TODO 这个时候才是需要将该连接添加进客户端管理
+	case *ShareAckMessage: // 收集权重，作出选择发送Share消息
+
 	default:
 		return fmt.Errorf("(%s) invalid message type %s.", this.cid(), msg.Name())
 	}
@@ -235,11 +230,6 @@ func (this *ColongSvc) processIncomingC(msg Message) error {
 // 这是其它节点发来消息的处理
 func (this *ColongSvc) processPublish(msg *PublishMessage) error {
 	return this.pubFunc(msg)
-}
-
-// 处理其它节点发来的共享消息
-func (this *ColongSvc) processSharePublish(msg *SharePubMessage) error {
-	return this.shareFunc(msg)
 }
 
 // 处理其它节点发来的$sys消息

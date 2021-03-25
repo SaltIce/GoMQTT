@@ -136,7 +136,7 @@ func (this *Ackqueue) Wait(msg Message, onComplete interface{}) error {
 	defer this.mu.Unlock()
 
 	switch msg := msg.(type) {
-	case *PublishMessage, *SysMessage, *SharePubMessage:
+	case *PublishMessage, *SysMessage, *ShareReqMessage, *SharePubMessage:
 		// 这些类型的消息需要等待消息确认
 		return this.insert(msg.PacketId(), msg, onComplete)
 

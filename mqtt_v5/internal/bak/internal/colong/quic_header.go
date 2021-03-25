@@ -271,6 +271,96 @@ func (this *header) decodePubToSys(src []byte) (int, error) {
 	return total, nil
 }
 
+// sys转pub的
+func (this *header) decodeSysToPub(src []byte) (int, error) {
+	total := 0
+
+	this.dbuf = src
+
+	mtype := this.Type()
+	//mtype := MessageType(0)
+
+	this.mtypeflags = src[total : total+1]
+	//mtype := MessageType(src[total] >> 4)
+	if !this.Type().Valid() {
+		return total, fmt.Errorf("header/decodeToSys: Invalid message type %d.", mtype)
+	}
+	// publish -> sys
+	if mtype != PUBLISH && SYS != this.Type() {
+		return total, fmt.Errorf("header/decodeToSys: Invalid message type %d. Expecting %d.", this.Type(), mtype)
+	}
+
+	//this.flags = src[total] & 0x0f
+	if this.Type() != SYS && this.Flags() != this.Type().DefaultFlags() {
+		return total, fmt.Errorf("header/decodeToSys: Invalid message (%d) flags. Expecting %d, got %d", this.Type(), this.Type().DefaultFlags(), this.Flags())
+	}
+
+	if this.Type() == SYS && !ValidQos((this.Flags()>>1)&0x3) {
+		return total, fmt.Errorf("header/decodeToSys: Invalid QoS (%d) for SYS message.", (this.Flags()>>1)&0x3)
+	}
+	this.SetType(mtype)
+	total++
+
+	remlen, m := binary.Uvarint(src[total:])
+	total += m
+	this.remlen = int32(remlen)
+
+	if this.remlen > maxRemainingLength || remlen < 0 {
+		return total, fmt.Errorf("header/decodeToSys: Remaining length (%d) out of bound (max %d, min 0)", this.remlen, maxRemainingLength)
+	}
+
+	if int(this.remlen) > len(src[total:]) {
+		return total, fmt.Errorf("header/decodeToSys: Remaining length (%d) is greater than remaining buffer (%d)", this.remlen, len(src[total:]))
+	}
+
+	return total, nil
+}
+
+// sharePub 转 publish
+func (this *header) decodeShareToPub(src []byte) (int, error) {
+	total := 0
+
+	this.dbuf = src
+
+	mtype := this.Type()
+	//mtype := MessageType(0)
+
+	this.mtypeflags = src[total : total+1]
+	//mtype := MessageType(src[total] >> 4)
+	if !this.Type().Valid() {
+		return total, fmt.Errorf("header/decodeToPub: Invalid message type %d.", mtype)
+	}
+	// publish -> sys
+	if mtype != PUBLISH && SHAREPUBLISH != this.Type() {
+		return total, fmt.Errorf("header/decodeToPub: Invalid message type %d. Expecting %d.", this.Type(), mtype)
+	}
+
+	//this.flags = src[total] & 0x0f
+	if this.Type() != SHAREPUBLISH && this.Flags() != this.Type().DefaultFlags() {
+		return total, fmt.Errorf("header/decodeToPub: Invalid message (%d) flags. Expecting %d, got %d", this.Type(), this.Type().DefaultFlags(), this.Flags())
+	}
+
+	if this.Type() == SHAREPUBLISH && !ValidQos((this.Flags()>>1)&0x3) {
+		return total, fmt.Errorf("header/decodeToPub: Invalid QoS (%d) for Share message.", (this.Flags()>>1)&0x3)
+	}
+	this.SetType(mtype)
+	total++
+
+	remlen, m := binary.Uvarint(src[total:])
+	total += m
+	this.remlen = int32(remlen)
+
+	if this.remlen > maxRemainingLength || remlen < 0 {
+		return total, fmt.Errorf("header/decodeToPub: Remaining length (%d) out of bound (max %d, min 0)", this.remlen, maxRemainingLength)
+	}
+
+	if int(this.remlen) > len(src[total:]) {
+		return total, fmt.Errorf("header/decodeToPub: Remaining length (%d) is greater than remaining buffer (%d)", this.remlen, len(src[total:]))
+	}
+
+	return total, nil
+}
+
 // publish 转 sharePub
 func (this *header) decodePubToShare(src []byte) (int, error) {
 	total := 0

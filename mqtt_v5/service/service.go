@@ -129,13 +129,6 @@ type service struct {
 	//输出数据缓冲区。这里写入的字节依次写入连接。
 	out *buffer
 
-	// onpub is the method that gets added to the topic subscribers list by the
-	// processSubscribe() method. When the server finishes the ack cycle for a
-	// PUBLISH message, it will call the subscriber, which is this method.
-	//
-	// For the server, when this method is called, it means there's a message that
-	// should be published to the client on the other end of this connection. So we
-	// will call publish() to send the message.
 	//onpub方法，将其添加到主题订阅方列表
 	// processSubscribe()方法。当服务器完成一个发布消息的ack循环时
 	//它将调用订阅者，也就是这个方法。
@@ -153,8 +146,10 @@ type service struct {
 	subs  []interface{}
 	qoss  []byte
 	rmsgs []*message.PublishMessage
-
-	clientLinkPub func(msg interface{}) error // 当前服务连接到其它服务的连接处理方法
+	// fn 是只发送共享消息到当前节点下
+	clientLinkPub func(msg interface{}, fn func(shareName string) error) error // 当前服务连接到其它服务的连接处理方法，发送普通消息给其它节点使用
+	// 原始publish消息，等待shareack后发送给各个服务端节点后删除
+	sourcePublishMsg *SafeMap
 }
 
 func (this *service) start() error {

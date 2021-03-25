@@ -12,12 +12,12 @@ var (
 
 func init() {
 	var err error
-	err = readConst(&ConstConf, "mqtt_v5/config/const.yml")
+	err = readConst(&ConstConf, "./mqtt_v5/config/const.yml")
 	if err != nil {
 		panic(err)
 	}
 	logger := MyConst{}
-	err = readConst(&logger, "mqtt_v5/config/logger.yml")
+	err = readConst(&logger, "./mqtt_v5/config/logger.yml")
 	if err != nil {
 		panic(err)
 	}
