@@ -116,16 +116,16 @@ func main() {
 	if strings.TrimSpace(config.ConstConf.BrokerUrl) != "" {
 		mqttaddr = strings.TrimSpace(config.ConstConf.BrokerUrl)
 	}
-	//mqttaddr := "tcp://:1885"
-	//saddr := "udp://127.0.0.1:8766"
-	//caddr := "udp://127.0.0.1:8765"
+	wsAddr := ""
+	if strings.TrimSpace(config.ConstConf.WsBrokerUrl) != "" {
+		wsAddr = strings.TrimSpace(config.ConstConf.WsBrokerUrl)
+	}
 	BuffConfigInit()
 	if len(wsAddr) > 0 || len(wssAddr) > 0 {
-		addr := "tcp://127.0.0.1:1889"
-		AddWebsocketHandler("/mqtt", addr)
+		AddWebsocketHandler("/mqtt", mqttaddr) // 将wsAddr的ws连接数据发到mqttaddr上
+
 		/* start a plain websocket listener */
 		if len(wsAddr) > 0 {
-			logger.Info("here")
 			go ListenAndServeWebsocket(wsAddr)
 		}
 		/* start a secure websocket listener */
@@ -159,12 +159,6 @@ func BuffConfigInit() {
 	//defaultWriteBlockSize := buff.WriteBlockSize
 	//service.BuffConfigInit(defaultBufferSize, defaultReadBlockSize, defaultWriteBlockSize)
 }
-func DefaultListenAndServeWebsocket() error {
-	if err := AddWebsocketHandler("/mqtt", "127.0.0.1:1883"); err != nil {
-		return err
-	}
-	return ListenAndServeWebsocket(":1234")
-}
 
 func AddWebsocketHandler(urlPattern string, uri string) error {
 	logger.Debugf("AddWebsocketHandler urlPattern=%s, uri=%s", urlPattern, uri)
@@ -178,6 +172,28 @@ func AddWebsocketHandler(urlPattern string, uri string) error {
 		WebsocketTcpProxy(ws, u.Scheme, u.Host)
 	}
 	http.Handle(urlPattern, websocket.Handler(h))
+	return nil
+}
+
+/* handler that proxies websocket <-> unix domain socket */
+func WebsocketTcpProxy(ws *websocket.Conn, nettype string, host string) error {
+	client, err := net.Dial(nettype, host)
+	if err != nil {
+		return err
+	}
+	defer client.Close()
+	defer ws.Close()
+	chDone := make(chan bool)
+
+	go func() {
+		io_ws_copy(client, ws)
+		chDone <- true
+	}()
+	go func() {
+		io_copy_ws(ws, client)
+		chDone <- true
+	}()
+	<-chDone
 	return nil
 }
 
@@ -226,26 +242,4 @@ func io_ws_copy(src io.Reader, dst *websocket.Conn) (int, error) {
 		}
 	}
 	return count, nil
-}
-
-/* handler that proxies websocket <-> unix domain socket */
-func WebsocketTcpProxy(ws *websocket.Conn, nettype string, host string) error {
-	client, err := net.Dial(nettype, host)
-	if err != nil {
-		return err
-	}
-	defer client.Close()
-	defer ws.Close()
-	chDone := make(chan bool)
-
-	go func() {
-		io_ws_copy(client, ws)
-		chDone <- true
-	}()
-	go func() {
-		io_copy_ws(ws, client)
-		chDone <- true
-	}()
-	<-chDone
-	return nil
 }

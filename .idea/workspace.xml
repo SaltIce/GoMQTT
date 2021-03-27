@@ -19,7 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf51d1a7-8d25-4780-9e7d-def3d64000b1" name="Default Changelist" comment="">
+    <list default="true" id="bf51d1a7-8d25-4780-9e7d-def3d64000b1" name="Default Changelist" comment="feat:完善获取集群共享主题数据错误时的应急处理">
       <change afterPath="$PROJECT_DIR$/../HomeNetwork/.idea/.gitignore" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../HomeNetwork/.idea/HomeNetwork.iml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../HomeNetwork/.idea/misc.xml" afterDir="false" />
@@ -66,6 +66,7 @@
       <change afterPath="$PROJECT_DIR$/../HomeNetwork/way/pipeline/channel_pipline.go" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../HomeNetwork/way/pipeline/handler.go" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../HomeNetwork/way/server.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../gaca-ga/.idea/workspace.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../github.com/BurntSushi/toml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../github.com/Djarvur/go-err113" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../github.com/Masterminds/semver" afterDir="false" />
@@ -160,7 +161,7 @@
       <change afterPath="$PROJECT_DIR$/../study_one_day/my_struct/struct_test.go" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../tcp_util" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/redis/share_topic_redis.go" beforeDir="false" afterPath="$PROJECT_DIR$/redis/share_topic_redis.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/colong/net.go" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/colong/net.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/comment/const.go" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/comment/const.go" afterDir="false" />
@@ -197,11 +198,50 @@
         <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
+    <option name="RECENT_COMMON_BRANCH" value="dev-feat-v1" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="ROOT_SYNC" value="SYNC" />
   </component>
   <component name="GitToolBoxStore">
     <option name="projectConfigVersion" value="2" />
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="mqtt_v5" />
+                    <option name="lastUsedInstant" value="1615819934" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="dev-feat-v1" />
+                    <option name="lastUsedInstant" value="1615819933" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="mqtt_v5" />
+                    <option name="lastUsedInstant" value="1615819990" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="dev-feat-v1" />
+                    <option name="lastUsedInstant" value="1615819989" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$/.." />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
   </component>
   <component name="GoLibraries">
     <option name="indexEntireGoPath" value="false" />
@@ -215,6 +255,7 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="DefaultGoTemplateProperty" value="Go File" />
     <property name="GO_FMT" value="true" />
@@ -225,47 +266,38 @@
     <property name="configurable.Module.GOPATH.is.expanded" value="false" />
     <property name="configurable.Project.GOPATH.is.expanded" value="true" />
     <property name="go.import.settings.migrated" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../qaca-ga" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/mqtt_v5/internal/bak/internal" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
+    <property name="settings.editor.selected.configurable" value="reference.settings.ide.settings.web.browsers" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="F:\Go_pro\src\Go-MQTT\redis" />
       <recent name="F:\Go_pro\src\Go-MQTT\mqtt_v5\internal\nodediscover" />
       <recent name="F:\Go_pro\src\Go-MQTT\quic\client" />
       <recent name="F:\Go_pro\src\Go-MQTT\mqtt_v5\internal" />
       <recent name="F:\Go_pro\src\Go-MQTT\quic\test" />
-      <recent name="F:\Go_pro\src\Go-MQTT\mqtt\internal" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="F:\Go_pro\src\Go-MQTT\mqtt_v5\internal" />
+      <recent name="F:\Go_pro\src\Go-MQTT\mqtt_v5\internal\bak\internal" />
       <recent name="F:\Go_pro\src\Go-MQTT\mqtt_v5\internal\colong" />
-      <recent name="F:\Go_pro\src\Go-MQTT" />
-      <recent name="F:\Go_pro\src\Go-MQTT\mqtt_v5\colong" />
-      <recent name="F:\Go_pro\src\Go-MQTT\mqtt_v5\auth" />
+      <recent name="F:\Go_pro\src\Go-MQTT\mqtt_v5\topics" />
+      <recent name="F:\Go_pro\src\Go-MQTT\mqtt_v5\topics\share" />
+      <recent name="F:\Go_pro\src\Go-MQTT\mqtt_v5\internal" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Test.TestGoMqtt in Go-MQTT/test">
+  <component name="RunManager" selected="Go Build.go build run.go (1)">
     <configuration name="go build Go-MQTT/mqtt_v5/internal/nodediscover/main" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="Go-MQTT" />
       <working_directory value="$PROJECT_DIR$" />
       <kind value="PACKAGE" />
       <filePath value="$PROJECT_DIR$/mqtt_v5/internal/nodediscover/main/nodediscover.go" />
       <package value="Go-MQTT/mqtt_v5/internal/nodediscover/main" />
-      <directory value="$PROJECT_DIR$/" />
-      <method v="2" />
-    </configuration>
-    <configuration name="go build Go-MQTT/quic/test" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
-      <module name="Go-MQTT" />
-      <working_directory value="$PROJECT_DIR$" />
-      <kind value="PACKAGE" />
-      <filePath value="$PROJECT_DIR$/quic/test/run.go" />
-      <package value="Go-MQTT/quic/test" />
       <directory value="$PROJECT_DIR$/" />
       <method v="2" />
     </configuration>
@@ -289,31 +321,42 @@
       <pattern value="^TestGoMqtt$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestName in Go-MQTT/quic/client" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestRedis in Go-MQTT/test" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="Go-MQTT" />
-      <working_directory value="$PROJECT_DIR$/quic/client" />
+      <working_directory value="$PROJECT_DIR$/test" />
       <framework value="gotest" />
       <kind value="PACKAGE" />
-      <package value="Go-MQTT/quic/client" />
+      <package value="Go-MQTT/test" />
       <directory value="$PROJECT_DIR$/" />
       <filePath value="$PROJECT_DIR$/" />
-      <pattern value="^TestName$" />
+      <pattern value="^TestRedis$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestSharePub in Go-MQTT/mqtt_v5/internal/colong" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="Go-MQTT" />
+      <working_directory value="$PROJECT_DIR$/mqtt_v5/internal/colong" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="Go-MQTT/mqtt_v5/internal/colong" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^TestSharePub$" />
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Go Build.go build Go-MQTT/quic/test" />
       <item itemvalue="Go Build.go build run.go (1)" />
       <item itemvalue="Go Build.go build Go-MQTT/mqtt_v5/internal/nodediscover/main" />
-      <item itemvalue="Go Test.TestName in Go-MQTT/quic/client" />
       <item itemvalue="Go Test.TestGoMqtt in Go-MQTT/test" />
+      <item itemvalue="Go Test.TestSharePub in Go-MQTT/mqtt_v5/internal/colong" />
+      <item itemvalue="Go Test.TestRedis in Go-MQTT/test" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Test.TestGoMqtt in Go-MQTT/test" />
         <item itemvalue="Go Build.go build run.go (1)" />
+        <item itemvalue="Go Test.TestRedis in Go-MQTT/test" />
+        <item itemvalue="Go Test.TestSharePub in Go-MQTT/mqtt_v5/internal/colong" />
+        <item itemvalue="Go Test.TestGoMqtt in Go-MQTT/test" />
         <item itemvalue="Go Build.go build Go-MQTT/mqtt_v5/internal/nodediscover/main" />
-        <item itemvalue="Go Test.TestName in Go-MQTT/quic/client" />
-        <item itemvalue="Go Build.go build Go-MQTT/quic/test" />
       </list>
     </recent_temporary>
   </component>
@@ -363,6 +406,7 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <ignored-roots>
       <path value="$PROJECT_DIR$/jmqtt" />
     </ignored-roots>
@@ -374,9 +418,20 @@
     <MESSAGE value="fix:解决其它节点发来的消息转发给当前节点下的客户端逻辑bug" />
     <MESSAGE value="fix:修复其它节点发来的消息转发给当前节点下客户端的qos等级处理不正确bug" />
     <MESSAGE value="fix:修复超过两个节点启动失败bug" />
-    <MESSAGE value="更新readme" />
     <MESSAGE value="新增压测脚本" />
-    <option name="LAST_COMMIT_MESSAGE" value="新增压测脚本" />
+    <MESSAGE value="commit" />
+    <MESSAGE value="feat:修复+和#订阅的匹配问题，新增了s/s和s/s/都能够被s/s/#匹配到，s/s/能被s/s/+匹配到，但s/s不能被s/s/+匹配到" />
+    <MESSAGE value="feat:新增系统主题订阅与单机共享订阅实现" />
+    <MESSAGE value="feat:新增节点间$sys/消息发送" />
+    <MESSAGE value="feat:添加共享主题的{ShareName} 是一个不包含 &quot;/&quot;, &quot;+&quot; 以及 &quot;#&quot; 的字符串限制" />
+    <MESSAGE value="更新readme" />
+    <MESSAGE value="feat:完善ws监听代理配置" />
+    <MESSAGE value="feat:完善共享主题订阅集群处理" />
+    <MESSAGE value="feat:完善共享主题集群数据获取" />
+    <MESSAGE value="feat:完善获取集群共享主题数据错误时的应急处理" />
+    <MESSAGE value="feat:更新共享主题在redis中的拼接符" />
+    <MESSAGE value="feat:非集群模式时，共享主题获取处理" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat:非集群模式时，共享主题获取处理" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
@@ -388,22 +443,22 @@
     <proxy>https://goproxy.io,direct</proxy>
   </component>
   <component name="WindowStateProjectService">
-    <state x="223" y="88" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1615608695943">
+    <state x="223" y="88" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1616597992948">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="223" y="88" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.864@0.0.1536.864" timestamp="1615608695943" />
-    <state x="1033" y="127" key="#xdebugger.evaluate" timestamp="1615617474041">
+    <state x="223" y="88" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.864@0.0.1536.864" timestamp="1616597992948" />
+    <state x="1033" y="127" key="#xdebugger.evaluate" timestamp="1616813417083">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="1033" y="127" key="#xdebugger.evaluate/0.0.1536.864@0.0.1536.864" timestamp="1615617474041" />
-    <state x="372" y="0" key="CommitChangelistDialog2" timestamp="1615722427650">
+    <state x="1033" y="127" key="#xdebugger.evaluate/0.0.1536.864@0.0.1536.864" timestamp="1616813417083" />
+    <state x="372" y="0" key="CommitChangelistDialog2" timestamp="1616862888114">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="372" y="0" key="CommitChangelistDialog2/0.0.1536.864@0.0.1536.864" timestamp="1615722427650" />
-    <state x="147" y="74" key="DiffContextDialog" timestamp="1610851518731">
+    <state x="372" y="0" key="CommitChangelistDialog2/0.0.1536.864@0.0.1536.864" timestamp="1616862888114" />
+    <state x="147" y="74" width="1228" height="719" key="DiffContextDialog" timestamp="1616862938869">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="147" y="74" key="DiffContextDialog/0.0.1536.864@0.0.1536.864" timestamp="1610851518731" />
+    <state x="147" y="74" width="1228" height="719" key="DiffContextDialog/0.0.1536.864@0.0.1536.864" timestamp="1616862938869" />
     <state x="425" y="208" key="EditFileWatcherDialog" timestamp="1610631803263">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
@@ -412,62 +467,66 @@
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="549" y="188" key="FileChooserDialogImpl/0.0.1536.864@0.0.1536.864" timestamp="1615737736717" />
-    <state width="1493" height="333" key="GridCell.Tab.0.bottom" timestamp="1615722553510">
+    <state width="1493" height="260" key="GridCell.Tab.0.bottom" timestamp="1616862710331">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="333" key="GridCell.Tab.0.bottom/0.0.1536.864@0.0.1536.864" timestamp="1615722553510" />
-    <state width="1493" height="333" key="GridCell.Tab.0.center" timestamp="1615722553510">
+    <state width="1493" height="260" key="GridCell.Tab.0.bottom/0.0.1536.864@0.0.1536.864" timestamp="1616862710331" />
+    <state width="1493" height="260" key="GridCell.Tab.0.center" timestamp="1616862710331">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="333" key="GridCell.Tab.0.center/0.0.1536.864@0.0.1536.864" timestamp="1615722553510" />
-    <state width="1493" height="333" key="GridCell.Tab.0.left" timestamp="1615722553510">
+    <state width="1493" height="260" key="GridCell.Tab.0.center/0.0.1536.864@0.0.1536.864" timestamp="1616862710331" />
+    <state width="1493" height="260" key="GridCell.Tab.0.left" timestamp="1616862710331">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="333" key="GridCell.Tab.0.left/0.0.1536.864@0.0.1536.864" timestamp="1615722553510" />
-    <state width="1493" height="333" key="GridCell.Tab.0.right" timestamp="1615722553510">
+    <state width="1493" height="260" key="GridCell.Tab.0.left/0.0.1536.864@0.0.1536.864" timestamp="1616862710331" />
+    <state width="1493" height="260" key="GridCell.Tab.0.right" timestamp="1616862710331">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="333" key="GridCell.Tab.0.right/0.0.1536.864@0.0.1536.864" timestamp="1615722553510" />
-    <state width="1493" height="114" key="GridCell.Tab.1.bottom" timestamp="1615722553495">
+    <state width="1493" height="260" key="GridCell.Tab.0.right/0.0.1536.864@0.0.1536.864" timestamp="1616862710331" />
+    <state width="1493" height="260" key="GridCell.Tab.1.bottom" timestamp="1616862777058">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="114" key="GridCell.Tab.1.bottom/0.0.1536.864@0.0.1536.864" timestamp="1615722553495" />
-    <state width="1493" height="114" key="GridCell.Tab.1.center" timestamp="1615722553494">
+    <state width="1493" height="260" key="GridCell.Tab.1.bottom/0.0.1536.864@0.0.1536.864" timestamp="1616862777058" />
+    <state width="1493" height="260" key="GridCell.Tab.1.center" timestamp="1616862777058">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="114" key="GridCell.Tab.1.center/0.0.1536.864@0.0.1536.864" timestamp="1615722553494" />
-    <state width="1493" height="114" key="GridCell.Tab.1.left" timestamp="1615722553494">
+    <state width="1493" height="260" key="GridCell.Tab.1.center/0.0.1536.864@0.0.1536.864" timestamp="1616862777058" />
+    <state width="1493" height="260" key="GridCell.Tab.1.left" timestamp="1616862777058">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="114" key="GridCell.Tab.1.left/0.0.1536.864@0.0.1536.864" timestamp="1615722553494" />
-    <state width="1493" height="114" key="GridCell.Tab.1.right" timestamp="1615722553495">
+    <state width="1493" height="260" key="GridCell.Tab.1.left/0.0.1536.864@0.0.1536.864" timestamp="1616862777058" />
+    <state width="1493" height="260" key="GridCell.Tab.1.right" timestamp="1616862777058">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="114" key="GridCell.Tab.1.right/0.0.1536.864@0.0.1536.864" timestamp="1615722553495" />
-    <state x="270" y="75" key="SettingsEditor" timestamp="1614608796422">
+    <state width="1493" height="260" key="GridCell.Tab.1.right/0.0.1536.864@0.0.1536.864" timestamp="1616862777058" />
+    <state x="270" y="75" key="SettingsEditor" timestamp="1616291600210">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="270" y="75" key="SettingsEditor/0.0.1536.864@0.0.1536.864" timestamp="1614608796422" />
-    <state x="361" y="166" key="Vcs.Push.Dialog.v2" timestamp="1615722439306">
+    <state x="270" y="75" key="SettingsEditor/0.0.1536.864@0.0.1536.864" timestamp="1616291600210" />
+    <state x="361" y="166" key="Vcs.Push.Dialog.v2" timestamp="1616862940703">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="361" y="166" key="Vcs.Push.Dialog.v2/0.0.1536.864@0.0.1536.864" timestamp="1615722439306" />
-    <state width="775" height="439" key="XDebugger.FullValuePopup" timestamp="1615622845313">
+    <state x="361" y="166" key="Vcs.Push.Dialog.v2/0.0.1536.864@0.0.1536.864" timestamp="1616862940703" />
+    <state width="447" height="391" key="XDebugger.FullValuePopup" timestamp="1616862782115">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="775" height="439" key="XDebugger.FullValuePopup/0.0.1536.864@0.0.1536.864" timestamp="1615622845313" />
+    <state width="447" height="391" key="XDebugger.FullValuePopup/0.0.1536.864@0.0.1536.864" timestamp="1616862782115" />
     <state x="321" y="169" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1610795172624">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="321" y="169" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1536.864@0.0.1536.864" timestamp="1610795172624" />
-    <state x="439" y="95" width="782" height="600" key="find.popup" timestamp="1615715604282">
+    <state x="439" y="95" width="782" height="600" key="find.popup" timestamp="1616861579750">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="439" y="95" width="782" height="600" key="find.popup/0.0.1536.864@0.0.1536.864" timestamp="1615715604282" />
-    <state x="953" y="185" width="672" height="678" key="search.everywhere.popup" timestamp="1615696913360">
+    <state x="439" y="95" width="782" height="600" key="find.popup/0.0.1536.864@0.0.1536.864" timestamp="1616861579750" />
+    <state x="499" y="219" key="git4idea.merge.GitPullDialog" timestamp="1616675627556">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="953" y="185" width="672" height="678" key="search.everywhere.popup/0.0.1536.864@0.0.1536.864" timestamp="1615696913360" />
+    <state x="499" y="219" key="git4idea.merge.GitPullDialog/0.0.1536.864@0.0.1536.864" timestamp="1616675627556" />
+    <state x="953" y="185" width="672" height="678" key="search.everywhere.popup" timestamp="1616825598304">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state x="953" y="185" width="672" height="678" key="search.everywhere.popup/0.0.1536.864@0.0.1536.864" timestamp="1616825598304" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -482,6 +541,16 @@
           <line>206</line>
           <option name="timeStamp" value="41" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/mqtt_v5/internal/colong/test_sharepub_test.go</url>
+          <line>15</line>
+          <option name="timeStamp" value="73" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/mqtt_v5/internal/colong/test_sharepub_test.go</url>
+          <line>17</line>
+          <option name="timeStamp" value="74" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
@@ -493,6 +562,7 @@
         <watch expression="providers" />
         <watch expression="common.NodeTableOld" />
         <watch expression="common.NodeTable" />
+        <watch expression="shareByte" />
       </configuration>
     </watches-manager>
   </component>

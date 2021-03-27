@@ -17,6 +17,9 @@ package topics
 import (
 	"Go-MQTT/mqtt_v5/config"
 	"Go-MQTT/mqtt_v5/message"
+	"Go-MQTT/mqtt_v5/topics/share"
+	"Go-MQTT/mqtt_v5/topics/sys"
+	"Go-MQTT/redis"
 	"fmt"
 	"reflect"
 	"sync"
@@ -39,10 +42,13 @@ type memTopics struct {
 	rmu sync.RWMutex
 	// Retained messages topic tree
 	rroot *rnode
+	share share.ShareTopicsProvider // 共享订阅处理器
+	sys   sys.SysTopicsProvider     // 系统消息处理器
 }
 
 var (
 	topicsProvider = "mem"
+	nodeName       = config.ConstConf.Cluster.Name
 )
 
 func memTopicInit() {
@@ -63,11 +69,44 @@ var _ TopicsProvider = (*memTopics)(nil)
 //订阅并保留内存中的消息。内容不是这样持久化的
 //当服务器关闭时，所有东西都将消失。小心使用。
 func NewMemProvider() *memTopics {
+	sharePrv, err := share.NewManager(topicsProvider)
+	if err != nil {
+		panic(err)
+	}
+	sysPrv, err := sys.NewManager(topicsProvider)
+	if err != nil {
+		panic(err)
+	}
 	return &memTopics{
 		sroot: newSNode(),
 		rroot: newRNode(),
+		share: sharePrv,
+		sys:   sysPrv,
 	}
 }
+
+var (
+	shareByte = []byte("$share/")
+	sysByte   = []byte("$sys/")
+	// reflect.DeepEqual(topic[:len(shareByte)],shareByte)
+	// 这样可以减少反射操作
+	deepEqual = func(topic []byte) bool {
+		for i, i2 := range shareByte {
+			if topic[i] != i2 {
+				return false
+			}
+		}
+		return true
+	}
+	deepSysEqual = func(topic []byte) bool {
+		for i, i2 := range sysByte {
+			if topic[i] != i2 {
+				return false
+			}
+		}
+		return true
+	}
+)
 
 //订阅主题
 func (this *memTopics) Subscribe(topic []byte, qos byte, sub interface{}) (byte, error) {
@@ -85,34 +124,103 @@ func (this *memTopics) Subscribe(topic []byte, qos byte, sub interface{}) (byte,
 	if qos > MaxQosAllowed {
 		qos = MaxQosAllowed
 	}
-
+	if len(topic) > len(sysByte) && deepSysEqual(topic) {
+		return this.sys.Subscribe(topic[len(sysByte):], qos, sub)
+	}
+	if len(topic) > len(shareByte) && deepEqual(topic) {
+		var index = len(shareByte)
+		// 找到共享主题名称
+		for i, b := range topic[len(shareByte):] {
+			if b == '/' {
+				index += i
+				break
+			} else if b == '+' || b == '#' {
+				// {ShareName} 是一个不包含 "/", "+" 以及 "#" 的字符串。
+				return message.QosFailure, fmt.Errorf("Share Topic Subscriber did not allow '+' or '#' in {ShareName}")
+			}
+		}
+		if index == len(shareByte) {
+			return message.QosFailure, fmt.Errorf("Share Topic Subscriber no have {ShareName}/")
+		}
+		if len(topic) >= 2+index && topic[index] == '/' {
+			//shareName := string(topic[len(shareByte) : index])
+			// TODO 注册共享订阅到redis
+			redis.SubShare(string(topic[index+1:]), string(topic[len(shareByte):index]), nodeName)
+			return this.share.Subscribe(topic[index+1:], topic[len(shareByte):index], qos, sub)
+		}
+	}
 	if err := this.sroot.sinsert(topic, qos, sub); err != nil {
 		return message.QosFailure, err
 	}
-
 	return qos, nil
 }
 
 func (this *memTopics) Unsubscribe(topic []byte, sub interface{}) error {
 	this.smu.Lock()
 	defer this.smu.Unlock()
-
+	if len(topic) > len(sysByte) && deepSysEqual(topic) {
+		return this.sys.Unsubscribe(topic[len(sysByte):], sub)
+	}
+	if len(topic) > len(shareByte) && deepEqual(topic) {
+		var index = len(shareByte)
+		// 找到共享主题名称
+		for i, b := range topic[len(shareByte):] {
+			if b == '/' {
+				index += i
+				break
+			} else if b == '+' || b == '#' {
+				return fmt.Errorf("Share Topic UnSubscriber did not allow '+' or '#' in {ShareName}")
+			}
+		}
+		if index == len(shareByte) {
+			return fmt.Errorf("Share Topic UnSubscriber no have {ShareName}/")
+		}
+		if len(topic) >= 2+index && topic[index] == '/' {
+			//shareName := string(topic[len(shareByte) : index+len(shareByte)])
+			// TODO 取消注册共享订阅到redis
+			redis.UnSubShare(string(topic[index+1:]), string(topic[len(shareByte):index]), nodeName)
+			return this.share.Unsubscribe(topic[index+1:], topic[len(shareByte):index], sub)
+		}
+	}
 	return this.sroot.sremove(topic, sub)
 }
 
 // Returned values will be invalidated by the next Subscribers call
 //返回的值将在下一次订阅者调用时失效
-func (this *memTopics) Subscribers(topic []byte, qos byte, subs *[]interface{}, qoss *[]byte) error {
+// svc==true表示这是当前系统或者其它集群节点的系统消息，svc==false表示是客户端或者集群其它节点发来的普通共享、非共享消息
+// needShare != ""表示是否需要获取当前服务节点下共享组名为shareName的一个共享订阅节点
+func (this *memTopics) Subscribers(topic []byte, qos byte, subs *[]interface{}, qoss *[]byte, svc bool, shareName string, onlyShare bool) error {
 	if !message.ValidQos(qos) {
 		return fmt.Errorf("Invalid QoS %d", qos)
 	}
-
+	if !svc {
+		if len(topic) > 0 && topic[0] == '$' {
+			return fmt.Errorf("memtopics/Subscribers: Cannot publish to $ topics")
+		}
+	}
 	this.smu.RLock()
 	defer this.smu.RUnlock()
 
 	*subs = (*subs)[0:0]
 	*qoss = (*qoss)[0:0]
-
+	if svc { // 服务发来的 系统主题 消息
+		if len(topic) > 0 && deepSysEqual(topic) {
+			return this.sys.Subscribers(topic[len(sysByte):], qos, subs, qoss)
+		}
+		return fmt.Errorf("memtopics/Subscribers: Publish error message to $sys/ topics")
+	}
+	if shareName != "" {
+		err := this.share.Subscribers(topic, []byte(shareName), qos, subs, qoss)
+		if err != nil {
+			return err
+		}
+		if onlyShare { // 是否需要非共享
+			return nil
+		}
+	} else if shareName == "" && onlyShare == true { // 获取所有shareName的每个的订阅者之一
+		err := this.share.Subscribers(topic, nil, qos, subs, qoss)
+		return err
+	}
 	return this.sroot.smatch(topic, qos, subs, qoss)
 }
 
@@ -175,7 +283,7 @@ func (this *snode) sinsert(topic []byte, qos byte, sub interface{}) error {
 		// QoS and then return.
 		//让我们看看用户是否已经在名单上了。如果是的,更新
 		// QoS，然后返回。
-		for i := range this.subs {
+		for i := range this.subs { // 重复订阅，可更新qos
 			if equal(this.subs[i], sub) {
 				this.qos[i] = qos
 				return nil
@@ -286,6 +394,30 @@ func (this *snode) sremove(topic []byte, sub interface{}) error {
 //没有通配符(发布主题)，它返回订阅的订阅方列表
 //回到主题。对于每个级别名称，它都是匹配的
 // -如果“#”中有订阅者，那么所有的订阅者都将被添加到结果集中
+
+//非规范评注
+//例如, 如果客户端订阅主题 “sport/tennis/player1/#”, 它会收到使用下列主题名发布的消息:
+//• “sport/tennis/player1”
+//• “sport/tennis/player1/ranking
+//• “sport/tennis/player1/score/wimbledon”
+//
+//非规范评注
+//• “sport/#”也匹配单独的“sport”主题名, 因为#包括它的父级.
+//• “#”是有效的, 会收到所有的应用消息.
+//• “sport/tennis/#”也是有效的.
+//• “sport/tennis#”是无效的.
+//• “sport/tennis/#/ranking”是无效的.
+
+//非规范评注
+//例如, “sport/tennis/+”匹配“sport/tennis/player1”和“sport/tennis/player2”,
+//但是不匹配“sport/tennis/player1/ranking”.同时, 由于单层通配符只能匹配一个层级,
+//“sport/+”不匹配“sport”但是却匹配“sport/”.
+//• “+”是有效的.
+//• “+/tennis/#”是有效的.
+//• “sport+”是无效的.
+//• “sport/+/player1”是有效的.
+//• “/finance”匹配“+/+”和“/+”, 但是不匹配“+”.
+
 func (this *snode) smatch(topic []byte, qos byte, subs *[]interface{}, qoss *[]byte) error {
 	// If the topic is empty, it means we are at the final matching snode. If so,
 	// let's find the subscribers that match the qos and append them to the list.
@@ -293,10 +425,19 @@ func (this *snode) smatch(topic []byte, qos byte, subs *[]interface{}, qoss *[]b
 	//让我们找到与qos匹配的订阅服务器并将它们附加到列表中。
 	if len(topic) == 0 {
 		this.matchQos(qos, subs, qoss)
+		if v, ok := this.snodes["#"]; ok {
+			v.matchQos(qos, subs, qoss)
+		}
+		if v, ok := this.snodes["+"]; ok {
+			v.matchQos(qos, subs, qoss)
+		}
 		return nil
 	}
 
 	// ntl = next topic level
+	//rem和err都等于nil，意味着是 sss/sss这种后面没有/结尾的
+	//len(rem)==0和err等于nil，意味着是 sss/sss/这种后面有/结尾的
+	// rem用来做 #和+匹配时有用
 	ntl, rem, err := nextTopicLevel(topic)
 	if err != nil {
 		return err
@@ -308,8 +449,15 @@ func (this *snode) smatch(topic []byte, qos byte, subs *[]interface{}, qoss *[]b
 		if k == MWC {
 			n.matchQos(qos, subs, qoss)
 		} else if k == SWC || k == level {
-			if err := n.smatch(rem, qos, subs, qoss); err != nil {
-				return err
+			if rem != nil {
+				if err := n.smatch(rem, qos, subs, qoss); err != nil {
+					return err
+				}
+			} else { // 这个不需要匹配最后还有+的订阅者
+				n.matchQos(qos, subs, qoss)
+				if v, ok := n.snodes["#"]; ok {
+					v.matchQos(qos, subs, qoss)
+				}
 			}
 		}
 	}

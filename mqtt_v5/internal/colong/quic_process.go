@@ -157,27 +157,38 @@ func (this *ColongSvc) processorC() {
 	}
 }
 
-//集群其它节点发送来的mqtt消息的处理
+//集群其它节点发送来的mqtt消息的处理，作为服务端
 func (this *ColongSvc) processIncoming(msg Message) error {
 	var err error = nil
 	switch msg := msg.(type) {
-	case *PublishMessage:
+	// TODO 统一做PublishMessage和SysMessage消息确认机制
+	case *PublishMessage: // 客户端发来的普通消息
 		// For PUBLISH message, we should figure out what QoS it is and process accordingly
 		// If QoS == 0, we should just take the next step, no ack required
 		// If QoS == 1, we should send back PUBACK, then take the next step
 		// If QoS == 2, we need to put it in the ack queue, send back PUBREC
 		err = this.processPublish(msg) // 发送给当前节点的客户端
 		// 答复该客户端来的该条消息
-	case *PingreqMessage:
+	case *SharePubMessage: // 客户端发来的共享消息
+		// For PUBLISH message, we should figure out what QoS it is and process accordingly
+		// If QoS == 0, we should just take the next step, no ack required
+		// If QoS == 1, we should send back PUBACK, then take the next step
+		// If QoS == 2, we need to put it in the ack queue, send back PUBREC
+		err = this.processSharePublish(msg) // 发送给当前节点的客户端
+		// 答复该客户端来的该条消息
+	case *PingreqMessage: // 客户端发来的心跳
 		// For PINGREQ message, we should send back PINGRESP
 		resp := NewPingrespMessage()
 		_, err = this.writeMessage(resp)
-	case *DisconnectMessage:
+	case *DisconnectMessage: // 客户端发来的断开连接请求
 		// For DISCONNECT message, we should quit
 		return errDisconnect
-	case *ConnectMessage:
+	case *ConnectMessage: // 客户端发来的连接包
 		cack := NewConnackMessage()
 		_, err = this.writeMessage(cack)
+	case *SysMessage: // 客户端发来的系统消息
+		err = this.processSys(msg) // 发送给当前节点的客户端
+
 	default:
 		return fmt.Errorf("(%s) invalid message type %s.", this.cid(), msg.Name())
 	}
@@ -187,16 +198,20 @@ func (this *ColongSvc) processIncoming(msg Message) error {
 	return err
 }
 
-//当前节点接收到连接的服务端发来的数据， 客户端使用
+//当前节点接收到连接的服务端发来的数据， 作为客户端使用
 func (this *ColongSvc) processIncomingC(msg Message) error {
 	var err error = nil
 	switch msg := msg.(type) {
-	case *PingrespMessage:
-		// TODO 接收到其它节点的心跳响应，先不处理
-	case *DisconnectMessage:
+	// 作为客户端会收到的消息
+	case *PingrespMessage: // 心跳响应
+		// 接收到其它节点的心跳响应
+		//this.sess.Pingack.Ack(msg)
+		//this.processAcked(this.sess.Pingack) // 提醒处理
+	case *DisconnectMessage: // 服务端主动关闭连接
 		// For DISCONNECT message, we should quit
+		// TODO 需要进一步处理断开连接
 		return errDisconnect
-	case *ConnackMessage:
+	case *ConnackMessage: // 连接响应
 		// 客户端连接服务端认证成功
 		logger.Info("连接认证成功")
 	default:
@@ -219,7 +234,17 @@ func (this *ColongSvc) processIncomingC(msg Message) error {
 // 要发给当前节点的处理协程去处理
 // 这是其它节点发来消息的处理
 func (this *ColongSvc) processPublish(msg *PublishMessage) error {
-	return this.pubFunc(*msg)
+	return this.pubFunc(msg)
+}
+
+// 处理其它节点发来的共享消息
+func (this *ColongSvc) processSharePublish(msg *SharePubMessage) error {
+	return this.shareFunc(msg)
+}
+
+// 处理其它节点发来的$sys消息
+func (this *ColongSvc) processSys(msg *SysMessage) error {
+	return this.sysFunc(msg)
 }
 func (this *ColongSvc) processAcked(ackq *Ackqueue) {
 	for _, ackmsg := range ackq.Acked() {

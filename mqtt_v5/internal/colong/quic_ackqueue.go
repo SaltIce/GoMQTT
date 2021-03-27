@@ -79,17 +79,19 @@ type ackmsg struct {
 // Ackqueue用于存储正在等待ack返回的消息。
 //在那里
 //是几个需要ack的场景。
-// 1。 客户端发送订阅消息到服务器，等待SUBACK。
-// 2。 客户端发送取消订阅消息到服务器，等待UNSUBACK。
-// 3。 客户端向服务器发送PUBLISH QoS 1消息，等待PUBACK。
-// 4。 服务器向客户端发送PUBLISH QoS 1消息，等待PUBACK。
-// 5。 客户端向服务器发送PUBLISH QoS 2消息，等待PUBREC。
-// 6。 服务器向客户端发送PUBREC消息，等待PUBREL。
-// 7。 客户端发送PUBREL消息到服务器，等待PUBCOMP。
-// 8。 服务器向客户端发送PUBLISH QoS 2消息，等待PUBREC。
-// 9。 客户端发送PUBREC消息到服务器，等待PUBREL。
-// 10。 服务器向客户端发送PUBREL消息，等待PUBCOMP。
-// 11。 客户端发送PINGREQ消息到服务器，等待PINGRESP。
+
+// 其它节点 -------->>  当前节点
+//  客户端               服务器
+
+// 1。 客户端发送连接认证消息到服务器，等待AUTHACK。
+// 2。 客户端发送sys消息到服务器，等待SYSACK。
+// 3。 客户端向服务器发送PUBLISH消息，等待PUBREC。
+// 4。 服务器向客户端发送PUBREC消息，等待PUBREL。
+// 5。 客户端发送PUBREL消息到服务器，等待PUBCOMP。
+// 服务器向客户端PUBCIMP消息。
+// 6。 客户端发送PINGREQ消息到服务器，等待PINGRESP。
+// 7。 客户端发送shareReq消息到服务器，等待shareACK
+// 8。 服务器发送shareAck，等待share消息
 type Ackqueue struct {
 	size  int64
 	mask  int64
@@ -134,13 +136,9 @@ func (this *Ackqueue) Wait(msg Message, onComplete interface{}) error {
 	defer this.mu.Unlock()
 
 	switch msg := msg.(type) {
-	case *PublishMessage:
-		if msg.QoS() == QosAtMostOnce {
-			//return fmt.Errorf("QoS 0 messages don't require ack")
-			return errWaitMessage
-		}
-
-		this.insert(msg.PacketId(), msg, onComplete)
+	case *PublishMessage, *SysMessage, *SharePubMessage:
+		// 这些类型的消息需要等待消息确认
+		return this.insert(msg.PacketId(), msg, onComplete)
 
 	case *PingreqMessage:
 		this.ping = ackmsg{
@@ -264,6 +262,8 @@ func (this *Ackqueue) insert(pktid uint16, msg Message, onComplete interface{}) 
 	} else {
 		// If packet w/ pktid already exist, then this must be a PUBLISH message
 		// Other message types should never send with the same packet ID
+		//如果包w/ pktid已经存在，那么这必须是一个发布消息
+		//其他类型的消息永远不应该发送相同的包ID
 		pm, ok := msg.(*PublishMessage)
 		if !ok {
 			return fmt.Errorf("ack/insert: duplicate packet ID for %s message", msg.Name())
@@ -271,11 +271,14 @@ func (this *Ackqueue) insert(pktid uint16, msg Message, onComplete interface{}) 
 
 		// If this is a publish message, then the DUP flag must be set. This is the
 		// only scenario in which we will receive duplicate messages.
+		//如果这是一个发布消息，那么必须设置DUP标志
+		//唯一的场景，我们将收到重复的消息。
 		if pm.Dup() {
 			return fmt.Errorf("ack/insert: duplicate packet ID for PUBLISH message, but DUP flag is not set")
 		}
 
 		// Since it's a dup, there's really nothing we need to do. Moving on...
+		// 既然是dup，我们真的没什么要做的。继续……
 	}
 
 	return nil

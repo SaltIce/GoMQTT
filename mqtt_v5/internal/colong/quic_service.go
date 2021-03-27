@@ -20,7 +20,9 @@ var (
 type (
 	//完成的回调方法
 	OnCompleteFunc func(msg, ack Message, err error) error
-	OnPublishFunc  func(msg *PublishMessage) error
+	// 其它节点从当然客户端连接返回的消息处理,name 为当前quic client连接的名称
+	OnCompleteFuncForSvc func(msg, ack Message, name string, err error) error
+	OnPublishFunc        func(msg *PublishMessage) error
 )
 
 type stat struct {
@@ -37,16 +39,17 @@ var (
 	gsvcid uint64 = 0
 )
 
+// 集群节点服务，服务器的连接数据
 type ColongSvc struct {
 	// The ID of this service, it's not related to the Client ID, just a number that's
 	// incremented for every new service.
-	//这个服务的ID，它与客户ID无关，只是一个数字而已
-	//每增加一个新服务。
+	// 这个服务的ID，它与客户ID无关，只是一个数字而已
+	// 每增加一个新服务。
 	id uint64
 
 	// Is this a client or server. It's set by either Connect (client) or
 	// HandleConnection (server).
-	//这是客户端还是服务器?它是由Connect (client)或
+	// 这是客户端还是服务器?它是由Connect (client)或
 	// HandleConnection(服务器)。
 	// 用来表示该是服务端的还是客户端的
 	client bool
@@ -134,12 +137,19 @@ type ColongSvc struct {
 	qoss  []byte
 	rmsgs []*PublishMessage
 
-	pubFunc func(msg interface{}) error
+	// 服务端使用
+	pubFunc   func(msg interface{}) error // 其它节点发来的消息处理
+	sysFunc   func(msg interface{}) error // 其它节点发来的$sys消息处理
+	shareFunc func(msg interface{}) error // 其它节点发来的$share消息处理
+	// 客户端连接使用
+	pubSys func(msg interface{}) error // 向其它节点发送$sys消息处理
 }
 
-func (this *ColongSvc) start(pubFunc func(msg interface{}) error) error {
+func (this *ColongSvc) start(pubFunc, sysFunc, shareFunc func(msg interface{}) error) error {
 	var err error
 	this.pubFunc = pubFunc
+	this.sysFunc = sysFunc
+	this.shareFunc = shareFunc
 	// Create the incoming ring buffer
 	this.in, err = newBuffer(defaultBufferSize)
 	if err != nil {
@@ -179,9 +189,8 @@ func (this *ColongSvc) start(pubFunc func(msg interface{}) error) error {
 
 	return nil
 }
-func (this *ColongSvc) startC(pubFunc func(msg interface{}) error) error {
+func (this *ColongSvc) startC() error {
 	var err error
-	this.pubFunc = pubFunc
 	// Create the incoming ring buffer
 	this.in, err = newBuffer(defaultBufferSize)
 	if err != nil {
@@ -264,22 +273,27 @@ func (this *ColongSvc) stop() {
 	this.out = nil
 }
 
-func (this *ColongSvc) publish(msg *PublishMessage, onComplete OnCompleteFunc) error {
-
-	_, err := this.writeMessage(msg)
-	if err != nil {
-		return fmt.Errorf("(%s) Error sending %s message: %v", this.cid(), msg.Name(), err)
+// 发送到其它节点，并写入等待acl确认队列
+func (this *ColongSvc) Publish(msg Message, onComplete interface{}) error {
+	switch msg.(type) {
+	case *SysMessage:
+		// 直接发送，并等待确认
+		_, err := this.writeMessage(msg)
+		if err != nil {
+			return fmt.Errorf("(%s) Error sending %s message to cluser: %v", this.cid(), msg.Name(), err)
+		}
+		//return this.sess.SysMsgack.Wait(msg, onComplete)
+		return nil
+	case *SharePubMessage, *PublishMessage:
+		_, err := this.writeMessage(msg)
+		if err != nil {
+			return fmt.Errorf("(%s) Error sending %s message to cluser: %v", this.cid(), msg.Name(), err)
+		}
+		//return this.sess.Msgack.Wait(msg, onComplete)
+		return nil
+	default:
+		return nil
 	}
-	// TODO 等待这个消息确认
-	return this.sess.Msgack.Wait(msg, onComplete)
-}
-
-func (this *ColongSvc) Publish(msg *PublishMessage, onComplete OnCompleteFunc) error {
-	_, err := this.writeMessage(msg)
-	if err != nil {
-		return fmt.Errorf("(%s) Error sending %s message to cluser: %v", this.cid(), msg.Name(), err)
-	}
-	return nil
 }
 
 func (this *ColongSvc) ping(onComplete OnCompleteFunc) error {

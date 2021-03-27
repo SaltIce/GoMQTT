@@ -3,11 +3,12 @@
 ##  常量配置文件
 ##
 serverversion: "3.1.0"
-brokerurl : "tcp://:1887"
+brokerurl : "tcp://:1883" # mqtt服务
+wsbrokerurl : ":8883" # ws路径
 cluster:
-    enabled: true
-    name : "node7" # 当前节点name，不要与其它节点冲突
-    hostip : "udp://127.0.0.1:8767" #当前节点的外网访问地址
+    enabled: false
+    name : "node3" # 当前节点name，不要与其它节点冲突
+    hostip : "udp://127.0.0.1:8763" #当前节点的外网访问地址
     zkurl : "10.112.26.131:2181" ## zk集群的写法 10.112.26.131:2181,10.112.26.131:2181
     zktimeout : 5 # zk超时 单位秒
     zkmqroot : "/mqRoot" # zk根
@@ -33,7 +34,7 @@ defaultconst:
     authenticator: "" # 不填则会采用默认，开启身份验证的验证钩子，可选【"default","mysql","redis"】
     redis:
       redisurl: "10.112.26.131:6379"
-      password: "root"
+      password: ""
       db: 1
       rsize: 15 #redis池大小
     mysql:

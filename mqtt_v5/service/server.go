@@ -21,6 +21,7 @@ import (
 	"Go-MQTT/mqtt_v5/internal/common"
 	"Go-MQTT/mqtt_v5/logger"
 	"Go-MQTT/mqtt_v5/utils"
+	"Go-MQTT/redis"
 	"errors"
 	"fmt"
 	"io"
@@ -137,9 +138,12 @@ type Server struct {
 	subs []interface{}
 	qoss []byte
 
-	colongSvc *colong.ColongSvc         // 自己充当服务端的服务器
+	colongSvc *colong.Server            // 自己充当服务端的服务器
 	client    map[string]*colong.Server // 自己充当客户端的那些连接
 	clientWg  *sync.RWMutex             // 控制客户端连接的锁
+	//ShareMsgPack map[uint16]*Pack // share消息的待选择节点列表
+	// 原始publish消息，等待shareack后发送给各个服务端节点后删除
+	sourcePublishMsg *SafeMap // <uint16: *Pack>
 }
 
 // ListenAndServe listents to connections on the URI requested, and handles any
@@ -167,6 +171,7 @@ func (this *Server) ListenAndServe(uri string) error {
 		this.client = make(map[string]*colong.Server)
 	}
 	this.quit = make(chan struct{})
+	this.sourcePublishMsg = NewSafeMap()
 
 	u, err := url.Parse(uri)
 	if err != nil {
@@ -183,7 +188,7 @@ func (this *Server) ListenAndServe(uri string) error {
 	if err != nil {
 		panic(err)
 	}
-	print()
+	printBanner()
 	var tempDelay time.Duration // how long to sleep on accept failure 接受失败要睡多久，默认5ms，最大1s
 	if config.ConstConf.Cluster.Enabled {
 		ul := config.ConstConf.Cluster.HostIp
@@ -219,17 +224,23 @@ func (this *Server) ListenAndServe(uri string) error {
 						}
 					}
 					mp := common.NodeTableOld.GetMap()
-					s.clientWg.Lock()
-					// 移除不要的
-					for i, _ := range mp {
-						if c, ok := this.client[i]; ok {
-							_ = c.Close()
-							delete(this.client, i)
-							logger.Infof("节点%v断线", c.Name)
+					wg := &sync.WaitGroup{}
+					wg.Add(1)
+					go func() {
+						defer wg.Done()
+						s.clientWg.Lock()
+						defer s.clientWg.Unlock()
+						// 移除不要的
+						for i, _ := range mp {
+							if c, ok := this.client[i]; ok {
+								_ = c.Close()
+								delete(this.client, i)
+								logger.Infof("节点%v断线", c.Name)
+							}
 						}
-					}
-					s.clientWg.Unlock()
-					common.Exchange()
+						common.Exchange()
+					}()
+					wg.Wait()
 				}
 			}
 		}
@@ -237,6 +248,17 @@ func (this *Server) ListenAndServe(uri string) error {
 			_ = autoUpdate(this)
 		}()
 	}
+	//go func() {
+	//	for {
+	//		time.Sleep(10 * time.Second)
+	//		msg := message.NewPublishMessage()
+	//		msg.SetQoS(0x02)
+	//		msg.SetTopic([]byte("$sys/1"))
+	//		msg.SetPacketId(uint16(1))
+	//		msg.SetPayload([]byte("lalalala"))
+	//		this.PublishSys(msg, nil)
+	//	}
+	//}()
 	for {
 		conn, err := this.ln.Accept()
 
@@ -277,7 +299,9 @@ func (this *Server) ListenAndServe(uri string) error {
 		}()
 	}
 }
-func print() {
+
+// 打印启动banner
+func printBanner() {
 	logger.Infof("\n"+
 		"\\***\n"+
 		"*  _ooOoo_\n"+
@@ -322,13 +346,38 @@ func (this *Server) CreatQUICServer(url string) {
 		AckTimeout:     this.AckTimeout,
 		TimeoutRetries: this.TimeoutRetries,
 	}
+	this.colongSvc = svr
 	go svr.ListenAndServe(url, func(msg interface{}) error {
-		if msgP, ok := msg.(colong.PublishMessage); ok {
+		// 其它节点发来publish消息
+		if msgP, ok := msg.(*colong.PublishMessage); ok {
 			pub := message.NewPublishMessage()
 			dst := make([]byte, msgP.Len())
 			_, _ = msgP.Encode(dst)
 			_, _ = pub.Decode(dst)
-			_ = this.Publish(pub, nil) // 发送给当前节点下的订阅者们
+			_ = this.publish(pub, nil) // 发送给当前节点下的订阅者们
+		}
+		return nil
+	}, func(msg interface{}) error {
+		// 其它节点发来sys消息
+		if msgP, ok := msg.(*colong.SysMessage); ok {
+			msgP.SetType(colong.PUBLISH)
+			pub := message.NewPublishMessage()
+			dst := make([]byte, msgP.Len())
+			_, _ = msgP.Encode(dst)
+			_, _ = pub.Decode(dst)
+			_ = this.sysPublish(pub, nil) // 从其它节点接收到$sys/消息，发送sys消息给当前节点下的订阅者们
+		}
+		return nil
+	}, func(msg interface{}) error {
+		// 其它节点发来sharePub消息
+		if msgP, ok := msg.(*colong.SharePubMessage); ok {
+			msgP.SetType(colong.PUBLISH)
+			shareName := msgP.ShareName()
+			pub := message.NewPublishMessage()
+			dst := make([]byte, msgP.Len())
+			_, _ = msgP.Encode(dst)
+			_, _ = pub.Decode(dst)
+			_ = this.sharePublish(pub, shareName, nil) // 从其它节点接收到sharePub消息，发送share消息给当前节点下shareName的订阅者们
 		}
 		return nil
 	})
@@ -359,8 +408,8 @@ func (this *Server) CreatQUICClient(name, url string) {
 	}()
 }
 
-// 其它节点发来的消息处理
-func (this *Server) Publish(msg *message.PublishMessage, onComplete OnCompleteFunc) error {
+// 其它节点发来的普通消息处理
+func (this *Server) publish(msg *message.PublishMessage, onComplete OnCompleteFunc) error {
 	if err := this.checkConfiguration(); err != nil {
 		return err
 	}
@@ -370,8 +419,8 @@ func (this *Server) Publish(msg *message.PublishMessage, onComplete OnCompleteFu
 			logger.Errorf(err, "Error retaining message: %v", err)
 		}
 	}
-
-	if err := this.topicsMgr.Subscribers(msg.Topic(), msg.QoS(), &this.subs, &this.qoss); err != nil {
+	// 只需要发送非共享主题的
+	if err := this.topicsMgr.Subscribers(msg.Topic(), msg.QoS(), &this.subs, &this.qoss, false, "", false); err != nil {
 		return err
 	}
 
@@ -392,6 +441,91 @@ func (this *Server) Publish(msg *message.PublishMessage, onComplete OnCompleteFu
 		}
 	}
 
+	return nil
+}
+
+// 其它节点发来的sharePub消息处理
+func (this *Server) sharePublish(msg *message.PublishMessage, shareName string, onComplete OnCompleteFunc) error {
+	if err := this.checkConfiguration(); err != nil {
+		return err
+	}
+
+	if msg.Retain() {
+		if err := this.topicsMgr.Retain(msg); err != nil {
+			logger.Errorf(err, "Error retaining message: %v", err)
+		}
+	}
+	// 需要发送共享主题的，也要发送非共享主题的
+	if err := this.topicsMgr.Subscribers(msg.Topic(), msg.QoS(), &this.subs, &this.qoss, false, shareName, false); err != nil {
+		return err
+	}
+
+	msg.SetRetain(false)
+
+	//glog.Debugf("(server) Publishing to topic %q and %d subscribers", string(msg.Topic()), len(this.subs))
+	for i, s := range this.subs {
+		if s != nil {
+			fn, ok := s.(*OnPublishFunc)
+			if !ok {
+				logger.Info("Invalid onPublish Function")
+			} else {
+				oldQos := msg.QoS()
+				msg.SetQoS(this.qoss[i])
+				(*fn)(msg)
+				msg.SetQoS(oldQos)
+			}
+		}
+	}
+
+	return nil
+}
+
+// 其它节点发来的$sys/消息消息处理
+func (this *Server) sysPublish(msg *message.PublishMessage, onComplete OnCompleteFunc) error {
+	if err := this.checkConfiguration(); err != nil {
+		return err
+	}
+	// 只需要发送系统主题消息给订阅者们
+	if err := this.topicsMgr.Subscribers(msg.Topic(), msg.QoS(), &this.subs, &this.qoss, true, "", false); err != nil {
+		return err
+	}
+
+	msg.SetRetain(false)
+
+	//glog.Debugf("(server) Publishing to topic %q and %d subscribers", string(msg.Topic()), len(this.subs))
+	for i, s := range this.subs {
+		if s != nil {
+			fn, ok := s.(*OnPublishFunc)
+			if !ok {
+				logger.Info("Invalid onPublish Function")
+			} else {
+				oldQos := msg.QoS()
+				msg.SetQoS(this.qoss[i])
+				(*fn)(msg)
+				msg.SetQoS(oldQos)
+			}
+		}
+	}
+
+	return nil
+}
+
+// 当前节点向其它节点发送$sys/主题下的消息，系统服务可调用
+// FIXME 会变成qos=0
+func (this *Server) PublishSys(msg *message.PublishMessage, onComplete colong.OnCompleteFunc) error {
+	this.clientWg.Lock()
+	defer this.clientWg.Unlock()
+	if len(this.client) == 0 {
+		return nil
+	}
+	b := make([]byte, msg.Len())
+	msg.Encode(b)
+	m := colong.NewSysMessage()
+	m.Decode(b)
+	for _, cl := range this.client { //发送到其它节点
+		cl.Svc.Publish(m, onComplete)
+	}
+	logger.Debug("发送一次sys消息")
 	return nil
 }
 
@@ -483,7 +617,7 @@ func (this *Server) handleConnection(c io.Closer) (svc *service, err error) {
 		//登陆失败日志，断开连接
 		resp.SetReturnCode(message.ErrBadUsernameOrPassword)
 		resp.SetSessionPresent(false)
-		writeMessage(conn, resp)
+		err = writeMessage(conn, resp)
 		return nil, err
 	}
 
@@ -503,17 +637,65 @@ func (this *Server) handleConnection(c io.Closer) (svc *service, err error) {
 		conn:      conn,
 		sessMgr:   this.sessMgr,
 		topicsMgr: this.topicsMgr,
-		clientLinkPub: func(msg interface{}) error {
+
+		clientLinkPub: func(msg interface{}, fn func(shareName string) error, fnPlus func() error) error {
 			if msgP, ok := msg.(*message.PublishMessage); ok {
-				b := make([]byte, msgP.Len())
-				msgP.Encode(b)
-				m := colong.NewPublishMessage()
-				m.Decode(b)
-				for _, cl := range this.client { //发送到其它节点
-					cl.Svc.Publish(m, nil)
+				// 获取该主题的 共享集群数据
+				v, err := redis.GetTopicShare(string(msgP.Topic()))
+				if err != nil {
+					logger.Debugf("获取主题%v的共享数据错误：%v", string(msgP.Topic()), err.Error())
+					// 没有获取到数据，就只发送普通消息到其它节点,自己节点下尝试发送共享消息
+					// 加锁,防止更新客户端节点的时候起冲突
+					this.clientWg.RLock()
+					defer this.clientWg.RUnlock()
+					for _, cl := range this.client {
+						b := make([]byte, msgP.Len())
+						msgP.Encode(b)
+						mp := colong.NewPublishMessage()
+						mp.Decode(b)
+						cl.Svc.Publish(mp, nil)
+					}
+					return fnPlus()
+				}
+				if v == nil { // 表示为单机模式，直接发送自己下面的共享订阅组们
+					return fnPlus()
+				}
+				check := v.RandShare()
+				// 加锁,防止更新客户端节点的时候起冲突
+				this.clientWg.RLock()
+				defer this.clientWg.RUnlock()
+				for _, cl := range this.client {
+					if shareName, ok := check[cl.Name]; ok {
+						for _, sname := range shareName {
+							sp := colong.NewSharePubMessage()
+							shtopic := append([]byte("$share/"), []byte(sname+"/")...)
+							shtopic = append(shtopic, msgP.Topic()...)
+							msgP.SetTopic(shtopic)
+							b := make([]byte, msgP.Len())
+							i, _ := msgP.Encode(b)
+							if i < len(b) {
+								b = b[:i]
+							}
+							sp.Decode(b)
+							cl.Svc.Publish(sp, nil)
+						}
+					} else {
+						b := make([]byte, msgP.Len())
+						msgP.Encode(b)
+						mp := colong.NewPublishMessage()
+						mp.Decode(b)
+						cl.Svc.Publish(mp, nil)
+					}
+				}
+				// 查看当前节点是否也要发送共享消息【只是共享消息，因为普通消息早就发送了的】，
+				if shareName, ok := check[config.ConstConf.Cluster.Name]; ok {
+					for _, sname := range shareName {
+						err = fn(sname)
+					}
 				}
 			}
-			return nil
+			// 错误处理需要完善
+			return err
 		},
 	}
 	err = this.getSession(svc, req, resp)
@@ -543,7 +725,6 @@ func (this *Server) handleConnection(c io.Closer) (svc *service, err error) {
 
 	return svc, nil
 }
-
 func (this *Server) checkConfiguration() error {
 	var err error
 

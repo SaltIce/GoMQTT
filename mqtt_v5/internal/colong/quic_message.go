@@ -33,7 +33,8 @@ const (
 
 	// QosFailure is a return value for a subscription if there's a problem while subscribing
 	// to a specific topic.
-	QosFailure = 0x80
+	QosFailure    = 0x80
+	WeightFailure = QosFailure
 )
 
 // SupportedVersions is a map of the version number (0x3 or 0x4) to the version string,
@@ -153,6 +154,11 @@ const (
 	// RESERVED2是一个保留值，应该被认为是一个无效的消息类型。
 	// 两个RESERVED是方便做校验，直接判断是否处在这两个中间即可判断合法性
 	RESERVED2
+	// 下面的并没有等号后面的那个的意思
+	// 下面只是一个标志，实际载体还是publish消息
+	SYS          = SUBSCRIBE   // 节点间sys消息，因为type只能在0-15范围内，所以拿SUBSCRIBE这个位代替
+	SHAREPUBLISH = UNSUBSCRIBE // 选出的那个,发送共享消息
+
 )
 
 func (this MessageType) String() string {
@@ -180,14 +186,6 @@ func (this MessageType) Name() string {
 		return "PUBREL"
 	case PUBCOMP:
 		return "PUBCOMP"
-	case SUBSCRIBE:
-		return "SUBSCRIBE"
-	case SUBACK:
-		return "SUBACK"
-	case UNSUBSCRIBE:
-		return "UNSUBSCRIBE"
-	case UNSUBACK:
-		return "UNSUBACK"
 	case PINGREQ:
 		return "PINGREQ"
 	case PINGRESP:
@@ -196,6 +194,10 @@ func (this MessageType) Name() string {
 		return "DISCONNECT"
 	case RESERVED2:
 		return "RESERVED2"
+	case SYS:
+		return "SYS"
+	case SHAREPUBLISH:
+		return "SHAREPUBLISH"
 	}
 
 	return "UNKNOWN"
@@ -219,14 +221,6 @@ func (this MessageType) Desc() string {
 		return "Publish release (assured delivery part 2)"
 	case PUBCOMP:
 		return "Publish complete (assured delivery part 3)"
-	case SUBSCRIBE:
-		return "Client subscribe request"
-	case SUBACK:
-		return "Subscribe acknowledgement"
-	case UNSUBSCRIBE:
-		return "Unsubscribe request"
-	case UNSUBACK:
-		return "Unsubscribe acknowledgement"
 	case PINGREQ:
 		return "PING request"
 	case PINGRESP:
@@ -235,6 +229,10 @@ func (this MessageType) Desc() string {
 		return "Client is disconnecting"
 	case RESERVED2:
 		return "Reserved"
+	case SYS:
+		return "SYS message"
+	case SHAREPUBLISH:
+		return "SHAREPUBLISH message"
 	}
 
 	return "UNKNOWN"
@@ -260,14 +258,6 @@ func (this MessageType) DefaultFlags() byte {
 		return 2
 	case PUBCOMP:
 		return 0
-	case SUBSCRIBE:
-		return 2
-	case SUBACK:
-		return 0
-	case UNSUBSCRIBE:
-		return 2
-	case UNSUBACK:
-		return 0
 	case PINGREQ:
 		return 0
 	case PINGRESP:
@@ -275,6 +265,10 @@ func (this MessageType) DefaultFlags() byte {
 	case DISCONNECT:
 		return 0
 	case RESERVED2:
+		return 0
+	case SYS:
+		return 2
+	case SHAREPUBLISH:
 		return 0
 	}
 
@@ -300,6 +294,10 @@ func (this MessageType) New() (Message, error) {
 		return NewConnectMessage(), nil
 	case CONNACK:
 		return NewConnackMessage(), nil
+	case SYS:
+		return NewSysMessage(), nil
+	case SHAREPUBLISH:
+		return NewSharePubMessage(), nil
 	}
 
 	return nil, fmt.Errorf("msgtype/NewMessage: Invalid message type %d", this)
