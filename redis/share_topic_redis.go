@@ -14,6 +14,7 @@ var (
 	r            *redis.Client
 	cacheGlobal  *cacheInfo
 	cacheOutTime = 1 * time.Second
+	open         bool
 )
 
 type tn struct {
@@ -27,9 +28,13 @@ type cacheInfo struct {
 }
 
 func init() {
+	if open = config.ConstConf.Cluster.Enabled; !open {
+		return
+	}
 	redisSUrl := config.ConstConf.DefaultConst.Redis.RedisUrl
 	redisSPassword := config.ConstConf.DefaultConst.Redis.PassWord
 	redisSDB := config.ConstConf.DefaultConst.Redis.DB
+	open = config.ConstConf.Cluster.Enabled
 	if isEmpty(redisSUrl) {
 		panic("redis info have empty")
 	}
@@ -195,6 +200,9 @@ func reqMerge(topic string) (*ShareNameInfo, error) {
 
 // 获取topic的共享主题信息
 func GetTopicShare(topic string) (*ShareNameInfo, error) {
+	if !open {
+		return nil, nil
+	}
 	cacheGlobal.RLock()
 	if v, ok := cacheGlobal.global[topic]; ok {
 		defer cacheGlobal.RUnlock()
@@ -212,6 +220,9 @@ func GetTopicShare(topic string) (*ShareNameInfo, error) {
 // 可以考虑换一个拼接符 '/'，因为$share/{shareName}/{filter} 中shareName中不能出现'/'的
 // 上述已修改为 '/'
 func SubShare(topic, shareName, nodeName string) bool {
+	if !open {
+		return true
+	}
 	v, err := redis.NewScript(sr).Run(r, []string{topic, shareName, nodeName}, 1, 1).Result()
 	if err != nil {
 		return false
@@ -221,6 +232,9 @@ func SubShare(topic, shareName, nodeName string) bool {
 
 // 取消一个topic下某个shareName的订阅
 func UnSubShare(topic, shareName, nodeName string) bool {
+	if !open {
+		return true
+	}
 	v, err := redis.NewScript(sr).Run(r, []string{topic, shareName, nodeName}, 0, -1).Result()
 	if err != nil {
 		return false
@@ -230,6 +244,9 @@ func UnSubShare(topic, shareName, nodeName string) bool {
 
 // 删除主题
 func DelTopic(topic string) error {
+	if !open {
+		return nil
+	}
 	_, err := redis.NewScript(del).Run(r, []string{topic}).Result()
 	if err != nil {
 		return fmt.Errorf("删除topic：%v下的共享信息出错：%v", topic, err)

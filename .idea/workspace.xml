@@ -162,8 +162,8 @@
       <change afterPath="$PROJECT_DIR$/../tcp_util" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt_v5/config/const.yml" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/config/const.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mqtt_v5/service/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/service/server.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/service/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/service/service.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/redis/share_topic_redis.go" beforeDir="false" afterPath="$PROJECT_DIR$/redis/share_topic_redis.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../github.com/surgemq/surgemq/colong/net.go" beforeDir="false" afterPath="$PROJECT_DIR$/../github.com/surgemq/surgemq/colong/net.go" afterDir="false" />
@@ -432,7 +432,8 @@
     <MESSAGE value="feat:完善共享主题订阅集群处理" />
     <MESSAGE value="feat:完善共享主题集群数据获取" />
     <MESSAGE value="feat:完善获取集群共享主题数据错误时的应急处理" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat:完善获取集群共享主题数据错误时的应急处理" />
+    <MESSAGE value="feat:更新共享主题在redis中的拼接符" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat:更新共享主题在redis中的拼接符" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
@@ -452,10 +453,10 @@
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="1033" y="127" key="#xdebugger.evaluate/0.0.1536.864@0.0.1536.864" timestamp="1616813417083" />
-    <state x="372" y="0" key="CommitChangelistDialog2" timestamp="1616816524910">
+    <state x="372" y="0" key="CommitChangelistDialog2" timestamp="1616826033513">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="372" y="0" key="CommitChangelistDialog2/0.0.1536.864@0.0.1536.864" timestamp="1616816524910" />
+    <state x="372" y="0" key="CommitChangelistDialog2/0.0.1536.864@0.0.1536.864" timestamp="1616826033513" />
     <state x="147" y="74" width="1228" height="719" key="DiffContextDialog" timestamp="1616207405057">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
@@ -504,10 +505,10 @@
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="270" y="75" key="SettingsEditor/0.0.1536.864@0.0.1536.864" timestamp="1616291600210" />
-    <state x="361" y="166" key="Vcs.Push.Dialog.v2" timestamp="1616816549832">
+    <state x="361" y="166" key="Vcs.Push.Dialog.v2" timestamp="1616826049973">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="361" y="166" key="Vcs.Push.Dialog.v2/0.0.1536.864@0.0.1536.864" timestamp="1616816549832" />
+    <state x="361" y="166" key="Vcs.Push.Dialog.v2/0.0.1536.864@0.0.1536.864" timestamp="1616826049973" />
     <state width="447" height="391" key="XDebugger.FullValuePopup" timestamp="1616813915240">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
@@ -516,10 +517,10 @@
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="321" y="169" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1536.864@0.0.1536.864" timestamp="1610795172624" />
-    <state x="439" y="95" width="782" height="600" key="find.popup" timestamp="1615715604282">
+    <state x="439" y="95" width="782" height="600" key="find.popup" timestamp="1616861579750">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="439" y="95" width="782" height="600" key="find.popup/0.0.1536.864@0.0.1536.864" timestamp="1615715604282" />
+    <state x="439" y="95" width="782" height="600" key="find.popup/0.0.1536.864@0.0.1536.864" timestamp="1616861579750" />
     <state x="499" y="219" key="git4idea.merge.GitPullDialog" timestamp="1616675627556">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
@@ -551,11 +552,6 @@
           <url>file://$PROJECT_DIR$/mqtt_v5/internal/colong/test_sharepub_test.go</url>
           <line>17</line>
           <option name="timeStamp" value="74" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/mqtt_v5/internal/colong/quic_sharepub.go</url>
-          <line>54</line>
-          <option name="timeStamp" value="82" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/mqtt_v5/topics/memtopics.go</url>

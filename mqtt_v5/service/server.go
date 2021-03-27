@@ -657,6 +657,9 @@ func (this *Server) handleConnection(c io.Closer) (svc *service, err error) {
 					}
 					return fnPlus()
 				}
+				if v == nil { // 表示为单机模式，直接发送自己下面的共享订阅组们
+					return fnPlus()
+				}
 				check := v.RandShare()
 				// 加锁,防止更新客户端节点的时候起冲突
 				this.clientWg.RLock()
