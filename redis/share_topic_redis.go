@@ -34,7 +34,6 @@ func init() {
 	redisSUrl := config.ConstConf.DefaultConst.Redis.RedisUrl
 	redisSPassword := config.ConstConf.DefaultConst.Redis.PassWord
 	redisSDB := config.ConstConf.DefaultConst.Redis.DB
-	open = config.ConstConf.Cluster.Enabled
 	if isEmpty(redisSUrl) {
 		panic("redis info have empty")
 	}
