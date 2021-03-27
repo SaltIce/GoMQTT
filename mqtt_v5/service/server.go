@@ -634,14 +634,13 @@ func (this *Server) handleConnection(c io.Closer) (svc *service, err error) {
 		ackTimeout:     this.AckTimeout,
 		timeoutRetries: this.TimeoutRetries,
 
-		conn:             conn,
-		sessMgr:          this.sessMgr,
-		topicsMgr:        this.topicsMgr,
-		sourcePublishMsg: this.sourcePublishMsg,
+		conn:      conn,
+		sessMgr:   this.sessMgr,
+		topicsMgr: this.topicsMgr,
 
 		clientLinkPub: func(msg interface{}, fn func(shareName string) error, fnPlus func() error) error {
-			// 首先发送sharereq消息
 			if msgP, ok := msg.(*message.PublishMessage); ok {
+				// 获取该主题的 共享集群数据
 				v, err := redis.GetTopicShare(string(msgP.Topic()))
 				if err != nil {
 					logger.Debugf("获取主题%v的共享数据错误：%v", string(msgP.Topic()), err.Error())

@@ -85,7 +85,7 @@ var tp = `
 		for k, v in ipairs(shareName) do
 			local aa = {}
 			cc[k] = v
-    		local ks = KEYS[1].."_"..v
+    		local ks = KEYS[1].."/"..v
             local c = redis.call("hgetall",ks)
 			if c ~= nil
 			then
@@ -104,7 +104,7 @@ var tp = `
 // 更新脚本
 var sr = `
   redis.call("sadd",KEYS[1],KEYS[2])
-  local k = KEYS[1].."_"..KEYS[2]
+  local k = KEYS[1].."/"..KEYS[2]
   local value = redis.call("hget",k,KEYS[3])
   if value == nil
    then
@@ -133,7 +133,7 @@ var del = `
 	if shareName ~= nil
 	then
 		for k, v in ipairs(shareName) do
-            redis.call("del",KEYS[1].."_"..v)
+            redis.call("del",KEYS[1].."/"..v)
 		end
 		return redis.call("del",KEYS[1])
 	end
@@ -205,6 +205,12 @@ func GetTopicShare(topic string) (*ShareNameInfo, error) {
 }
 
 // 新增一个topic下某个shareName的订阅
+// A：$share/a_b/c
+// B：$share/a/b_c
+// 如果采用非/,+,#的拼接符
+// 会出现redis中冲突的情况，
+// 可以考虑换一个拼接符 '/'，因为$share/{shareName}/{filter} 中shareName中不能出现'/'的
+// 上述已修改为 '/'
 func SubShare(topic, shareName, nodeName string) bool {
 	v, err := redis.NewScript(sr).Run(r, []string{topic, shareName, nodeName}, 1, 1).Result()
 	if err != nil {
