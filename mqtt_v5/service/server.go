@@ -419,6 +419,7 @@ func (this *Server) publish(msg *message.PublishMessage, onComplete OnCompleteFu
 			logger.Errorf(err, "Error retaining message: %v", err)
 		}
 	}
+	// 只需要发送非共享主题的
 	if err := this.topicsMgr.Subscribers(msg.Topic(), msg.QoS(), &this.subs, &this.qoss, false, "", false); err != nil {
 		return err
 	}
@@ -454,6 +455,7 @@ func (this *Server) sharePublish(msg *message.PublishMessage, shareName string, 
 			logger.Errorf(err, "Error retaining message: %v", err)
 		}
 	}
+	// 需要发送共享主题的，也要发送非共享主题的
 	if err := this.topicsMgr.Subscribers(msg.Topic(), msg.QoS(), &this.subs, &this.qoss, false, shareName, false); err != nil {
 		return err
 	}
@@ -483,7 +485,7 @@ func (this *Server) sysPublish(msg *message.PublishMessage, onComplete OnComplet
 	if err := this.checkConfiguration(); err != nil {
 		return err
 	}
-
+	// 只需要发送系统主题消息给订阅者们
 	if err := this.topicsMgr.Subscribers(msg.Topic(), msg.QoS(), &this.subs, &this.qoss, true, "", false); err != nil {
 		return err
 	}
@@ -637,13 +639,24 @@ func (this *Server) handleConnection(c io.Closer) (svc *service, err error) {
 		topicsMgr:        this.topicsMgr,
 		sourcePublishMsg: this.sourcePublishMsg,
 
-		clientLinkPub: func(msg interface{}, fn func(shareName string) error) error {
+		clientLinkPub: func(msg interface{}, fn func(shareName string) error, fnPlus func() error) error {
 			// 首先发送sharereq消息
 			if msgP, ok := msg.(*message.PublishMessage); ok {
 				v, err := redis.GetTopicShare(string(msgP.Topic()))
 				if err != nil {
-					logger.Errorf(err, "获取主题%v的共享数据错误", string(msgP.Topic()))
-					return nil
+					logger.Debugf("获取主题%v的共享数据错误：%v", string(msgP.Topic()), err.Error())
+					// 没有获取到数据，就只发送普通消息到其它节点,自己节点下尝试发送共享消息
+					// 加锁,防止更新客户端节点的时候起冲突
+					this.clientWg.RLock()
+					defer this.clientWg.RUnlock()
+					for _, cl := range this.client {
+						b := make([]byte, msgP.Len())
+						msgP.Encode(b)
+						mp := colong.NewPublishMessage()
+						mp.Decode(b)
+						cl.Svc.Publish(mp, nil)
+					}
+					return fnPlus()
 				}
 				check := v.RandShare()
 				// 加锁,防止更新客户端节点的时候起冲突
@@ -672,13 +685,15 @@ func (this *Server) handleConnection(c io.Closer) (svc *service, err error) {
 						cl.Svc.Publish(mp, nil)
 					}
 				}
+				// 查看当前节点是否也要发送共享消息【只是共享消息，因为普通消息早就发送了的】，
 				if shareName, ok := check[config.ConstConf.Cluster.Name]; ok {
 					for _, sname := range shareName {
-						fn(sname)
+						err = fn(sname)
 					}
 				}
 			}
-			return nil
+			// 错误处理需要完善
+			return err
 		},
 	}
 	err = this.getSession(svc, req, resp)
