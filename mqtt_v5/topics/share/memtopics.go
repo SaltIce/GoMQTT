@@ -131,7 +131,6 @@ func (this *memTopics) Close() error {
 	return nil
 }
 
-const corn = 0x00 // 占位
 type sins struct {
 	subs []interface{}
 	qos  []byte
