@@ -1,35 +1,24 @@
 package config
 
 import (
+	"Go-MQTT/mqtt_v5/utils"
 	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
-	"os"
-	"strings"
 )
 
 var (
 	ConstConf = MyConst{}
 )
 
-/*
-获取程序运行路径
-*/
-func getCurrentDirectory() string {
-	dir, err := os.Getwd()
-	if err != nil {
-		panic(err)
-	}
-	return strings.Replace(dir, "\\", "/", -1)
-}
 func init() {
 	var err error
-	err = readConst(&ConstConf, getCurrentDirectory()+"/mqtt_v5/config/const.yml")
+	err = readConst(&ConstConf, utils.GetCurrentDirectory()+"/mqtt_v5/config/const.yml")
 	if err != nil {
 		panic(err)
 	}
 	logger := MyConst{}
-	err = readConst(&logger, getCurrentDirectory()+"/mqtt_v5/config/logger.yml")
+	err = readConst(&logger, utils.GetCurrentDirectory()+"/mqtt_v5/config/logger.yml")
 	if err != nil {
 		panic(err)
 	}

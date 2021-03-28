@@ -20,6 +20,7 @@ import (
 	_ "Go-MQTT/mqtt_v5/internal/nodediscover"
 	"Go-MQTT/mqtt_v5/logger"
 	"Go-MQTT/mqtt_v5/service"
+	"Go-MQTT/mqtt_v5/utils"
 	"flag"
 	"golang.org/x/net/websocket"
 	"io"
@@ -53,7 +54,7 @@ func init() {
 	authenticator = consts.DefaultConst.Authenticator
 	sessionsProvider = consts.DefaultConst.SessionsProvider
 	topicsProvider = consts.DefaultConst.TopicsProvider
-	cpuprofile = "F:\\Go_pro\\src\\Go-MQTT\\pprof_file\\cpu.txt"
+	cpuprofile = utils.GetCurrentDirectory() + "/pprof_file/cpu.txt"
 	flag.IntVar(&keepAlive, "keepalive", comment.DefaultKeepAlive, "Keepalive (sec)")
 	flag.IntVar(&connectTimeout, "connecttimeout", comment.DefaultConnectTimeout, "Connect Timeout (sec)")
 	flag.IntVar(&ackTimeout, "acktimeout", comment.DefaultAckTimeout, "Ack Timeout (sec)")
