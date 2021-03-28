@@ -65,11 +65,12 @@ func init() {
 	if consts.LogPath != "" {
 		logPath = consts.LogPath
 	}
+	init2()
 }
 
 //添加一个封装log，方便以后修改log框架
 //正常退出日志模块
-func init() {
+func init2() {
 	//关闭日志服务
 	//defer Logger.LogClose()
 
