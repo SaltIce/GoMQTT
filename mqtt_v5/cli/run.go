@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package cli
 
 import (
 	"Go-MQTT/mqtt_v5/comment"
@@ -72,7 +72,7 @@ func init() {
 	flag.Parse()
 }
 
-func main() {
+func Run() {
 	svr := &service.Server{
 		KeepAlive:        keepAlive,
 		ConnectTimeout:   connectTimeout,
@@ -99,7 +99,7 @@ func main() {
 	signal.Notify(sigchan, os.Interrupt, os.Kill)
 	go func() {
 		sig := <-sigchan
-		logger.Infof("Existing due to trapped signal; %v", sig)
+		logger.Infof("服务停止：Existing due to trapped signal; %v", sig)
 
 		if f != nil {
 			logger.Info("Stopping profile")
