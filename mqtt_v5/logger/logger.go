@@ -5,6 +5,7 @@ import (
 	"Go-MQTT/mqtt_v5/config"
 	"bytes"
 	"fmt"
+	"github.com/buguang01/util"
 	"runtime"
 	"strconv"
 	"strings"
@@ -50,6 +51,7 @@ func init() {
 	consts := config.ConstConf.Logger
 	InfoOpen = consts.InfoOpen
 	DebugOpen = consts.DebugOpen
+	util.SetLocation(util.BeiJing)
 	if !InfoOpen {
 		fmt.Println("日志系统 未开启 info日志打印记录")
 	}
