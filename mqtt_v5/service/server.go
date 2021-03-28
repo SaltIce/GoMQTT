@@ -536,28 +536,38 @@ func (this *Server) Close() error {
 	// By closing the quit channel, we are telling the server to stop accepting new
 	// connection.
 	close(this.quit)
-	// We then close the net.Listener, which will force Accept() to return if it's
-	// blocked waiting for new connections.
-	err := this.ln.Close()
-	if err != nil {
-		logger.Error(err, "关闭网络Listener错误")
+	if this.colongSvc != nil {
+		err := this.colongSvc.Close()
+		if err != nil {
+			logger.Error(err, "关闭当前节点网络QUIC Listener错误")
+		}
 	}
+
 	for _, svc := range this.svcs {
 		logger.Infof("Stopping service %d", svc.id)
 		svc.stop()
 	}
+
 	if this.sessMgr != nil {
 		err := this.sessMgr.Close()
 		if err != nil {
 			logger.Error(err, "关闭session管理器错误")
 		}
 	}
+
 	if this.topicsMgr != nil {
 		err := this.topicsMgr.Close()
 		if err != nil {
 			logger.Error(err, "关闭topic管理器错误")
 		}
 	}
+	// We then close the net.Listener, which will force Accept() to return if it's
+	// blocked waiting for new connections.
+	err := this.ln.Close()
+	if err != nil {
+		logger.Error(err, "关闭网络Listener错误")
+	}
+	// 后面不会执行到，不知道为啥
 	// TODO 将当前节点上的客户端数据保存持久化到mysql或者redis都行，待这些客户端重连集群时，可以搜索到旧session，也要考虑是否和客户端连接时的cleanSession有绑定
 	return nil
 }

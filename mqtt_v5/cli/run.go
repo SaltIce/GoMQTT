@@ -97,8 +97,16 @@ func Run() {
 	}
 
 	sigchan := make(chan os.Signal, 1)
-	signal.Notify(sigchan, os.Interrupt, os.Kill)
+	//signal.Notify(sigchan, os.Interrupt, os.Kill)
+	signal.Notify(sigchan)
+
 	go func() {
+		defer func() {
+			if err := recover(); err != nil {
+				panic(err)
+			}
+			logger.Info("==22=")
+		}()
 		sig := <-sigchan
 		logger.Infof("服务停止：Existing due to trapped signal; %v", sig)
 
@@ -108,8 +116,10 @@ func Run() {
 			f.Close()
 		}
 
-		svr.Close()
-
+		err := svr.Close()
+		if err != nil {
+			logger.Errorf(err, "server close err: ")
+		}
 		os.Exit(0)
 	}()
 
