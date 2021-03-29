@@ -122,7 +122,6 @@ func Run() {
 		}
 		os.Exit(0)
 	}()
-
 	mqttaddr := "tcp://:1883"
 	if strings.TrimSpace(config.ConstConf.BrokerUrl) != "" {
 		mqttaddr = strings.TrimSpace(config.ConstConf.BrokerUrl)

@@ -12,6 +12,7 @@ cluster:
     zkurl : "10.112.26.131:2181" ## zk集群的写法 10.112.26.131:2181,10.112.26.131:2181
     zktimeout : 5 # zk超时 单位秒
     zkmqroot : "/mqRoot" # zk根
+    sharejoin: "/" # 共享订阅中，主题与相应的共享名称的拼接符，默认为 '/'
 # 下面mybuff没啥用的，只能写死在service/buffer:go里面:
 mybuff:
     buffersize: 262144  #1024 * 256

@@ -71,6 +71,7 @@ type TopicsProvider interface {
 	// if onlyShare == false && shareName != "" ===>> 获取当前主题的共享组名为shareName的订阅者一个与所有非共享组订阅者们
 	// if onlyShare == true && shareName != ""  ===>> 仅仅获取主题的共享组名为shareName的订阅者一个
 	Subscribers(topic []byte, qos byte, subs *[]interface{}, qoss *[]byte, svc bool, shareName string, onlyShare bool) error
+	AllSubInfo() (map[string][]string, error) // 获取所有的共享订阅，k: 主题，v: 该主题的所有共享组
 	Retain(msg *message.PublishMessage) error
 	Retained(topic []byte, msgs *[]*message.PublishMessage) error
 	Close() error
@@ -120,6 +121,10 @@ func (this *Manager) Unsubscribe(topic []byte, subscriber interface{}) error {
 // if onlyShare == true && shareName != ""  ===>> 仅仅获取主题的共享组名为shareName的订阅者一个
 func (this *Manager) Subscribers(topic []byte, qos byte, subs *[]interface{}, qoss *[]byte, svc bool, shareName string, onlyShare bool) error {
 	return this.p.Subscribers(topic, qos, subs, qoss, svc, shareName, onlyShare)
+}
+
+func (this *Manager) AllSubInfo() (map[string][]string, error) {
+	return this.p.AllSubInfo()
 }
 
 func (this *Manager) Retain(msg *message.PublishMessage) error {

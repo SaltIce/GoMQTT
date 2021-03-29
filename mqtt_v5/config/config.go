@@ -26,6 +26,7 @@ type Cluster struct {
 	HostIp    string
 	ZkTimeOut int
 	ZkMqRoot  string
+	ShareJoin string
 }
 
 type Version struct {

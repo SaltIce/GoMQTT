@@ -42,6 +42,7 @@ type ShareTopicsProvider interface {
 	Subscribe(topic, shareName []byte, qos byte, subscriber interface{}) (byte, error)
 	Unsubscribe(topic, shareName []byte, subscriber interface{}) error
 	Subscribers(topic, shareName []byte, qos byte, subs *[]interface{}, qoss *[]byte) error
+	AllSubInfo() (map[string][]string, error) // 获取所有的共享订阅，k: 主题，v: 该主题的所有共享组
 	Retain(msg *message.PublishMessage, shareName []byte) error
 	Retained(topic, shareName []byte, msgs *[]*message.PublishMessage) error
 	Close() error
@@ -79,6 +80,10 @@ func NewManager(providerName string) (*Manager, error) {
 
 func (this *Manager) Subscribe(topic, shareName []byte, qos byte, subscriber interface{}) (byte, error) {
 	return this.p.Subscribe(topic, shareName, qos, subscriber)
+}
+
+func (this *Manager) AllSubInfo() (map[string][]string, error) {
+	return this.p.AllSubInfo()
 }
 
 func (this *Manager) Unsubscribe(topic, shareName []byte, subscriber interface{}) error {

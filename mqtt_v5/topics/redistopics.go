@@ -64,7 +64,9 @@ func NewRedisProvider() *redisTopics {
 		rroot: newRRNode(),
 	}
 }
-
+func (this *redisTopics) AllSubInfo() (map[string][]string, error) {
+	return nil, nil
+}
 func (this *redisTopics) Subscribe(topic []byte, qos byte, sub interface{}) (byte, error) {
 	if !message.ValidQos(qos) {
 		return message.QosFailure, fmt.Errorf("Invalid QoS %d", qos)

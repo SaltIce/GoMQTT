@@ -223,7 +223,11 @@ func (this *memTopics) Subscribers(topic []byte, qos byte, subs *[]interface{}, 
 	}
 	return this.sroot.smatch(topic, qos, subs, qoss)
 }
-
+func (this *memTopics) AllSubInfo() (map[string][]string, error) {
+	this.rmu.RLock()
+	defer this.rmu.RUnlock()
+	return this.share.AllSubInfo()
+}
 func (this *memTopics) Retain(msg *message.PublishMessage) error {
 	this.rmu.Lock()
 	defer this.rmu.Unlock()

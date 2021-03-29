@@ -102,6 +102,16 @@ func (this *memTopics) Subscribers(topic, shareName []byte, qos byte, subs *[]in
 	return this.sroot.smatch(topic, shareName, qos, subs, qoss)
 }
 
+// 获取所有的共享订阅，k: 主题，v: 该主题的所有共享组
+// FIXME 这个会在服务停止时调用，但是再某些情况会调用失败，比如与redis也断开了连接
+func (this *memTopics) AllSubInfo() (map[string][]string, error) {
+	v := make(map[string][]string)
+	this.smu.RLock()
+	defer this.smu.RUnlock()
+	err := this.sroot.smatchAll(v)
+	return v, err
+}
+
 func (this *memTopics) Retain(msg *message.PublishMessage, shareName []byte) error {
 	this.rmu.Lock()
 	defer this.rmu.Unlock()
@@ -143,7 +153,7 @@ type snode struct {
 	//如果这是主题字符串的结尾，那么在这里添加订阅者
 	shares map[string]*sins // shareName : *sin
 	// Otherwise add the next topic level here
-	snodes map[string]*snode
+	snodes map[string]*snode // topic: nextNode
 }
 
 func newSNode() *snode {
@@ -365,6 +375,15 @@ func (this *snode) smatch(topic, shareName []byte, qos byte, subs *[]interface{}
 		}
 	}
 
+	return nil
+}
+
+// 匹配所有的
+// DPS or BPS
+func (this *snode) smatchAll(v map[string][]string) error {
+	for k, n := range this.snodes {
+		n.matchAll(v, []byte(k))
+	}
 	return nil
 }
 
@@ -650,6 +669,22 @@ func (this *snode) matchQos(qos byte, subs *[]interface{}, qoss *[]byte, shareNa
 	}
 }
 
+// 获取所有的
+func (this *snode) matchAll(v map[string][]string, topic []byte) {
+	tp := string(topic)
+	for i, _ := range this.shares {
+		if _, ok := v[tp]; !ok {
+			v[tp] = make([]string, 0)
+		}
+		v[tp] = append(v[tp], i)
+	}
+	for p, sn := range this.snodes {
+		temp := topic
+		temp = append(temp, '/')
+		temp = append(temp, p...)
+		sn.matchAll(v, temp)
+	}
+}
 func equal(k1, k2 interface{}) bool {
 	if reflect.TypeOf(k1) != reflect.TypeOf(k2) {
 		return false

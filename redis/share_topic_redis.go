@@ -6,6 +6,7 @@ import (
 	"github.com/go-redis/redis"
 	"math/rand"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 )
@@ -15,6 +16,7 @@ var (
 	cacheGlobal  *cacheInfo
 	cacheOutTime = 1 * time.Second
 	open         bool
+	shareJoin    = "/"
 )
 
 type tn struct {
@@ -45,6 +47,9 @@ func init() {
 	cacheGlobal = &cacheInfo{
 		RWMutex: sync.RWMutex{},
 		global:  make(map[string]*tn),
+	}
+	if sj := strings.TrimSpace(config.ConstConf.Cluster.ShareJoin); sj != "" {
+		shareJoin = sj
 	}
 	cacheGlobal.autoClea()
 }
@@ -89,7 +94,7 @@ var tp = `
 		for k, v in ipairs(shareName) do
 			local aa = {}
 			cc[k] = v
-    		local ks = KEYS[1].."/"..v
+    		local ks = KEYS[1].."` + shareJoin + `"..v
             local c = redis.call("hgetall",ks)
 			if c ~= nil
 			then
@@ -108,7 +113,7 @@ var tp = `
 // 更新脚本
 var sr = `
   redis.call("sadd",KEYS[1],KEYS[2])
-  local k = KEYS[1].."/"..KEYS[2]
+  local k = KEYS[1].."` + shareJoin + `"..KEYS[2]
   local value = redis.call("hget",k,KEYS[3])
   if value == nil
    then
@@ -131,17 +136,25 @@ var sr = `
   end
 `
 
-// 删除脚本
+// 删除主题脚本
 var del = `
 	local shareName = redis.call("smembers",KEYS[1])
 	if shareName ~= nil
 	then
 		for k, v in ipairs(shareName) do
-            redis.call("del",KEYS[1].."/"..v)
+            redis.call("del",KEYS[1].."` + shareJoin + `"..v)
 		end
 		return redis.call("del",KEYS[1])
 	end
 	return 0
+`
+
+// 删除节点相关订阅数据脚本
+var delNode = `
+	for i, v in ipairs(KEYS) do
+		redis.call("hdel",v,ARGV[1])
+	end
+	return 1
 `
 var merge = &Group{}
 
@@ -249,6 +262,25 @@ func DelTopic(topic string) error {
 	_, err := redis.NewScript(del).Run(r, []string{topic}).Result()
 	if err != nil {
 		return fmt.Errorf("删除topic：%v下的共享信息出错：%v", topic, err)
+	}
+	return nil
+}
+
+// 删除节点相关订阅数据
+// 思路：获取当前节点的share manage，查询哪写需要删除，然后一次性删除
+func DelNode(old map[string][]string, nodeName string) error {
+	if !open {
+		return nil
+	}
+	pa := make([]string, 0)
+	for tpc, v := range old {
+		for _, s := range v {
+			pa = append(pa, tpc+shareJoin+s)
+		}
+	}
+	_, err := redis.NewScript(delNode).Run(r, pa, []string{nodeName}).Result()
+	if err != nil {
+		return fmt.Errorf("删除当前节点的所有共享信息出错：%v", err)
 	}
 	return nil
 }

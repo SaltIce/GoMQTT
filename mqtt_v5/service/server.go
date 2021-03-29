@@ -536,13 +536,33 @@ func (this *Server) Close() error {
 	// By closing the quit channel, we are telling the server to stop accepting new
 	// connection.
 	close(this.quit)
+
 	if this.colongSvc != nil {
 		err := this.colongSvc.Close()
 		if err != nil {
 			logger.Error(err, "关闭当前节点网络QUIC Listener错误")
 		}
+		// 需要删除redis中的订阅数据
+		// 思路：获取当前节点的share manage，查询哪些需要删除，然后一次性删除
+		mp, err := this.topicsMgr.AllSubInfo()
+		if err != nil {
+			logger.Errorf(err, "获取全部共享订阅数据失败：")
+		}
+		err = redis.DelNode(mp, config.ConstConf.Cluster.Name)
+		if err != nil {
+			logger.Errorf(err, "取消redis全部共享订阅数据失败：")
+		}
 	}
-
+	this.clientWg.Lock()
+	if this.client != nil {
+		for _, c := range this.client {
+			err := c.Close()
+			if err != nil {
+				logger.Error(err, "关闭当前节点网络QUIC Client socket错误")
+			}
+		}
+	}
+	this.clientWg.Unlock()
 	for _, svc := range this.svcs {
 		logger.Infof("Stopping service %d", svc.id)
 		svc.stop()
