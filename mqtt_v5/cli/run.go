@@ -22,6 +22,7 @@ import (
 	"Go-MQTT/mqtt_v5/service"
 	"Go-MQTT/mqtt_v5/utils"
 	"flag"
+	"github.com/pyroscope-io/pyroscope/pkg/agent/profiler"
 	"golang.org/x/net/websocket"
 	"io"
 	"log"
@@ -95,6 +96,15 @@ func Run() {
 
 		pprof.StartCPUProfile(f)
 	}
+	// docker 启动监控服务 ： docker run -it -p 4040:4040 pyroscope/pyroscope:latest server
+	pp, err := profiler.Start(profiler.Config{
+		ApplicationName: "GoMQTT Server v3.0",
+		ServerAddress:   "http://10.112.26.131:4040",
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer pp.Stop()
 
 	sigchan := make(chan os.Signal, 1)
 	//signal.Notify(sigchan, os.Interrupt, os.Kill)
@@ -105,7 +115,6 @@ func Run() {
 			if err := recover(); err != nil {
 				panic(err)
 			}
-			logger.Info("==22=")
 		}()
 		sig := <-sigchan
 		logger.Infof("服务停止：Existing due to trapped signal; %v", sig)
