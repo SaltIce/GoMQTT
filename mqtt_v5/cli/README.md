@@ -1,11 +1,8 @@
 # SurgeMQ Standalone Server
 
-Standalone SurgeMQ server, creates listeners for plaintext MQTT, Websocket and Secure Websocket. Without any options, surgemq listens on port 1883 for plaintext MQTT.
-
+下面未更新，不要使用，采用配置文件的方式配置了
 ## Build
 
-* `go get github.com/surgemq/surgemq`
-* `cd $GOPATH/src/github.com/surgemq/surgemq/examples/surgemq/`
 * `go build`
 
 ## Usage
@@ -25,7 +22,7 @@ Standalone SurgeMQ server, creates listeners for plaintext MQTT, Websocket and S
 ## Websocket listener
 
 1. In addition to listening for MQTT traffic on port 1883, the standalone server can be configured to listen for websocket over HTTP or HTTPS.
-2. `surgemq -wsaddr :8080` will start the server to listen for Websocket on port 8080
+2. `mq -wsaddr :8080` will start the server to listen for Websocket on port 8080
 
 ## Self-signed Websocket listener
 

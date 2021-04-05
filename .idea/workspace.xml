@@ -20,80 +20,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bf51d1a7-8d25-4780-9e7d-def3d64000b1" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt/internal/doc.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt/internal/doc.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/auth/authenticator.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/auth/authenticator.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/auth/default_auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/auth/default_auth.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/auth/mock_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/auth/mock_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/auth/mysql_auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/auth/mysql_auth.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/doc.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/doc.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/internal/bak/doc.txt" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/internal/bak/doc.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/internal/colong/quic_ackqueue.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/internal/colong/quic_ackqueue.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/internal/colong/quic_buffer.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/internal/colong/quic_buffer.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/internal/colong/quic_connack.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/internal/colong/quic_connack.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/internal/colong/quic_connackcode.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/internal/colong/quic_connackcode.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/internal/colong/quic_connect.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/internal/colong/quic_connect.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/internal/colong/quic_disconnect.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/internal/colong/quic_disconnect.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/internal/colong/quic_session.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/internal/colong/quic_session.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/AUTHORS" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/CONTRIBUTING.md" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/CONTRIBUTING.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/connack.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/connack.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/connackcode.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/connackcode.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/connect.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/connect.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/connect_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/connect_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/disconnect.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/disconnect.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/disconnect_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/disconnect_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/doc.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/doc.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/header.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/header.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/header_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/header_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/message.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/message.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/message_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/message_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/ping_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/ping_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/pingreq.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/pingreq.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/pingresp.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/pingresp.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/puback.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/puback.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/puback_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/puback_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/pubcomp.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/pubcomp.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/pubcomp_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/pubcomp_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/publish.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/publish.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/publish_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/publish_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/pubrec.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/pubrec.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/pubrec_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/pubrec_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/pubrel.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/pubrel.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/pubrel_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/pubrel_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/suback.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/suback.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/suback_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/suback_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/subscribe.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/subscribe.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/subscribe_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/subscribe_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/unsuback.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/unsuback.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/unsuback_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/unsuback_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/unsubscribe.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/unsubscribe.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/message/unsubscribe_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/message/unsubscribe_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/service/buffer.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/service/buffer.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/service/buffer_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/service/buffer_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/service/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/service/client.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/service/doc.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/service/doc.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/service/examples_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/service/examples_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/service/helpers_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/service/helpers_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/service/misc.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/service/misc.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/service/paho_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/service/paho_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/service/process.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/service/process.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/service/sendrecv.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/service/sendrecv.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/service/sendrecv_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/service/sendrecv_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/service/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/service/server.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/service/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/service/service.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/service/service_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/service/service_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/sessions/ackqueue.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/sessions/ackqueue.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/sessions/ackqueue_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/sessions/ackqueue_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/sessions/memprovider.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/sessions/memprovider.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/sessions/memprovider_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/sessions/memprovider_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/sessions/redisprovider.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/sessions/redisprovider.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/sessions/session.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/sessions/session.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/sessions/session_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/sessions/session_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/sessions/sessions.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/sessions/sessions.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/topics/memtopics.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/topics/memtopics.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/topics/memtopics_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/topics/memtopics_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqtt_v5/topics/topics.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/topics/topics.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt_v5/cli/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/cli/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt_v5/cli/run.go" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/cli/run.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -428,10 +356,10 @@
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="270" y="75" key="SettingsEditor/0.0.1536.864@0.0.1536.864" timestamp="1617539238802" />
-    <state x="361" y="166" key="Vcs.Push.Dialog.v2" timestamp="1617596390480">
+    <state x="361" y="166" key="Vcs.Push.Dialog.v2" timestamp="1617597147547">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="361" y="166" key="Vcs.Push.Dialog.v2/0.0.1536.864@0.0.1536.864" timestamp="1617596390480" />
+    <state x="361" y="166" key="Vcs.Push.Dialog.v2/0.0.1536.864@0.0.1536.864" timestamp="1617597147547" />
     <state width="447" height="391" key="XDebugger.FullValuePopup" timestamp="1617028112361">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
