@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package cli
 
 import (
 	"Go-MQTT/mqtt_v5/comment"
@@ -20,7 +20,9 @@ import (
 	_ "Go-MQTT/mqtt_v5/internal/nodediscover"
 	"Go-MQTT/mqtt_v5/logger"
 	"Go-MQTT/mqtt_v5/service"
+	"Go-MQTT/mqtt_v5/utils"
 	"flag"
+	"github.com/pyroscope-io/pyroscope/pkg/agent/profiler"
 	"golang.org/x/net/websocket"
 	"io"
 	"log"
@@ -53,7 +55,7 @@ func init() {
 	authenticator = consts.DefaultConst.Authenticator
 	sessionsProvider = consts.DefaultConst.SessionsProvider
 	topicsProvider = consts.DefaultConst.TopicsProvider
-	cpuprofile = "F:\\Go_pro\\src\\Go-MQTT\\pprof_file\\cpu.txt"
+	cpuprofile = utils.GetCurrentDirectory() + "/pprof_file/cpu.txt"
 	flag.IntVar(&keepAlive, "keepalive", comment.DefaultKeepAlive, "Keepalive (sec)")
 	flag.IntVar(&connectTimeout, "connecttimeout", comment.DefaultConnectTimeout, "Connect Timeout (sec)")
 	flag.IntVar(&ackTimeout, "acktimeout", comment.DefaultAckTimeout, "Ack Timeout (sec)")
@@ -72,7 +74,7 @@ func init() {
 	flag.Parse()
 }
 
-func main() {
+func Run() {
 	svr := &service.Server{
 		KeepAlive:        keepAlive,
 		ConnectTimeout:   connectTimeout,
@@ -94,12 +96,27 @@ func main() {
 
 		pprof.StartCPUProfile(f)
 	}
+	// docker 启动监控服务 ： docker run -it -p 4040:4040 pyroscope/pyroscope:latest server
+	pp, err := profiler.Start(profiler.Config{
+		ApplicationName: "GoMQTT Server v3.0",
+		ServerAddress:   "http://10.112.26.131:4040",
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	sigchan := make(chan os.Signal, 1)
-	signal.Notify(sigchan, os.Interrupt, os.Kill)
+	//signal.Notify(sigchan, os.Interrupt, os.Kill)
+	signal.Notify(sigchan)
+
 	go func() {
+		defer func() {
+			if err := recover(); err != nil {
+				panic(err)
+			}
+		}()
 		sig := <-sigchan
-		logger.Infof("Existing due to trapped signal; %v", sig)
+		logger.Infof("服务停止：Existing due to trapped signal; %v", sig)
 
 		if f != nil {
 			logger.Info("Stopping profile")
@@ -107,11 +124,14 @@ func main() {
 			f.Close()
 		}
 
-		svr.Close()
+		defer pp.Stop()
 
+		err := svr.Close()
+		if err != nil {
+			logger.Errorf(err, "server close err: ")
+		}
 		os.Exit(0)
 	}()
-
 	mqttaddr := "tcp://:1883"
 	if strings.TrimSpace(config.ConstConf.BrokerUrl) != "" {
 		mqttaddr = strings.TrimSpace(config.ConstConf.BrokerUrl)

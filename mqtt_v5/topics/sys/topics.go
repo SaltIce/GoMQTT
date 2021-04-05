@@ -49,15 +49,15 @@ type SysTopicsProvider interface {
 
 func Register(name string, provider SysTopicsProvider) {
 	if provider == nil {
-		panic("topics: Register provide is nil")
+		panic("sys topics: Register provide is nil")
 	}
 
 	if _, dup := providers[name]; dup {
-		panic("topics: Register called twice for provider " + name)
+		panic("sys topics: Register called twice for provider " + name)
 	}
 
 	providers[name] = provider
-	logger.Infof("Register TopicsProvider：'%s' success，%T", name, provider)
+	logger.Infof("Register Sys TopicsProvider：'%s' success，%T", name, provider)
 }
 
 func Unregister(name string) {

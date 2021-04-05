@@ -5,7 +5,7 @@
 Before creating a new Issue, please check first if a similar Issue [already exists](https://github.com/surgemq/message/issues?state=open) or was [recently closed](https://github.com/surgemq/message/issues?direction=desc&page=1&sort=updated&state=closed).
 
 Please provide the following minimum information:
-* Your SurgeMQ version (or git SHA)
+* Your MQ version (or git SHA)
 * Your Go version (run `go version` in your console)
 * A detailed issue description
 * Error Log if present

@@ -6,12 +6,13 @@ serverversion: "3.1.0"
 brokerurl : "tcp://:1883" # mqtt服务
 wsbrokerurl : ":8883" # ws路径
 cluster:
-    enabled: true
+    enabled: false
     name : "node3" # 当前节点name，不要与其它节点冲突
     hostip : "udp://127.0.0.1:8763" #当前节点的外网访问地址
     zkurl : "10.112.26.131:2181" ## zk集群的写法 10.112.26.131:2181,10.112.26.131:2181
     zktimeout : 5 # zk超时 单位秒
     zkmqroot : "/mqRoot" # zk根
+    sharejoin: "/" # 共享订阅中，主题与相应的共享名称的拼接符，默认为 '/'
 # 下面mybuff没啥用的，只能写死在service/buffer:go里面:
 mybuff:
     buffersize: 262144  #1024 * 256

@@ -1,17 +1,3 @@
-// Copyright (c) 2014 The SurgeMQ Authors. All rights reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package service
 
 import (
@@ -121,6 +107,7 @@ type Server struct {
 	// gracefully shut them down if they are still alive when the server goes down.
 	//服务器创建的服务列表。我们跟踪他们，这样我们就可以
 	//当服务器宕机时，如果它们仍然存在，那么可以优雅地关闭它们。
+	// TODO 选择切片还是map
 	svcs []*service
 
 	// Mutex for updating svcs
@@ -419,6 +406,7 @@ func (this *Server) publish(msg *message.PublishMessage, onComplete OnCompleteFu
 			logger.Errorf(err, "Error retaining message: %v", err)
 		}
 	}
+	// 只需要发送非共享主题的
 	if err := this.topicsMgr.Subscribers(msg.Topic(), msg.QoS(), &this.subs, &this.qoss, false, "", false); err != nil {
 		return err
 	}
@@ -454,6 +442,7 @@ func (this *Server) sharePublish(msg *message.PublishMessage, shareName string, 
 			logger.Errorf(err, "Error retaining message: %v", err)
 		}
 	}
+	// 需要发送共享主题的，也要发送非共享主题的
 	if err := this.topicsMgr.Subscribers(msg.Topic(), msg.QoS(), &this.subs, &this.qoss, false, shareName, false); err != nil {
 		return err
 	}
@@ -483,7 +472,7 @@ func (this *Server) sysPublish(msg *message.PublishMessage, onComplete OnComplet
 	if err := this.checkConfiguration(); err != nil {
 		return err
 	}
-
+	// 只需要发送系统主题消息给订阅者们
 	if err := this.topicsMgr.Subscribers(msg.Topic(), msg.QoS(), &this.subs, &this.qoss, true, "", false); err != nil {
 		return err
 	}
@@ -534,23 +523,58 @@ func (this *Server) Close() error {
 	// connection.
 	close(this.quit)
 
-	// We then close the net.Listener, which will force Accept() to return if it's
-	// blocked waiting for new connections.
-	this.ln.Close()
-
+	if this.colongSvc != nil {
+		err := this.colongSvc.Close()
+		if err != nil {
+			logger.Error(err, "关闭当前节点网络QUIC Listener错误")
+		}
+		// 需要删除redis中的订阅数据
+		// 思路：获取当前节点的share manage，查询哪些需要删除，然后一次性删除
+		mp, err := this.topicsMgr.AllSubInfo()
+		if err != nil {
+			logger.Errorf(err, "获取全部共享订阅数据失败：")
+		}
+		err = redis.DelNode(mp, config.ConstConf.Cluster.Name)
+		if err != nil {
+			logger.Errorf(err, "取消redis全部共享订阅数据失败：")
+		}
+	}
+	this.clientWg.Lock()
+	if this.client != nil {
+		for _, c := range this.client {
+			err := c.Close()
+			if err != nil {
+				logger.Error(err, "关闭当前节点网络QUIC Client socket错误")
+			}
+		}
+	}
+	this.clientWg.Unlock()
 	for _, svc := range this.svcs {
 		logger.Infof("Stopping service %d", svc.id)
 		svc.stop()
 	}
 
 	if this.sessMgr != nil {
-		this.sessMgr.Close()
+		err := this.sessMgr.Close()
+		if err != nil {
+			logger.Error(err, "关闭session管理器错误")
+		}
 	}
 
 	if this.topicsMgr != nil {
-		this.topicsMgr.Close()
+		err := this.topicsMgr.Close()
+		if err != nil {
+			logger.Error(err, "关闭topic管理器错误")
+		}
 	}
-
+	// We then close the net.Listener, which will force Accept() to return if it's
+	// blocked waiting for new connections.
+	err := this.ln.Close()
+	if err != nil {
+		logger.Error(err, "关闭网络Listener错误")
+	}
+	// 后面不会执行到，不知道为啥
+	// TODO 将当前节点上的客户端数据保存持久化到mysql或者redis都行，待这些客户端重连集群时，可以搜索到旧session，也要考虑是否和客户端连接时的cleanSession有绑定
 	return nil
 }
 
@@ -632,23 +656,36 @@ func (this *Server) handleConnection(c io.Closer) (svc *service, err error) {
 		ackTimeout:     this.AckTimeout,
 		timeoutRetries: this.TimeoutRetries,
 
-		conn:             conn,
-		sessMgr:          this.sessMgr,
-		topicsMgr:        this.topicsMgr,
-		sourcePublishMsg: this.sourcePublishMsg,
+		conn:      conn,
+		sessMgr:   this.sessMgr,
+		topicsMgr: this.topicsMgr,
 
-		clientLinkPub: func(msg interface{}, fn func(shareName string) error) error {
-			// 首先发送sharereq消息
+		clientLinkPub: func(msg interface{}, fn func(shareName string) error, fnPlus func() error) error {
 			if msgP, ok := msg.(*message.PublishMessage); ok {
+				// 获取该主题的 共享集群数据
 				v, err := redis.GetTopicShare(string(msgP.Topic()))
 				if err != nil {
-					logger.Errorf(err, "获取主题%v的共享数据错误", string(msgP.Topic()))
-					return nil
+					logger.Debugf("获取主题%v的共享数据错误：%v", string(msgP.Topic()), err.Error())
+					// 没有获取到数据，就只发送普通消息到其它节点,自己节点下尝试发送共享消息
+					// 加锁,防止更新客户端节点的时候起冲突
+					this.clientWg.RLock()
+					defer this.clientWg.RUnlock()
+					for _, cl := range this.client {
+						b := make([]byte, msgP.Len())
+						msgP.Encode(b)
+						mp := colong.NewPublishMessage()
+						mp.Decode(b)
+						cl.Svc.Publish(mp, nil)
+					}
+					return fnPlus()
+				}
+				if v == nil { // 表示为单机模式，直接发送自己下面的共享订阅组们
+					return fnPlus()
 				}
 				check := v.RandShare()
 				// 加锁,防止更新客户端节点的时候起冲突
-				this.clientWg.Lock()
-				defer this.clientWg.Unlock()
+				this.clientWg.RLock()
+				defer this.clientWg.RUnlock()
 				for _, cl := range this.client {
 					if shareName, ok := check[cl.Name]; ok {
 						for _, sname := range shareName {
@@ -672,13 +709,15 @@ func (this *Server) handleConnection(c io.Closer) (svc *service, err error) {
 						cl.Svc.Publish(mp, nil)
 					}
 				}
+				// 查看当前节点是否也要发送共享消息【只是共享消息，因为普通消息早就发送了的】，
 				if shareName, ok := check[config.ConstConf.Cluster.Name]; ok {
 					for _, sname := range shareName {
-						fn(sname)
+						err = fn(sname)
 					}
 				}
 			}
-			return nil
+			// 错误处理需要完善
+			return err
 		},
 	}
 	err = this.getSession(svc, req, resp)

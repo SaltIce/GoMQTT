@@ -1,17 +1,3 @@
-// Copyright (c) 2014 The SurgeMQ Authors. All rights reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package topics
 
 import (
@@ -128,35 +114,25 @@ func (this *memTopics) Subscribe(topic []byte, qos byte, sub interface{}) (byte,
 		return this.sys.Subscribe(topic[len(sysByte):], qos, sub)
 	}
 	if len(topic) > len(shareByte) && deepEqual(topic) {
-		var index = 0
+		var index = len(shareByte)
 		// 找到共享主题名称
 		for i, b := range topic[len(shareByte):] {
-			switch b {
-			case '+', '#':
+			if b == '/' {
+				index += i
+				break
+			} else if b == '+' || b == '#' {
+				// {ShareName} 是一个不包含 "/", "+" 以及 "#" 的字符串。
 				return message.QosFailure, fmt.Errorf("Share Topic Subscriber did not allow '+' or '#' in {ShareName}")
-			case '/':
-				index = i
-				goto SHARE
 			}
 		}
-		if index == 0 {
+		if index == len(shareByte) {
 			return message.QosFailure, fmt.Errorf("Share Topic Subscriber no have {ShareName}/")
 		}
-	SHARE:
-		{
-			if len(topic)-len(shareByte) >= 2+index && topic[index+len(shareByte)] == '/' {
-				//shareName := string(topic[len(shareByte) : index+len(shareByte)])
-				// {ShareName} 是一个不包含 "/", "+" 以及 "#" 的字符串。
-				for _, t := range topic[len(shareByte) : index+len(shareByte)] {
-					switch t {
-					case '+', '#':
-						return message.QosFailure, fmt.Errorf("share topic ${shareName} did not allow have + or #")
-					}
-				}
-				// TODO 注册共享订阅到redis
-				redis.SubShare(string(topic[len(shareByte)+2:]), string(topic[len(shareByte):index+len(shareByte)]), nodeName)
-				return this.share.Subscribe(topic[len(shareByte)+2:], topic[len(shareByte):index+len(shareByte)], qos, sub)
-			}
+		if len(topic) >= 2+index && topic[index] == '/' {
+			//shareName := string(topic[len(shareByte) : index])
+			// TODO 注册共享订阅到redis
+			redis.SubShare(string(topic[index+1:]), string(topic[len(shareByte):index]), nodeName)
+			return this.share.Subscribe(topic[index+1:], topic[len(shareByte):index], qos, sub)
 		}
 	}
 	if err := this.sroot.sinsert(topic, qos, sub); err != nil {
@@ -172,28 +148,24 @@ func (this *memTopics) Unsubscribe(topic []byte, sub interface{}) error {
 		return this.sys.Unsubscribe(topic[len(sysByte):], sub)
 	}
 	if len(topic) > len(shareByte) && deepEqual(topic) {
-		var index = 0
+		var index = len(shareByte)
 		// 找到共享主题名称
 		for i, b := range topic[len(shareByte):] {
-			switch b {
-			case '+', '#':
-				return fmt.Errorf("Share Topic Subscriber did not allow '+' or '#' in {ShareName}")
-			case '/':
-				index = i
-				goto SHARE
+			if b == '/' {
+				index += i
+				break
+			} else if b == '+' || b == '#' {
+				return fmt.Errorf("Share Topic UnSubscriber did not allow '+' or '#' in {ShareName}")
 			}
 		}
-		if index == 0 {
-			return fmt.Errorf("Share Topic Subscriber no have {ShareName}/")
+		if index == len(shareByte) {
+			return fmt.Errorf("Share Topic UnSubscriber no have {ShareName}/")
 		}
-	SHARE:
-		{
-			if len(topic)-len(shareByte) >= 2+index && topic[index+len(shareByte)] == '/' {
-				//shareName := string(topic[len(shareByte) : index+len(shareByte)])
-				// TODO 取消注册共享订阅到redis
-				redis.UnSubShare(string(topic[len(shareByte)+2:]), string(topic[len(shareByte):index+len(shareByte)]), nodeName)
-				return this.share.Unsubscribe(topic[2+len(topic)-len(shareByte):], topic[len(shareByte):index+len(shareByte)], sub)
-			}
+		if len(topic) >= 2+index && topic[index] == '/' {
+			//shareName := string(topic[len(shareByte) : index+len(shareByte)])
+			// TODO 取消注册共享订阅到redis
+			redis.UnSubShare(string(topic[index+1:]), string(topic[len(shareByte):index]), nodeName)
+			return this.share.Unsubscribe(topic[index+1:], topic[len(shareByte):index], sub)
 		}
 	}
 	return this.sroot.sremove(topic, sub)
@@ -228,13 +200,20 @@ func (this *memTopics) Subscribers(topic []byte, qos byte, subs *[]interface{}, 
 		if err != nil {
 			return err
 		}
-		if onlyShare {
+		if onlyShare { // 是否需要非共享
 			return nil
 		}
+	} else if shareName == "" && onlyShare == true { // 获取所有shareName的每个的订阅者之一
+		err := this.share.Subscribers(topic, nil, qos, subs, qoss)
+		return err
 	}
 	return this.sroot.smatch(topic, qos, subs, qoss)
 }
-
+func (this *memTopics) AllSubInfo() (map[string][]string, error) {
+	this.rmu.RLock()
+	defer this.rmu.RUnlock()
+	return this.share.AllSubInfo()
+}
 func (this *memTopics) Retain(msg *message.PublishMessage) error {
 	this.rmu.Lock()
 	defer this.rmu.Unlock()

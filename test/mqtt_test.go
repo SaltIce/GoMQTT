@@ -36,7 +36,7 @@ func TestGoMqtt(t *testing.T) {
 	fmt.Println("收到消息数：", n)
 }
 func createSubTask(n *int64) {
-	opts := MQTT.NewClientOptions().AddBroker("tcp://127.0.0.1:1887").SetUsername("admin").SetPassword("123456")
+	opts := MQTT.NewClientOptions().AddBroker("tcp://127.0.0.1:1883").SetUsername("admin").SetPassword("123456")
 	opts.SetClientID(fmt.Sprintf("go-simple-client:-%d", time.Now().UnixNano()))
 	opts.SetDefaultPublishHandler(f)
 	opts.SetConnectTimeout(time.Duration(60) * time.Second)
@@ -57,7 +57,7 @@ func createSubTask(n *int64) {
 }
 func createTask(taskId int, wg *sync.WaitGroup) {
 	defer wg.Done()
-	opts := MQTT.NewClientOptions().AddBroker("tcp://127.0.0.1:1887").SetUsername("admin").SetPassword("123456")
+	opts := MQTT.NewClientOptions().AddBroker("tcp://127.0.0.1:1883").SetUsername("admin").SetPassword("123456")
 	opts.SetClientID(fmt.Sprintf("go-simple-client:%d-%d", taskId, time.Now().UnixNano()))
 	opts.SetDefaultPublishHandler(f)
 	opts.SetConnectTimeout(time.Duration(60) * time.Second)
@@ -73,7 +73,7 @@ func createTask(taskId int, wg *sync.WaitGroup) {
 
 	//每隔5秒向topic发送一条消息
 	i := 0
-	for i < 1000 {
+	for i < 10 {
 		i++
 		time.Sleep(time.Duration(10) * time.Millisecond)
 		text := fmt.Sprintf("this is msg #%d! from task:%d", i, taskId)
