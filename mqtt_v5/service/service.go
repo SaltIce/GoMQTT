@@ -146,10 +146,10 @@ type service struct {
 	subs  []interface{}
 	qoss  []byte
 	rmsgs []*message.PublishMessage
-	// fn 是只发送共享消息到当前节点下
-	clientLinkPub func(msg interface{}, fn func(shareName string) error) error // 当前服务连接到其它服务的连接处理方法，发送普通消息给其它节点使用
-	// 原始publish消息，等待shareack后发送给各个服务端节点后删除
-	sourcePublishMsg *SafeMap
+	// fn 是只发送shareName共享组的当前节点下
+	// fnPlus 是发送该节点这个主题的所有共享名组 共享消息
+	// 当前服务连接到其它服务的消息发送处理
+	clientLinkPub func(msg interface{}, fn func(shareName string) error, fnPlus func() error) error
 }
 
 func (this *service) start() error {

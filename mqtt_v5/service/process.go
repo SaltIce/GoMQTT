@@ -421,39 +421,67 @@ func (this *service) onPublish(msg1 *message.PublishMessage) error {
 			logger.Errorf(err, "(%s) Error retaining message: %v", this.cid(), err)
 		}
 	}
-	pubFn := func(msg *message.PublishMessage, shareName string, onlyShare bool) error {
-		err := this.topicsMgr.Subscribers(msg.Topic(), msg.QoS(), &this.subs, &this.qoss, false, shareName, onlyShare)
-		if err != nil {
-			//logger.Errorf(err, "(%s) Error retrieving subscribers list: %v", this.cid(), err)
-			return err
-		}
-		msg.SetRetain(false)
-		logger.Debugf("(%s) Publishing to topic %q and %d subscribers", this.cid(), string(msg.Topic()), len(this.subs))
-		for i, s := range this.subs {
-			if s != nil {
-				fn, ok := s.(*OnPublishFunc)
-				if !ok {
-					logger.Errorf(nil, "Invalid onPublish Function")
-					return fmt.Errorf("Invalid onPublish Function")
-				} else {
-					_ = msg.SetQoS(this.qoss[i]) // 设置为该发的qos级别
-					err = (*fn)(msg)
-					if err == io.EOF {
-						// TODO 断线了，是否对于qos=1和2的保存至离线消息
-					}
-				}
-			}
-		}
-		return nil
-	}
 	err := this.clientLinkPub(msg1, func(shareName string) error {
-		// 只发送共享组
-		return pubFn(msg1, shareName, true)
+		// 只发送共享组名shareName的
+		return this.pubFn(msg1, shareName, true)
+	}, func() error {
+		// 发送当前主题的所有共享组
+		return this.pubFnPlus(msg1)
 	}) // TODO 发送到集群其它节点
 
 	if err != nil {
 		logger.Errorf(err, "%v向集群发送消息错误：%+v", this.cid(), *msg1)
 	}
-
-	return pubFn(msg1, "", false)
+	// 只需要先发送非共享订阅主题，如果需要发送共享订阅给当前节点，在this.clientLinkPub里面会处理
+	return this.pubFn(msg1, "", false)
+}
+func (this *service) pubFn(msg *message.PublishMessage, shareName string, onlyShare bool) error {
+	err := this.topicsMgr.Subscribers(msg.Topic(), msg.QoS(), &this.subs, &this.qoss, false, shareName, onlyShare)
+	if err != nil {
+		//logger.Errorf(err, "(%s) Error retrieving subscribers list: %v", this.cid(), err)
+		return err
+	}
+	msg.SetRetain(false)
+	logger.Debugf("(%s) Publishing to topic %q and %d subscribers：%v", this.cid(), string(msg.Topic()), len(this.subs), shareName)
+	for i, s := range this.subs {
+		if s != nil {
+			fn, ok := s.(*OnPublishFunc)
+			if !ok {
+				logger.Errorf(nil, "Invalid onPublish Function")
+				return fmt.Errorf("Invalid onPublish Function")
+			} else {
+				_ = msg.SetQoS(this.qoss[i]) // 设置为该发的qos级别
+				err = (*fn)(msg)
+				if err == io.EOF {
+					// TODO 断线了，是否对于qos=1和2的保存至离线消息
+				}
+			}
+		}
+	}
+	return nil
+}
+func (this *service) pubFnPlus(msg *message.PublishMessage) error {
+	err := this.topicsMgr.Subscribers(msg.Topic(), msg.QoS(), &this.subs, &this.qoss, false, "", true)
+	if err != nil {
+		//logger.Errorf(err, "(%s) Error retrieving subscribers list: %v", this.cid(), err)
+		return err
+	}
+	msg.SetRetain(false)
+	logger.Debugf("(%s) Publishing to all shareName topic in %q and %d subscribers：%v", this.cid(), string(msg.Topic()), len(this.subs))
+	for i, s := range this.subs {
+		if s != nil {
+			fn, ok := s.(*OnPublishFunc)
+			if !ok {
+				logger.Errorf(nil, "Invalid onPublish Function")
+				return fmt.Errorf("Invalid onPublish Function")
+			} else {
+				_ = msg.SetQoS(this.qoss[i]) // 设置为该发的qos级别
+				err = (*fn)(msg)
+				if err == io.EOF {
+					// TODO 断线了，是否对于qos=1和2的保存至离线消息
+				}
+			}
+		}
+	}
+	return nil
 }
