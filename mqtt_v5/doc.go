@@ -1,19 +1,6 @@
-// Copyright (c) 2014 The SurgeMQ Authors. All rights reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-// SurgeMQ is a high performance MQTT broker and client library that aims to be
+// This MQ Server is a high performance MQTT broker and client library that aims to be
 // fully compliant with MQTT 3.1 and 3.1.1 specs.
+// building 5.x now
 //
 // The primary package that's of interest is package service. It provides the
 // MQTT Server and Client services in a library form.
@@ -44,14 +31,14 @@
 //     network traffic.
 //   - A mechanism to notify interested parties when an abnormal disconnection occurs.
 //
-// Current performance benchmark of SurgeMQ, running all publishers, subscribers
+// Current performance benchmark of This MQ, running all publishers, subscribers
 // and broker on a single 4-core (2.8Ghz i7) MacBook Pro, is able to achieve:
 //   - over 400,000 MPS in a 1:1 single publisher and single producer configuration
 //   - over 450,000 MPS in a 20:1 fan-in configuration
 //   - over 750,000 MPS in a 1:20 fan-out configuration
 //   - over 700,000 MPS in a full mesh configuration with 20 clients
 //
-// In addition, SurgeMQ has been tested with the following client libraries and
+// In addition, This MQ has been tested with the following client libraries and
 // it _seems_ to work:
 //   - libmosquitto 1.3.5 (C)
 //     - Tested with the bundled test programs msgsps_pub and msgsps_sub
@@ -69,7 +56,7 @@
 //     - Actually I think there's a bug in the test suite as it calls the PUBLISH
 //       handler function for non-PUBLISH messages.
 //
-// A quick example of how to use SurgeMQ:
+// A quick example of how to use This MQ:
 //   func main() {
 //       // Create a new server
 //       svr := &service.Server{

@@ -2,5 +2,5 @@ package topics
 
 func init() {
 	memTopicInit()
-	redisTopicInit()
+	//redisTopicInit()
 }

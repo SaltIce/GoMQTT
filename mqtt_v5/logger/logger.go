@@ -5,6 +5,7 @@ import (
 	"Go-MQTT/mqtt_v5/config"
 	"bytes"
 	"fmt"
+	"github.com/buguang01/util"
 	"runtime"
 	"strconv"
 	"strings"
@@ -50,6 +51,7 @@ func init() {
 	consts := config.ConstConf.Logger
 	InfoOpen = consts.InfoOpen
 	DebugOpen = consts.DebugOpen
+	util.SetLocation(util.BeiJing)
 	if !InfoOpen {
 		fmt.Println("日志系统 未开启 info日志打印记录")
 	}
@@ -63,11 +65,12 @@ func init() {
 	if consts.LogPath != "" {
 		logPath = consts.LogPath
 	}
+	init2()
 }
 
 //添加一个封装log，方便以后修改log框架
 //正常退出日志模块
-func init() {
+func init2() {
 	//关闭日志服务
 	//defer Logger.LogClose()
 

@@ -307,6 +307,7 @@ func generateTLSConfig() *tls.Config {
 
 // Close terminates the server by shutting down all the client connections and closing
 // the listener. It will, as best it can, clean up after itself.
+// 作为服务端的关闭方法
 func (this *Server) Close() error {
 	defer func() {
 		if err := recover(); err != nil {
@@ -316,21 +317,19 @@ func (this *Server) Close() error {
 	// By closing the quit channel, we are telling the server to stop accepting new
 	// connection.
 	close(this.quit)
-
 	// We then close the net.Listener, which will force Accept() to return if it's
 	// blocked waiting for new connections.
 
 	this.ln.Close()
 
-	if this.sessMgr != nil {
-		this.sessMgr.Close()
-	}
-
-	if this.topicsMgr != nil {
-		this.topicsMgr.Close()
-	}
-
 	return nil
+}
+
+// 作为客户端的关闭方法
+// 发送断开连接包
+func (this *Server) CloseC() error {
+	// 可以记录其它的数据
+	return this.Svc.Publish(NewDisconnectMessage(), nil)
 }
 
 // HandleConnection用于代理处理来自其它节点的传入连接
