@@ -104,7 +104,6 @@ func Run() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer pp.Stop()
 
 	sigchan := make(chan os.Signal, 1)
 	//signal.Notify(sigchan, os.Interrupt, os.Kill)
@@ -124,6 +123,8 @@ func Run() {
 			pprof.StopCPUProfile()
 			f.Close()
 		}
+
+		defer pp.Stop()
 
 		err := svr.Close()
 		if err != nil {

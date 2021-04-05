@@ -50,15 +50,15 @@ type ShareTopicsProvider interface {
 
 func Register(name string, provider ShareTopicsProvider) {
 	if provider == nil {
-		panic("topics: Register provide is nil")
+		panic("share topics: Register provide is nil")
 	}
 
 	if _, dup := providers[name]; dup {
-		panic("topics: Register called twice for provider " + name)
+		panic("share topics: Register called twice for provider " + name)
 	}
 
 	providers[name] = provider
-	logger.Infof("Register TopicsProvider：'%s' success，%T", name, provider)
+	logger.Infof("Register Share TopicsProvider：'%s' success，%T", name, provider)
 }
 
 func Unregister(name string) {
