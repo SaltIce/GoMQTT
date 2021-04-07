@@ -3,9 +3,58 @@ package redis_test
 import (
 	"container/list"
 	"fmt"
+	"github.com/go-redis/redis"
 	"strings"
 	"testing"
 )
+
+var shareJoin = "/"
+var tp = `
+--[ i 记录最后一个的索引，用来最后添加sharename集合使用 ]--
+	local i = 1
+--[ cc 保存shareName  ]--
+	local cc = {}
+--[ ret保存每一个sharename下的集群订阅数据，最后一个集合是sharename的集合 ]--
+	local ret = {}
+	for ii,vk in ipairs(KEYS) do
+		--[ 获取sharename成员 --]
+		local shareName = redis.call("smembers",vk)
+		if shareName ~= nil and #shareName > 0
+		then
+		--[ 遍历sharename，拼接KEYS[1] 获取该共享组下的信息--]
+			for k, v in ipairs(shareName) do
+				--[ aa 保存当前sharename下的集合数据 ]--
+				local aa = {}
+				cc[i] = v
+    			local ks = vk.."` + shareJoin + `"..v
+            	local c = redis.call("hgetall",ks)
+				if c ~= nil and #c > 0
+				then
+					for k2, v2 in ipairs(c) do
+						aa[k2] = v2
+					end
+					ret[i] = aa
+					i = i +1
+				end
+			end
+		end
+	end
+	ret[i] = cc
+	return ret
+`
+
+func TestTopic(t *testing.T) {
+	r := redis.NewClient(&redis.Options{DB: int(1), Password: "", Addr: "10.112.26.131:6379", Network: "tcp"})
+	_, err := r.Ping().Result()
+	if err != nil {
+		panic(err)
+	}
+	v, err := redis.NewScript(tp).Run(r, matchTopicS("test/pass/123")).Result()
+	if err != nil {
+		panic(fmt.Errorf("脚本执行错误：%v", err))
+	}
+	fmt.Println(v)
+}
 
 func TestShare(t *testing.T) {
 	fmt.Println(matchTopicS("/as/aa/aa"))

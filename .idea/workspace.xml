@@ -20,9 +20,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bf51d1a7-8d25-4780-9e7d-def3d64000b1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/redis/redis_test/share_topic_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/redis/redis.go" beforeDir="false" afterPath="$PROJECT_DIR$/redis/redis.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqtt_v5/config/const.yml" beforeDir="false" afterPath="$PROJECT_DIR$/mqtt_v5/config/const.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/redis/redis_test/share_topic_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/redis/redis_test/share_topic_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/redis/share_topic_redis.go" beforeDir="false" afterPath="$PROJECT_DIR$/redis/share_topic_redis.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -137,7 +138,7 @@
       <recent name="F:\Go_pro\src\Go-MQTT\mqtt_v5\internal" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Test.BenchmarkShare in Go-MQTT/redis/redis_test">
+  <component name="RunManager" selected="Go Build.go build main.go">
     <configuration name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="Go-MQTT" />
       <working_directory value="$PROJECT_DIR$" />
@@ -156,17 +157,6 @@
       <directory value="$PROJECT_DIR$/" />
       <filePath value="$PROJECT_DIR$/" />
       <pattern value="^BenchmarkShare$" />
-      <method v="2" />
-    </configuration>
-    <configuration name="TestGoMqtt in Go-MQTT/test" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="Go-MQTT" />
-      <working_directory value="$PROJECT_DIR$/test" />
-      <framework value="gotest" />
-      <kind value="PACKAGE" />
-      <package value="Go-MQTT/test" />
-      <directory value="$PROJECT_DIR$/" />
-      <filePath value="$PROJECT_DIR$/" />
-      <pattern value="^TestGoMqtt$" />
       <method v="2" />
     </configuration>
     <configuration name="TestShare in Go-MQTT/redis" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -191,20 +181,31 @@
       <pattern value="^TestShare$" />
       <method v="2" />
     </configuration>
+    <configuration name="TestTopic in Go-MQTT/redis/redis_test" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="Go-MQTT" />
+      <working_directory value="$PROJECT_DIR$/redis/redis_test" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="Go-MQTT/redis/redis_test" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^TestTopic$" />
+      <method v="2" />
+    </configuration>
     <list>
-      <item itemvalue="Go Build.go build main.go" />
-      <item itemvalue="Go Test.TestGoMqtt in Go-MQTT/test" />
       <item itemvalue="Go Test.TestShare in Go-MQTT/redis" />
       <item itemvalue="Go Test.TestShare in Go-MQTT/redis/redis_test" />
       <item itemvalue="Go Test.BenchmarkShare in Go-MQTT/redis/redis_test" />
+      <item itemvalue="Go Test.TestTopic in Go-MQTT/redis/redis_test" />
+      <item itemvalue="Go Build.go build main.go" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Build.go build main.go" />
+        <item itemvalue="Go Test.TestTopic in Go-MQTT/redis/redis_test" />
         <item itemvalue="Go Test.BenchmarkShare in Go-MQTT/redis/redis_test" />
         <item itemvalue="Go Test.TestShare in Go-MQTT/redis/redis_test" />
         <item itemvalue="Go Test.TestShare in Go-MQTT/redis" />
-        <item itemvalue="Go Test.TestGoMqtt in Go-MQTT/test" />
-        <item itemvalue="Go Build.go build main.go" />
       </list>
     </recent_temporary>
   </component>
@@ -259,7 +260,6 @@
       <path value="$PROJECT_DIR$/jmqtt" />
       <path value="$PROJECT_DIR$/.." />
     </ignored-roots>
-    <MESSAGE value="fix:修复超过两个节点启动失败bug" />
     <MESSAGE value="新增压测脚本" />
     <MESSAGE value="commit" />
     <MESSAGE value="feat:修复+和#订阅的匹配问题，新增了s/s和s/s/都能够被s/s/#匹配到，s/s/能被s/s/+匹配到，但s/s不能被s/s/+匹配到" />
@@ -284,7 +284,8 @@
     <MESSAGE value="feat:小细节修改" />
     <MESSAGE value="feat:去除无用注释" />
     <MESSAGE value="feat:更新注释" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat:更新注释" />
+    <MESSAGE value="feat:添加获取主题匹配的所有包含通配符的主题数据方法" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat:添加获取主题匹配的所有包含通配符的主题数据方法" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
@@ -308,10 +309,10 @@
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="1033" y="127" key="#xdebugger.evaluate/0.0.1536.864@0.0.1536.864" timestamp="1616813417083" />
-    <state x="372" y="0" key="CommitChangelistDialog2" timestamp="1617599193155">
+    <state x="372" y="0" key="CommitChangelistDialog2" timestamp="1617803090975">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="372" y="0" key="CommitChangelistDialog2/0.0.1536.864@0.0.1536.864" timestamp="1617599193155" />
+    <state x="372" y="0" key="CommitChangelistDialog2/0.0.1536.864@0.0.1536.864" timestamp="1617803090975" />
     <state x="147" y="74" width="1228" height="719" key="DiffContextDialog" timestamp="1617599136545">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
@@ -324,46 +325,46 @@
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="549" y="188" key="FileChooserDialogImpl/0.0.1536.864@0.0.1536.864" timestamp="1615737736717" />
-    <state width="1493" height="284" key="GridCell.Tab.0.bottom" timestamp="1617802495148">
+    <state width="1493" height="220" key="GridCell.Tab.0.bottom" timestamp="1617810303068">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="284" key="GridCell.Tab.0.bottom/0.0.1536.864@0.0.1536.864" timestamp="1617802495148" />
-    <state width="1493" height="284" key="GridCell.Tab.0.center" timestamp="1617802495148">
+    <state width="1493" height="220" key="GridCell.Tab.0.bottom/0.0.1536.864@0.0.1536.864" timestamp="1617810303068" />
+    <state width="1493" height="220" key="GridCell.Tab.0.center" timestamp="1617810303068">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="284" key="GridCell.Tab.0.center/0.0.1536.864@0.0.1536.864" timestamp="1617802495148" />
-    <state width="1493" height="284" key="GridCell.Tab.0.left" timestamp="1617802495148">
+    <state width="1493" height="220" key="GridCell.Tab.0.center/0.0.1536.864@0.0.1536.864" timestamp="1617810303068" />
+    <state width="1493" height="220" key="GridCell.Tab.0.left" timestamp="1617810303068">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="284" key="GridCell.Tab.0.left/0.0.1536.864@0.0.1536.864" timestamp="1617802495148" />
-    <state width="1493" height="284" key="GridCell.Tab.0.right" timestamp="1617802495148">
+    <state width="1493" height="220" key="GridCell.Tab.0.left/0.0.1536.864@0.0.1536.864" timestamp="1617810303068" />
+    <state width="1493" height="220" key="GridCell.Tab.0.right" timestamp="1617810303068">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="284" key="GridCell.Tab.0.right/0.0.1536.864@0.0.1536.864" timestamp="1617802495148" />
-    <state width="1493" height="154" key="GridCell.Tab.1.bottom" timestamp="1617802212789">
+    <state width="1493" height="220" key="GridCell.Tab.0.right/0.0.1536.864@0.0.1536.864" timestamp="1617810303068" />
+    <state width="1493" height="220" key="GridCell.Tab.1.bottom" timestamp="1617810305722">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="154" key="GridCell.Tab.1.bottom/0.0.1536.864@0.0.1536.864" timestamp="1617802212789" />
-    <state width="1493" height="154" key="GridCell.Tab.1.center" timestamp="1617802212789">
+    <state width="1493" height="220" key="GridCell.Tab.1.bottom/0.0.1536.864@0.0.1536.864" timestamp="1617810305722" />
+    <state width="1493" height="220" key="GridCell.Tab.1.center" timestamp="1617810305721">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="154" key="GridCell.Tab.1.center/0.0.1536.864@0.0.1536.864" timestamp="1617802212789" />
-    <state width="1493" height="154" key="GridCell.Tab.1.left" timestamp="1617802212789">
+    <state width="1493" height="220" key="GridCell.Tab.1.center/0.0.1536.864@0.0.1536.864" timestamp="1617810305721" />
+    <state width="1493" height="220" key="GridCell.Tab.1.left" timestamp="1617810305721">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="154" key="GridCell.Tab.1.left/0.0.1536.864@0.0.1536.864" timestamp="1617802212789" />
-    <state width="1493" height="154" key="GridCell.Tab.1.right" timestamp="1617802212789">
+    <state width="1493" height="220" key="GridCell.Tab.1.left/0.0.1536.864@0.0.1536.864" timestamp="1617810305721" />
+    <state width="1493" height="220" key="GridCell.Tab.1.right" timestamp="1617810305722">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="154" key="GridCell.Tab.1.right/0.0.1536.864@0.0.1536.864" timestamp="1617802212789" />
+    <state width="1493" height="220" key="GridCell.Tab.1.right/0.0.1536.864@0.0.1536.864" timestamp="1617810305722" />
     <state x="270" y="75" key="SettingsEditor" timestamp="1617539238802">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="270" y="75" key="SettingsEditor/0.0.1536.864@0.0.1536.864" timestamp="1617539238802" />
-    <state x="361" y="166" key="Vcs.Push.Dialog.v2" timestamp="1617599202735">
+    <state x="361" y="166" key="Vcs.Push.Dialog.v2" timestamp="1617803100982">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="361" y="166" key="Vcs.Push.Dialog.v2/0.0.1536.864@0.0.1536.864" timestamp="1617599202735" />
+    <state x="361" y="166" key="Vcs.Push.Dialog.v2/0.0.1536.864@0.0.1536.864" timestamp="1617803100982" />
     <state width="447" height="391" key="XDebugger.FullValuePopup" timestamp="1617028112361">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
