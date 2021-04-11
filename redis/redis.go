@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/garyburd/redigo/redis"
+	"strconv"
 	"time"
 )
 
@@ -54,7 +55,7 @@ func (r *Redis) SetNX(key string, value interface{}) bool {
 //设置key value 过期时间
 func (r *Redis) SetVHasTime(key string, value interface{}, time int64) error {
 	time = checkTime(time)
-	_, err := r.rc.Do("SET", key, value, "EX", string(time))
+	_, err := r.rc.Do("SET", key, value, "EX", strconv.Itoa(int(time)))
 	if err != nil {
 		return err
 	}
@@ -64,7 +65,7 @@ func (r *Redis) SetVHasTime(key string, value interface{}, time int64) error {
 //可以充当分布式锁，但是不会是死锁，到时间自动删除，只有不存在才会执行成功
 func (r *Redis) SetNXHasTime(key string, value interface{}, time int64) bool {
 	time = checkTime(time)
-	n, err := r.rc.Do("SETNX", key, value, "EX", string(time))
+	n, err := r.rc.Do("SETNX", key, value, "EX", strconv.Itoa(int(time)))
 	if err != nil {
 		fmt.Println(err)
 		return false

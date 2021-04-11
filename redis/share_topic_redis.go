@@ -2,6 +2,7 @@ package redis
 
 import (
 	"Go-MQTT/mqtt_v5/config"
+	"container/list"
 	"fmt"
 	"github.com/go-redis/redis"
 	"math/rand"
@@ -83,27 +84,33 @@ func isEmpty(str ...string) bool {
 
 // 获取数据脚本
 var tp = `
---[ 获取sharename成员 --]
-	local shareName = redis.call("smembers",KEYS[1])
-	local ret = {}
-	local cc = {}
+--[ i 记录最后一个的索引，用来最后添加sharename集合使用 ]--
 	local i = 1
-	if shareName ~= nil
-	then
---[ 遍历sharename，拼接KEYS[1] 获取该共享组下的信息--]
-		for k, v in ipairs(shareName) do
-			local aa = {}
-			cc[k] = v
-    		local ks = KEYS[1].."` + shareJoin + `"..v
-            local c = redis.call("hgetall",ks)
-			if c ~= nil
-			then
-				for k2, v2 in ipairs(c) do
-					aa[k2] = v2
+--[ cc 保存shareName  ]--
+	local cc = {}
+--[ ret保存每一个sharename下的集群订阅数据，最后一个集合是sharename的集合 ]--
+	local ret = {}
+	for ii,vk in ipairs(KEYS) do
+		--[ 获取sharename成员 --]
+		local shareName = redis.call("smembers",vk)
+		if shareName ~= nil and #shareName > 0
+		then
+		--[ 遍历sharename，拼接KEYS[1] 获取该共享组下的信息--]
+			for k, v in ipairs(shareName) do
+				--[ aa 保存当前sharename下的集合数据 ]--
+				local aa = {}
+				cc[i] = v
+    			local ks = vk.."` + shareJoin + `"..v
+            	local c = redis.call("hgetall",ks)
+				if c ~= nil and #c > 0
+				then
+					for k2, v2 in ipairs(c) do
+						aa[k2] = v2
+					end
+					ret[i] = aa
+					i = i +1
 				end
 			end
-			ret[k] = aa
-			i = i +1
 		end
 	end
 	ret[i] = cc
@@ -160,7 +167,7 @@ var merge = &Group{}
 
 func reqMerge(topic string) (*ShareNameInfo, error) {
 	ret := merge.DoChan(topic, func() (interface{}, error) {
-		v, err := redis.NewScript(tp).Run(r, []string{topic}).Result()
+		v, err := redis.NewScript(tp).Run(r, matchTopicS(topic)).Result()
 		if err != nil {
 			return nil, fmt.Errorf("脚本执行错误：%v", err)
 		}
@@ -186,8 +193,14 @@ func reqMerge(topic string) (*ShareNameInfo, error) {
 					mp[retdata[i][j].(string)] = ii
 					tv += ii
 				}
-				sni.V[da.(string)] = mp
-				sni.t[da.(string)] = tv
+				if mv, ok := sni.V[da.(string)]; ok {
+					for nod, d := range mp {
+						mv[nod] += d
+					}
+				} else {
+					sni.V[da.(string)] = mp
+				}
+				sni.t[da.(string)] += tv
 			}
 			cacheGlobal.Lock()
 			cacheGlobal.global[topic] = &tn{
@@ -318,4 +331,42 @@ func (s *ShareNameInfo) RandShare() map[string][]string {
 		}
 	}
 	return ret
+}
+
+// 获取需要匹配的主题
+// FIXME 下面可优化的地方太多了，因为性能不是很好
+func matchTopicS(topic string) []string {
+	tp := strings.Split(topic, "/")
+	ret := list.New()
+	ret.PushBack(tp[0])
+	// 直接限制订阅主题第一个不能是通配符,并且不能是单纯一个/,所以该方法就不做限制
+	for k := range tp {
+		if k == 0 {
+			continue
+		}
+		v := tp[k]
+		size := ret.Len()
+		for i := 0; i < size; i++ {
+			el := ret.Front()
+			s := el.Value.(string)
+			if s != "" && s[len(s)-1] == '#' {
+				ret.MoveToBack(el)
+				continue
+			}
+			el.Value = s + "/" + v
+			ret.MoveToBack(el)
+			ret.PushBack(s + "/+")
+			ret.PushBack(s + "/#")
+		}
+	}
+
+	da := make([]string, 0)
+	for elem := ret.Front(); elem != nil; elem = elem.Next() {
+		vs := elem.Value.(string)
+		if vs == "" {
+			continue
+		}
+		da = append(da, vs)
+	}
+	return da
 }
